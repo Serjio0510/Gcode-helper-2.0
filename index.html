@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Программы для вычислений</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Программы для вычислений</h1>
+        <div id="mainButtons" class="main-buttons">
+            <button class="main-tablinks" onclick="openMainTab(event, 'gapCalc')">Паз</button>
+            <button class="main-tablinks" onclick="openMainTab(event, 'angleCalc')">Угол</button>
+        </div>
+        <div id="backButton" class="back-button" style="display:none;">
+            <button onclick="goBack()">Назад</button>
+        </div>
+        <div id="gapCalc" class="main-tabcontent" style="display:none;">
+            <div id="gapButtons" class="gap-buttons">
+                <button class="tablinks" onclick="showTab('gapTab')">Рассчитать высоту паза</button>
+                <button class="tablinks" onclick="showTab('gapWidthTab')">Рассчитать ширину паза</button>
+            </div>
+            <div id="gapTab" class="tabcontent" style="display:none;">
+                <div class="input-container">
+                    <label for="diameter">Диаметр окружности:</label>
+                    <input type="number" id="diameter" min="0">
+                </div>
+                <div class="input-container">
+                    <label for="distanceToTop">Расстояние до вершины паза:</label>
+                    <input type="number" id="distanceToTop" min="0">
+                </div>
+                <div class="index-container">
+                    <label for="index">Допуск:</label>
+                    <input type="number" id="index" min="0">
+                </div>
+                <button class="calculate-button" onclick="calculateDistance()">Вычислить</button>
+                <div id="result"></div>
+            </div>
+            <div id="gapWidthTab" class="tabcontent" style="display:none;">
+                <div class="input-container">
+                    <label for="gapWidth">Ширина паза:</label>
+                    <input type="number" id="gapWidth" min="0">
+                </div>
+                <div class="index-containertwo">
+                    <label for="indextwo">Допуск:</label>
+                    <input type="number" id="indextwo" min="0">
+                </div>
+                <button class="calculate-button" onclick="calculateGapWidth()">Вычислить</button>
+                <div id="gapResult"></div>
+            </div>
+        </div>
+        <div id="angleCalc" class="main-tabcontent" style="display:none;">
+            <div id="angleButtons" class="angle-buttons">
+                <button class="tablinks" onclick="showTab('bottomTab')">Нижняя точка</button>
+                <button class="tablinks" onclick="showTab('topTab')">Верхняя точка</button>
+            </div>
+            <div id="bottomTab" class="tabcontent" style="display:none;">
+                <div class="input-container">
+                    <label for="diameterBottom">Диаметр окружности:</label>
+                    <input type="number" id="diameterBottom" min="0">
+                </div>
+                <div class="input-container">
+                    <label for="angleBottom">Угол:</label>
+                    <input type="number" id="angleBottom" min="0" max="360">
+                </div>
+                <div class="input-container">
+                    <label for="cutterDiameterBottom">Диаметр инструмента:</label>
+                    <input type="number" id="cutterDiameterBottom" min="0">
+                </div>
+                <button class="calculate-button" onclick="calculateCoordinates('bottom')">Вычислить</button>
+                <div id="resultBottom"></div>
+            </div>
+            <div id="topTab" class="tabcontent" style="display:none;">
+                <div class="input-container">
+                    <label for="diameterTop">Диаметр окружности:</label>
+                    <input type="number" id="diameterTop" min="0">
+                </div>
+                <div class="input-container">
+                    <label for="angleTop">Угол:</label>
+                    <input type="number" id="angleTop" min="0" max="360">
+                </div>
+                <div class="input-container">
+                    <label for="cutterDiameterTop">Диаметр инструмента:</label>
+                    <input type="number" id="cutterDiameterTop" min="0">
+                </div>
+                <button class="calculate-button" onclick="calculateCoordinates('top')">Вычислить</button>
+                <div id="resultTop"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
