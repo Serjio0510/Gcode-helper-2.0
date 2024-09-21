@@ -27,7 +27,7 @@ function calculateDistance() {
     const diameterInput = document.getElementById("diameter");
     const distanceToTopInput = document.getElementById("distanceToTop");
     const indexInput = document.getElementById("index");
-    const resultElement = document.getElementById("result");
+    const resultElement = document.getElementById("gapResultHeight");
 
     const diameter = parseFloat(diameterInput.value);
     const distanceToTop = parseFloat(distanceToTopInput.value);
@@ -45,7 +45,7 @@ function calculateDistance() {
 function calculateGapWidth() {
     const gapWidthInput = document.getElementById("gapWidth");
     const indexInputtwo = document.getElementById("indextwo");
-    const resultElement = document.getElementById("gapResult");
+    const resultElement = document.getElementById("gapResultWidth");
 
     const gapWidth = parseFloat(gapWidthInput.value);
     const indextwo = parseFloat(indexInputtwo.value);
@@ -56,7 +56,7 @@ function calculateGapWidth() {
     }
 
     const gapWidthCalculated = calculateGapWidthValue(gapWidth, indextwo);
-    resultElement.textContent = "Номинальная ширина паза " + gapWidth + " и допуск " + indextwo + " середина паза равна " + gapWidthCalculated.toFixed(4);
+    resultElement.textContent = "Ширина паза: " + gapWidth + " мм, Допуск: " + indextwo + " мм, Середина паза равна: " + gapWidthCalculated.toFixed(4) + " мм.";
 }
 
 function calculateDistanceToCenter(diameter, distanceToTop, index) {
@@ -67,9 +67,9 @@ function calculateDistanceToCenter(diameter, distanceToTop, index) {
     return slot + radius + coefficient;
 }
 
-function calculateGapWidthValue(indextwo, gapWidth) {
-    const mediumWidth = gapWidth / 4;
-    const coefficient1 = indextwo / 2;
+function calculateGapWidthValue(gapWidth, index) {
+    const mediumWidth = gapWidth / 2;
+    const coefficient1 = index / 4;
 
     return coefficient1 + mediumWidth;
 }
@@ -111,4 +111,25 @@ function calculateCoordinates(point) {
     }
 
     resultElement.textContent = `Координаты точки: X = ${x.toFixed(2)}, Y = ${y.toFixed(2)}`;
+}
+
+function calculateHoleCoordinates() {
+    const pitchDiameterInput = document.getElementById("pitchDiameter");
+    const angleInput = document.getElementById("angleHole");
+    const resultElement = document.getElementById("resultHole");
+
+    const pitchDiameter = parseFloat(pitchDiameterInput.value);
+    const angle = parseFloat(angleInput.value);
+
+    if (isNaN(pitchDiameter) || pitchDiameter <= 0 || isNaN(angle) || angle < 0 || angle > 360) {
+        resultElement.textContent = "Пожалуйста, введите корректные данные.";
+        return;
+    }
+
+    const radius = pitchDiameter / 2;
+    const angleInRadians = (angle * Math.PI) / 180;
+    const x = radius * Math.cos(angleInRadians);
+    const y = radius * Math.sin(angleInRadians);
+
+    resultElement.textContent = `Координаты отверстия: X = ${x.toFixed(2)}, Y = ${y.toFixed(2)}`;
 }
