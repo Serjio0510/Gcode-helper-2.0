@@ -28,6 +28,7 @@ function calculateDistance() {
     const distanceToTopInput = document.getElementById("distanceToTop");
     const indexInput = document.getElementById("index");
     const resultElement = document.getElementById("gapResultHeight");
+    const resultElement = document.getElementById("gapResultHeight");
 
     const diameter = parseFloat(diameterInput.value);
     const distanceToTop = parseFloat(distanceToTopInput.value);
@@ -46,6 +47,7 @@ function calculateGapWidth() {
     const gapWidthInput = document.getElementById("gapWidth");
     const indexInputtwo = document.getElementById("indextwo");
     const resultElement = document.getElementById("gapResultWidth");
+    const resultElement = document.getElementById("gapResultWidth");
 
     const gapWidth = parseFloat(gapWidthInput.value);
     const indextwo = parseFloat(indexInputtwo.value);
@@ -57,6 +59,7 @@ function calculateGapWidth() {
 
     const gapWidthCalculated = calculateGapWidthValue(gapWidth, indextwo);
     resultElement.textContent = "Ширина паза: " + gapWidth + " мм, Допуск: " + indextwo + " мм, Середина паза равна: " + gapWidthCalculated.toFixed(4) + " мм.";
+    resultElement.textContent = "Ширина паза: " + gapWidth + " мм, Допуск: " + indextwo + " мм, Середина паза равна: " + gapWidthCalculated.toFixed(4) + " мм.";
 }
 
 function calculateDistanceToCenter(diameter, distanceToTop, index) {
@@ -67,6 +70,9 @@ function calculateDistanceToCenter(diameter, distanceToTop, index) {
     return slot + radius + coefficient;
 }
 
+function calculateGapWidthValue(gapWidth, index) {
+    const mediumWidth = gapWidth / 2;
+    const coefficient1 = index / 4;
 function calculateGapWidthValue(gapWidth, index) {
     const mediumWidth = gapWidth / 2;
     const coefficient1 = index / 4;
