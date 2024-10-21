@@ -216,3 +216,56 @@ function calculateGear() {
     document.getElementById('normalLength').textContent = `Длинна общей нормали (мм): ${normalLength.toFixed(3)}`;
     document.getElementById('FaskaVtulki').textContent = `Фаска или радиус притупления продольной кромки: ${FaskaVtulki.toFixed(2)}`;
 }
+
+// Впадина зуба
+function calculateSocket() {
+    const toothPitch = document.getElementById("pitchTooth");
+    const toothModule = document.getElementById("moduleTooth");
+    const toothCoeff = document.getElementById("coeffTooth");
+    const resultEl = document.getElementById("resultSocket");
+
+    const pitchTooth = parseFloat(toothPitch.value);
+    const moduleTooth = parseFloat(toothModule.value);
+    const coeffTooth = parseFloat(toothCoeff.value);
+
+    if (isNaN(pitchTooth) || pitchTooth <= 0 || isNaN(moduleTooth) || moduleTooth < 0 || isNaN(coeffTooth) || coeffTooth < -10) {
+        resultEl.textContent = "Пожалуйста, введите корректные данные.";
+        return;
+    }
+
+    const SocketTooth = calculateSocketTooth(pitchTooth, moduleTooth, coeffTooth);
+    resultEl.textContent = "Диаметр впадин зубчатого колеса (df): " + SocketTooth.toFixed(4) + " мм.";
+
+function calculateSocketTooth(pitchTooth, moduleTooth, coeffTooth) {
+    const sockTooth = pitchTooth - 2 * moduleTooth * (1.25 - coeffTooth);
+
+    return sockTooth;
+}
+
+}
+
+function calculatePitch() {
+    const numbTeeth = document.getElementById("teethNumb");
+    const modulePitch = document.getElementById("pitchModule");
+    const pitchAngle = document.getElementById("anglePitch");
+    const resultEl = document.getElementById("resultPitch");
+
+    const teethNumb = parseFloat(numbTeeth.value);
+    const pitchModule = parseFloat(modulePitch.value);
+    const anglePitch = parseFloat(pitchAngle.value);
+    const radianPitch = (anglePitch * (Math.PI / 180))
+
+    if (isNaN(teethNumb) || teethNumb <= 0 || isNaN(pitchModule) || pitchModule < 0 || isNaN(anglePitch) || anglePitch < 0) {
+        resultEl.textContent = "Пожалуйста, введите корректные данные.";
+        return;
+    }
+
+    const pitchDm = calculatepitchDm(teethNumb, pitchModule, radianPitch);
+    resultEl.textContent = "Делительный диаметр (d): " + pitchDm.toFixed(4) + " мм.";
+
+function calculatepitchDm(teethNumb, pitchModule, radianPitch) {
+    const dmPitch = (teethNumb * pitchModule) / Math.cos(radianPitch);
+
+    return dmPitch;
+}
+}

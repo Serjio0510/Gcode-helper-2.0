@@ -14,6 +14,7 @@
             <button class="main-tablinks" onclick="openMainTab(event, 'angleCalc')">Угол</button>
             <button class="main-tablinks" onclick="openMainTab(event, 'holeCalc')">Координаты отверстий</button>
             <button class="main-tablinks" onclick="openMainTab(event, 'gearCalc')">Эвольвентные шлицы</button>
+            <button class="main-tablinks" onclick="openMainTab(event, 'toothCalc')">Диаметр впадин</button>
         </div>
         <div id="backButton" class="back-button" style="display:none;">
             <button onclick="goBack()">Назад</button>
@@ -140,6 +141,44 @@
                 <p id="teethOnNormal">Число зубьев на длине общей нормали: </p>
                 <p id="FaskaVtulki">Фаска или радиус притупления продольной кромки: </p>
             </div>
+    </div>
+    <div id="toothCalc" class="main-tabcontent" style="display:none;">
+        <div id="toothCalc" class="tooth-calc">
+            <button class="tablinks" onclick="showTab('socketTooth')">Диаметр впадин</button>
+            <button class="tablinks" onclick="showTab('pitchDm')">Делительный диаметр</button>
+        </div>
+        <div id="socketTooth" class="tabcontent" style="display:none;">
+            <div class="input-container">
+                <label for="pitchTooth">Делительный диаметр (d):</label>
+                <input type="number" id="pitchTooth" min="0">
+            </div>
+            <div class="input-container">
+                <label for="moduleTooth">Модуль (m):</label>
+                <input type="number" id="moduleTooth" min="0">
+            </div>
+            <div class="input-container">
+                <label for="coeffTooth">Коэффициент смещения (x):</label>
+                <input type="number" id="coeffTooth" min="-10">
+            </div>
+            <button class="calculate-button" onclick="calculateSocket('socket')">Вычислить</button>
+            <div id="resultSocket"></div> <!-- Уникальный идентификатор -->
+        </div>
+        <div id="pitchDm" class="tabcontent" style="display:none;">
+            <div class="input-container">
+                <label for="teethNumb">Число зубьев (z):</label>
+                <input type="number" id="teethNumb" min="0">
+            </div>
+            <div class="input-container">
+                <label for="pitchModule">Модуль:</label>
+                <input type="number" id="pitchModule" min="0">
+            </div>
+            <div class="input-container">
+                <label for="anglePitch">Угол наклона на делительном диаметре β° <b>(подбираем)</b>:</label>
+                <input type="number" id="anglePitch" min="0">
+            </div>
+            <button class="calculate-button" onclick="calculatePitch('pitch')">Вычислить</button>
+            <div id="resultPitch"></div> <!-- Уникальный идентификатор -->
+        </div>
     </div>
     <script src="src/script.js"></script>
 </body>
