@@ -99,3 +99,44 @@ input[type="number"] {
 .back-button {
   margin-bottom: 1rem;
 }
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+input{
+  width: 77%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+select{
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.resultDopusck {
+  text-align-last: start;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+ b {
+  text-align: center;
+ }
+
+ p {
+  margin-top: -18px;
+  margin-left: 60px;
+  margin-bottom: auto;
+ }
