@@ -147,3 +147,11 @@ select{
   margin-left: 60px;
   margin-bottom: auto;
  }
+
+ .imagesTop {
+  position: fixed;
+  top: 223px; /* Расстояние от верхнего края */
+  right: 0px; /* Расстояние от правого края */
+  width: 127px; /* Ширина изображения */
+  height: 97px; /* Высота изображения */
+}
