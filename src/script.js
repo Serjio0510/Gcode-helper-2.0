@@ -164,11 +164,10 @@ function calculateGear() {
 
     // Эвольвента угла профиля в точке на концентрической окружности зубчатого колеса, проходящей через центр ролика(шарика)
         
-    const inv = - (rollerDiameter / numTeeth / module/ Math.cos(profile)) +
-    (Math.tan(profile) - profile) +
-    ((Math.PI / 2 + 2 * 0.45 * Math.tan(profile)) / numTeeth);
+    const inv = - (rollerDiameter / numTeeth / module/ Math.cos(profile)) + (Math.tan(profile) - profile) + 
+    ((Math.PI / 2 + 2 * displacementCoefficient * Math.tan(profile)) / numTeeth);
 
-    // Угол профиля  в точке на концентрической окружности зубчатого колеса, проходящей через центр ролика(шарика)
+    // Угол профиля в точке на концентрической окружности зубчатого колеса, проходящей через центр ролика(шарика)
 
         const term1 = Math.cbrt(3 * inv);
         const term2 = (2 * inv) / 5;
@@ -213,6 +212,9 @@ function calculateGear() {
     document.getElementById('teethOnNormal').textContent = `Число зубьев на длине общей нормали: ${teethOnNormalIntValue}`;
     document.getElementById('normalLength').textContent = `Длинна общей нормали (мм): ${normalLength.toFixed(3)}`;
     document.getElementById('FaskaVtulki').textContent = `Фаска или радиус притупления продольной кромки: ${FaskaVtulki.toFixed(2)}`;
+    document.getElementById('сheckTeeth').textContent = `чётное, не чётное: ${checkTeeth.toFixed(2)}`;
+    document.getElementById('Ad').textContent = `Угол профиля в точке на концентрической окружности зубчатого колеса: ${Ad.toFixed(4)}`;
+    document.getElementById('inv').textContent = `INV: ${inv.toFixed(4)}`;
 }
 
 // Впадина зуба
