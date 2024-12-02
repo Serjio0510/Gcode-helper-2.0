@@ -4,10 +4,10 @@ self.addEventListener('install', (event) => {
         return cache.addAll([
           '/',
           '/index.html',
-          '/styles.css',
-          '/script.js',
-          '/favicon.png',
-          '/topPoint.png'
+          '/src/styles.css',
+          '/src/script.js',
+          '/src/images/favicon.png',
+          '/src/images/topPoint.png'
         ]);
       })
     );
