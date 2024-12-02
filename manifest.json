@@ -4,15 +4,18 @@
     "start_url": "/Gcode-helper-2.0/",
     "display": "standalone",
     "background-color" : "#1e1e1e",
+    "color" : "#1e1e1e",
     "icons": [
       {
         "src": "src/images/favicon.png",
         "sizes": "192x192",
+        "background-color" : "#1e1e1e",
         "type": "image/png"
       },
       {
         "src": "src/images/favicon.png",
         "sizes": "512x512",
+        "background-color" : "#1e1e1e",
         "type": "image/png"
       }
     ]
