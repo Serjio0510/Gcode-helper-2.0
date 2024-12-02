@@ -9,6 +9,7 @@
       {
         "src": "images/favicon.png",
         "sizes": "192x192",
+        "background-color" : "1e1e1e",
         "type": "image/png"
       },
       {
