@@ -1,7 +1,7 @@
 {
     "name": "MachinCalc",
     "short_name": "MachinCalc",
-    "start_url": "/",
+    "start_url": "https://serjio0510.github.io/Gcode-helper-2.0/",
     "display": "standalone",
     "background-color" : "1e1e1e",
     "color" : "1e1e1e",
