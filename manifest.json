@@ -7,13 +7,13 @@
     "color" : "1e1e1e",
     "icons": [
       {
-        "src": "images/favicon.png",
+        "src": "src/images/favicon.png",
         "sizes": "192x192",
         "background-color" : "1e1e1e",
         "type": "image/png"
       },
       {
-        "src": "images/favicon.png",
+        "src": "src/images/favicon.png",
         "background-color" : "1e1e1e",
         "sizes": "512x512",
         "type": "image/png"
