@@ -4,6 +4,7 @@
     "start_url": "/",
     "display": "standalone",
     "background-color" : "1e1e1e",
+    "color" : "1e1e1e",
     "icons": [
       {
         "src": "images/favicon.png",
