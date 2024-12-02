@@ -1,196 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru"> 
 <head>
-<!-- Общий фавикон -->
-<link rel="icon" href="/src/images/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Программы для вычислений</title>
+    <link rel="apple-touch-icon" sizes="512x512" href="src/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="src/images/favicon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="src/styles.css">
+    <title>MachinCalc</title>
 </head>
 <body>
     <div class="container">
-        <h1>Программы для вычислений</h1>
-        <div id="mainButtons" class="main-buttons">
-            <button class="main-tablinks" onclick="openMainTab(event, 'gapCalc')">Паз</button>
-            <button class="main-tablinks" onclick="openMainTab(event, 'angleCalc')">Угол</button>
-            <button class="main-tablinks" onclick="openMainTab(event, 'holeCalc')">Координаты отверстий</button>
-            <button class="main-tablinks" onclick="openMainTab(event, 'gearCalc')">Эвольвентные шлицы</button>
-            <button class="main-tablinks" onclick="openMainTab(event, 'toothCalc')">Диаметр впадин</button>
-            <button class="main-tablinks" onclick="openMainTab(event, 'dopusk')">Допуски и посадки</button>
-        </div>
-        <div id="backButton" class="back-button" style="display:none;">
-            <button onclick="goBack()">Назад</button>
-        </div>
+        <h1>MachinCalc</h1>
+        <button id="theme-toggle" class="theme-toggle">🌙</button>
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openMainTab(event, 'gapCalc')" id="defaultOpen">Паз</button>
+                <button class="tab-button" onclick="openMainTab(event, 'holeCalc')">Координаты отв.</button>
+                <button class="tab-button" onclick="openMainTab(event, 'angleCalc')">Угол</button>
+                <button class="tab-button" onclick="openMainTab(event, 'gearCalc')">Эвольвентные шлицы</button>
+                <button class="tab-button" onclick="openMainTab(event, 'toothCalc')">Впадина зуба</button>
+                <button class="tab-button" onclick="openMainTab(event, 'dopusk')">Допуски и посадки</button>
+            </div>
 
-        <!-- Вкладка для расчета паза -->
-        <div id="gapCalc" class="main-tabcontent" style="display:none;">
-            <div id="gapButtons" class="gap-buttons">
-                <button class="tablinks" onclick="showTab('gapHeightTab')">Рассчитать высоту от центра до вершины паза</button>
-                <button class="tablinks" onclick="showTab('gapWidthTab')">Рассчитать ширину паза</button>
-            </div>
-            <div id="gapHeightTab" class="tabcontent" style="display:none;">
-                <div class="input-container">
-                    <label for="diameter">Диаметр окружности:</label>
-                    <input type="number" id="diameter" min="0">
-                </div>
-                <div class="input-container">
-                    <label for="distanceToTop">Расстояние до вершины паза:</label>
-                    <input type="number" id="distanceToTop" min="0">
-                </div>
-                <div class="input-container">
-                    <label for="index">Допуск:</label>
-                    <input type="number" id="index" min="0">
-                </div>
-                <button class="calculate-button" onclick="calculateDistance()">Вычислить</button>
-                <div id="gapResultHeight"></div> <!-- Уникальный идентификатор -->
-            </div>
-            <div id="gapWidthTab" class="tabcontent" style="display:none;">
-                <div class="input-container">
-                    <label for="gapWidth">Ширина паза:</label>
-                    <input type="number" id="gapWidth" min="0">
-                </div>
-                <div class="input-container">
-                    <label for="indextwo">Допуск:</label>
-                    <input type="number" id="indextwo" min="0">
-                </div>
-                <button class="calculate-button" onclick="calculateGapWidth()">Вычислить</button>
-                <div id="gapResultWidth"></div> <!-- Уникальный идентификатор -->
-            </div>
-        </div>
+            <div id="gapCalc" class="tabcontent main-tabcontent">
+                <h2>Расчет высоты паза</h2>
+                <input type="number" id="diameter" placeholder="Диаметр">
+                <input type="number" id="distanceToTop" placeholder="Расстояние до вершины">
+                <input type="number" id="index" placeholder="Индекс">
+                <button onclick="calculateDistance()">Рассчитать</button>
+                <div id="gapResultHeight" class="result"></div>
 
-        <!-- Вкладка для расчета угла -->
-        <div id="angleCalc" class="main-tabcontent" style="display:none;">
-            <div id="angleButtons" class="angle-buttons">
-                <button class="tablinks" onclick="showTab('bottomTab')">Нижняя точка</button>
-                <button class="tablinks" onclick="showTab('topTab')">Верхняя точка</button>
+                <h2>Расчет ширины паза</h2>
+                <input type="number" id="gapWidth" placeholder="Ширина паза">
+                <input type="number" id="indextwo" placeholder="Допуск">
+                <button onclick="calculateGapWidth()">Рассчитать</button>
+                <div id="gapResultWidth" class="result"></div>
             </div>
-            <div id="bottomTab" class="tabcontent" style="display:none;">
-                <img src="src/images/bottomPoint.png" class="imagesTop">
-                <div class="input-container">
-                    <label for="diameterBottom">Диаметр окружности:</label>
-                    <input type="number" id="diameterBottom" min="0" placeholder="Нижняя точа">
-                </div>
-                <div class="input-container">
-                    <label for="angleBottom">Угол:</label>
-                    <input type="number" id="angleBottom" min="0" max="360" placeholder="Нижняя точа">
-                </div>
-                <div class="input-container">
-                    <label for="cutterDiameterBottom">Диаметр инструмента:</label>
-                    <input type="number" id="cutterDiameterBottom" min="0" placeholder="Нижняя точа">
-                </div>
-                <button class="calculate-button" onclick="calculateCoordinates('bottom')">Вычислить</button>
-                <div id="resultBottom"></div> <!-- Уникальный идентификатор -->
-            </div>
-            <div id="topTab" class="tabcontent" style="display:none;">
-                <img src="src/images/topPoint.png" class="imagesTop">
-                <div class="input-container">
-                    <label for="diameterTop">Диаметр окружности:</label>
-                    <input type="number" id="diameterTop" min="0" placeholder="Верхняя точа">
-                </div>
-                <div class="input-container">
-                    <label for="angleTop">Угол:</label>
-                    <input type="number" id="angleTop" min="0" max="360" placeholder="Верхняя точа">
-                </div>
-                <div class="input-container">
-                    <label for="cutterDiameterTop">Диаметр инструмента:</label>
-                    <input type="number" id="cutterDiameterTop" min="0" placeholder="Верхняя точа">
-                </div>
-                <button class="calculate-button" onclick="calculateCoordinates('top')">Вычислить</button>
-                <div id="resultTop"></div> <!-- Уникальный идентификатор -->
-            </div>
-        </div>
 
-        <!-- Вкладка для расчета координат отверстий -->
+            <!-- Вкладка для расчета координат отверстий -->
         <div id="holeCalc" class="main-tabcontent" style="display:none;">
+            <h2>Координаты отверстий</h2>
             <div class="input-container">
-                <label for="pitchDiameter">Делительный диаметр:</label>
-                <input type="number" id="pitchDiameter" min="0">
+                <input type="number" id="pitchDiameter" min="0" placeholder="Делительный диаметр">
             </div>
             <div class="input-container">
-                <label for="angleHole">Угол:</label>
-                <input type="number" id="angleHole" min="0" max="360">
+                <input type="number" id="angleHole" min="0" max="360" placeholder="Угол">
             </div>
             <button id="calculateButton" class="calculate-button" onclick="calculateHoleCoordinates()">Вычислить</button>
             <div id="resultHole"></div> <!-- Уникальный идентификатор -->
         </div>
 
-        <!-- Вкладка для расчета эвольвентных шлицов -->
-        <div id="gearCalc" class="main-tabcontent" style="display:none;">
-            <h2>Эвольвентные шлицы</h2>
-            <div class="input-container">
-                <label for="numTeeth">Количество зубьев:</label>
-                <input type="number" id="numTeeth" required>
-            </div>
-            <div class="input-container">
-                <label for="module">Модуль (мм):</label>
-                <input type="number" id="module" step="0.01" required>
-            </div>
-            <div class="input-container">
-                <label for="diameterHeight">Номинальный диаметр (мм):</label>
-                <input type="number" id="diameterHeight" step="0.01" required>
-            </div>
-            <button class="calculate-button" onclick="calculateGear()">Рассчитать</button>
-            <div id="results">
-                <h3>Результаты расчета:</h3>
-                <p1 id="displacementCoefficient">Коэффициент смещения исходного контура: </p1>
-                <p1 id="pitchCircle">Делительный диаметр (мм): </p1>
-                <p1 id="rollerDiameter">Диаметр ролика (мм): </p1>
-                <select id="formulaSelect">
-                    <option value="1.7">1.7 * m</option>
-                    <option value="1.75">1.75 * m</option>
-                    <option value="1.8">1.8 * m</option>
-                </select>
-                <p1 id="distanceBetweenRollers">Расстояние между роликами (мм): </p1>
-                <p1 id="normalLength">Длина общей нормали (мм): </p1>
-                <p1 id="teethOnNormal">Число зубьев на длине общей нормали: </p1>
-                <p1 id="FaskaVtulki">Фаска или радиус притупления продольной кромки: </p1>
-            </div>
-    </div>
+            <div id="angleCalc" class="tabcontent main-tabcontent" style="display:none;">
+                <h2>Угловые координаты</h2>
+                <img src="src/images/topPoint.png" class="imagesTop">
+                <input type="number" id="diameterBottom" placeholder="Диаметр (Øменьший)">
+                <input type="number" id="angleBottom" placeholder="Угол (Øменьший)">
+                <input type="number" id="cutterDiameterBottom" placeholder="Диаметр фрезы (Øменьший)">
+                <button onclick="calculateCoordinates('bottom')">Рассчитать (Øменьший)</button>
+                <div id="resultBottom" class="result"></div>
 
-    <!--Диаметр впадины-->
-    <div id="toothCalc" class="main-tabcontent" style="display:none;">
-        <div id="toothCalc" class="tooth-calc">
-            <button class="tablinks" onclick="showTab('socketTooth')">Диаметр впадин</button>
-            <button class="tablinks" onclick="showTab('pitchDm')">Делительный диаметр</button>
-        </div>
-        <div id="socketTooth" class="tabcontent" style="display:none;">
-            <div class="input-container">
-                <label for="pitchTooth">Делительный диаметр (d):</label>
-                <input type="number" id="pitchTooth" min="0">
+                <input type="number" id="diameterTop" placeholder="Диаметр (Øбольший)">
+                <input type="number" id="angleTop" placeholder="Угол (Øбольший)">
+                <input type="number" id="cutterDiameterTop" placeholder="Диаметр фрезы (Øбольший)">
+                <button onclick="calculateCoordinates('top')">Рассчитать (Øбольший)</button>
+                <div id="resultTop" class="result"></div>
             </div>
-            <div class="input-container">
-                <label for="moduleTooth">Модуль (m):</label>
-                <input type="number" id="moduleTooth" min="0">
-            </div>
-            <div class="input-container">
-                <label for="coeffTooth">Коэффициент смещения (x):</label>
-                <input type="number" id="coeffTooth" min="-10">
-            </div>
-            <button class="calculate-button" onclick="calculateSocket('socket')">Вычислить</button>
-            <div id="resultSocket"></div> <!-- Уникальный идентификатор -->
-        </div>
-        <div id="pitchDm" class="tabcontent" style="display:none;">
-            <div class="input-container">
-                <label for="teethNumb">Число зубьев (z):</label>
-                <input type="number" id="teethNumb" min="0">
-            </div>
-            <div class="input-container">
-                <label for="pitchModule">Модуль (m):</label>
-                <input type="number" id="pitchModule" min="0">
-            </div>
-            <div class="input-container">
-                <label for="anglePitch">Угол наклона на делительном диаметре β° <b>(подбираем)</b>:</label>
-                <input type="number" id="anglePitch" min="0">
-            </div>
-            <button class="calculate-button" onclick="calculatePitch('pitch')">Вычислить</button>
-            <div id="resultPitch"></div> <!-- Уникальный идентификатор -->
-        </div>
-    </div>
 
-    <!-- Допуски и посадки -->
-             <div id="dopusk" class="main-tabcontent" style="display:none;">
-                <h1>Допуски и посадки отверстий</h1>
+            <div id="gearCalc" class="main-tabcontent" style="display:none;">
+                <h2>Эвольвентные шлицы</h2>
+                <div class="input-container">
+                    <input type="number" id="numTeeth" placeholder="Число зубьев">
+                </div>
+                <div class="input-container">
+                    <input type="number" id="module" placeholder="Модуль">
+                </div>
+                <div class="input-container">
+                    <input type="number" id="diameterHeight" placeholder="Номинальный диаметр">
+                </div>
+                <button class="calculate-button" onclick="calculateGear()">Рассчитать</button>
+                <div id="results">
+                    <h3>Результаты расчета:</h3>
+                    <p1 id="displacementCoefficient">Коэффициент смещения исходного контура: </p1>
+                    <p1 id="pitchCircle">Делительный диаметр (мм): </p1>
+                    <p1 id="rollerDiameter">Диаметр ролика (мм): </p1>
+                    <select id="formulaSelect">
+                        <option value="1.7">1.7 * m</option>
+                        <option value="1.75">1.75 * m</option>
+                        <option value="1.8">1.8 * m</option>
+                    </select>
+                    <p1 id="distanceBetweenRollers">Расстояние между роликами (мм): </p1>
+                    <p1 id="normalLength">Длина общей нормали (мм): </p1>
+                    <p1 id="teethOnNormal">Число зубьев на длине общей нормали: </p1>
+                    <p1 id="FaskaVtulki">Фаска или радиус притупления продольной кромки: </p1>
+                </div>
+        </div>
+        <div id="toothCalc" class="main-tabcontent" style="display:none;" >
+                <h2>Впадина зуба</h2>
+                <div class="input-container">
+                    <input type="number" id="pitchTooth" min="0" placeholder="Делительный диаметр (d)">
+                </div>
+                <div class="input-container">
+                    <input type="number" id="moduleTooth" min="0" placeholder="Модуль (m)">
+                </div>
+                <div class="input-container">
+                    <input type="number" id="coeffTooth" min="-10" placeholder="Коэффициент смещения (x)">
+                </div>
+                <button class="calculate-button" onclick="calculateSocket('socket')">Вычислить</button>
+                <div id="resultSocket"></div> <!-- Уникальный идентификатор -->
+
+                <h2>Делительный диаметр</h2>
+                <div class="input-container">
+                    <input type="number" id="teethNumb" min="0" placeholder="Число зубьев (z)">
+                </div>
+                <div class="input-container">
+                    <input type="number" id="pitchModule" min="0" placeholder="Модуль (m)">
+                </div>
+                <div class="input-container">
+                    <input type="number" id="anglePitch" min="0" placeholder="Угол наклона β° (подбираем)">
+                </div>
+                <button class="calculate-button" onclick="calculatePitch('pitch')">Вычислить</button>
+                <div id="resultPitch"></div> <!-- Уникальный идентификатор -->
+            </div>
+
+            <!-- ДОПУСКИ И ПОСАДКИ -->
+            <div id="dopusk" class="main-tabcontent" style="display:none;">
+                <h2>Допуски и посадки отверстий</h2>
                 <div class="form-group">
                     <label for="diameterDop">Диаметр (мм):</label>
                     <input type="number" id="diameterDop" min="0" max="3150" placeholder="Введите диаметр">
@@ -300,8 +236,10 @@
                     </select>
                 </div>
                 <button class="calculate-button" onclick="calculateTolerance()">Вычислить</button>
-                <div id="resultDopusck" class="resultDopusck"></div>
+                <div id="result" class="result"></div>
                     </div>
+        </div>
+    </div>
     <script src="src/script.js"></script>
 </body>
 </html>

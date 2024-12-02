@@ -1,7 +1,16 @@
+document.getElementById("defaultOpen").click();
+
 function openMainTab(evt, tabName) {
-    document.getElementById("mainButtons").style.display = "none";
-    document.getElementById("backButton").style.display = "block";
+    var tabcontents = document.getElementsByClassName("main-tabcontent");
+    var tabButtons = document.getElementsByClassName("tab-button");
+
+    for (var i = 0; i < tabcontents.length; i++) {
+        tabcontents[i].style.display = "none";
+        tabButtons[i].classList.remove("active");
+    }
+
     document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.classList.add("active");
 }
 
 function goBack() {
@@ -13,14 +22,7 @@ function goBack() {
     document.getElementById("backButton").style.display = "none";
 }
 
-function showTab(tabName) {
-    var tabcontent = document.getElementsByClassName("tabcontent");
-    for (var i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    document.getElementById(tabName).style.display = "block";
-}
-
+// Расчет расстояния
 function calculateDistance() {
     const diameterInput = document.getElementById("diameter");
     const distanceToTopInput = document.getElementById("distanceToTop");
@@ -40,6 +42,15 @@ function calculateDistance() {
     resultElement.textContent = "Расстояние от центра диаметра до вершины паза: " + distanceToCenter.toFixed(3);
 }
 
+function calculateDistanceToCenter(diameter, distanceToTop, index) {
+    const slot = distanceToTop - diameter;
+    const radius = diameter / 2;
+    const coefficient = index / 2;
+
+    return slot + radius + coefficient;
+}
+
+// Расчет ширины паза
 function calculateGapWidth() {
     const gapWidthInput = document.getElementById("gapWidth");
     const indexInputtwo = document.getElementById("indextwo");
@@ -57,14 +68,6 @@ function calculateGapWidth() {
     resultElement.textContent = "Ширина паза: " + gapWidth + " мм, Допуск: " + indextwo + " мм, Середина паза равна: " + gapWidthCalculated.toFixed(4) + " мм.";
 }
 
-function calculateDistanceToCenter(diameter, distanceToTop, index) {
-    const slot = distanceToTop - diameter;
-    const radius = diameter / 2;
-    const coefficient = index / 2;
-
-    return slot + radius + coefficient;
-}
-
 function calculateGapWidthValue(gapWidth, index) {
     const mediumWidth = gapWidth / 2;
     const coefficient1 = index / 4;
@@ -72,6 +75,7 @@ function calculateGapWidthValue(gapWidth, index) {
     return coefficient1 + mediumWidth;
 }
 
+// Расчет угла
 function calculateCoordinates(point) {
     let diameterInput, angleInput, cutterDiameterInput, resultElement;
 
@@ -111,6 +115,8 @@ function calculateCoordinates(point) {
     resultElement.textContent = `Координаты точки: X = ${x.toFixed(2)}, Y = ${y.toFixed(2)}`;
 }
 
+// Расчёт координат отверстий
+
 function calculateHoleCoordinates() {
     const pitchDiameterInput = document.getElementById("pitchDiameter");
     const angleInput = document.getElementById("angleHole");
@@ -132,7 +138,7 @@ function calculateHoleCoordinates() {
     resultElement.textContent = `Координаты отверстия: X = ${x.toFixed(2)}, Y = ${y.toFixed(2)}`;
 }
 
-// script.js
+// Расчет для эвольвентных шлицов
 function calculateGear() {
     // Получение входных данных
     const numTeeth = parseFloat(document.getElementById('numTeeth').value);
@@ -574,9 +580,9 @@ function calculateTolerance() {
                 tolerance = 'Неверный класс точности';
         }
 
-        document.getElementById('resultDopusck').innerHTML = `Диаметр: ${diameterDop} мм <br>Класс точности: ${toleranceClass}<br> Допуск: ${tolerance}`;
+        document.getElementById('result').innerHTML = `Диаметр: ${diameterDop} мм <br>Класс точности: ${toleranceClass}<br> Допуск: ${tolerance}`;
     } else {
-        document.getElementById('resultDopusck').innerHTML = 'Введите диаметр в пределах от 0 до 3150 мм';
+        document.getElementById('result').innerHTML = 'Введите диаметр в пределах от 0 до 3150 мм';
     }
 }
 
@@ -3061,5 +3067,31 @@ searchInput.addEventListener('keyup', function() {
         const option = options[i];
         const txtValue = option.text.toLowerCase();
         option.style.display = txtValue.includes(filter) ? '' : 'none';
+    }
+});
+
+/// тёмная и светлая тема
+const themeToggleButton = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Проверяем, есть ли сохранённая тема в localStorage
+if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-theme');
+} else {
+    body.classList.add('light-theme');
+}
+
+// Обработчик события для переключения темы
+themeToggleButton.addEventListener('click', () => {
+    body.classList.toggle('dark-theme');
+    body.classList.toggle('light-theme');
+
+    // Сохраняем выбранную тему в localStorage
+    if (body.classList.contains('dark-theme')) {
+        localStorage.setItem('theme', 'dark');
+        themeToggleButton.textContent = '☀️'; // Изменяем иконку на солнце
+    } else {
+        localStorage.setItem('theme', 'light');
+        themeToggleButton.textContent = '🌙'; // Изменяем иконку на луну
     }
 });
