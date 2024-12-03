@@ -288,6 +288,10 @@ div#angleCalc.tabcontent.main-tabcontent{
     cursor: pointer;
     transition: background-color 0.3s;
   }
+
+  button#theme-toggle.theme-toggle {
+    margin-left: 93%;
+    }
   
   button:hover {
     background-color: #0056b3;
