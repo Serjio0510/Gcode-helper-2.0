@@ -81,6 +81,10 @@ button {
   transition: background-color 0.3s;
 }
 
+button#theme-toggle.theme-toggle {
+margin-left: 93.5%;
+}
+
 button:hover {
   background-color: #1E1E1E;
 }
