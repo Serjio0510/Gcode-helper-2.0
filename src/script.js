@@ -3096,6 +3096,7 @@ themeToggleButton.addEventListener('click', () => {
     }
 });
 
+//serviceWorker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/Gcode-helper-2.0/sw.js').then((registration) => {
