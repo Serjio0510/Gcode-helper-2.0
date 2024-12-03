@@ -3,7 +3,7 @@
   background-color: #121212;
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Times New Roman', Times, serif;
   background-color: #121212;
   margin: 8px;
   padding: 20px;
@@ -40,6 +40,7 @@ h1 {
   text-align: center;
   font-weight: bold;
   transition: background-color 0.3s;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .tab-button:hover {
@@ -49,6 +50,7 @@ h1 {
 .tab-button.active {
   background-color: #1E1E1E;
   color: #fff;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .tabcontent {
@@ -79,14 +81,15 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 button#theme-toggle.theme-toggle {
-margin-left: 93%;
+margin-left: 91%;
 }
 
 button:hover {
-  background-color: #1E1E1E;
+  background-color: #333;
 }
 
 .result {
@@ -108,12 +111,32 @@ p1 {
   color: #e9ecef;
 }
 
-select{
-  padding: 0.5rem;
-  color: #e9ecef;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  background-color: #1e1e1e;
+select {
+  padding: 10px 20px;
+  background-color: #1E1E1E;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  appearance: none; /* Убираем стандартный стиль браузера */
+  -webkit-appearance: none; /* Для Safari */
+  -moz-appearance: none; /* Для Firefox */
+  position: relative; /* Для позиционирования стрелки */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="white"/></svg>'); /* Стрелка вниз */
+  background-repeat: no-repeat;
+  background-position: right 5% center; /* Позиция стрелки */
+  background-size: 10px; /* Размер стрелки */
+  font-family: 'Times New Roman', Times, serif;
+}
+
+select:hover {
+  background-color: #333; /* Цвет фона при наведении */
+}
+
+select:focus {
+  outline: none; /* Убираем обводку при фокусе */
+  background-color: #444; /* Цвет фона при фокусе */
 }
 
 .results {
@@ -183,9 +206,11 @@ div#resultDopusck {
 
  input#searchInput {
   background-color: #1e1e1e;
-  border-radius: 3px;
-  color:#e9ecef;
-  width: 120px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 150px;
  }
 
  .tab-buttons {
@@ -211,7 +236,7 @@ div#angleCalc.tabcontent.main-tabcontent{
     background-color: #fff;
 
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Times New Roman', Times, serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
@@ -250,6 +275,7 @@ div#angleCalc.tabcontent.main-tabcontent{
     text-align: center;
     font-weight: bold;
     transition: background-color 0.3s;
+    font-family: 'Times New Roman', Times, serif;
   }
   
   .tab-button:hover {
@@ -259,6 +285,7 @@ div#angleCalc.tabcontent.main-tabcontent{
   .tab-button.active {
     background-color: #007bff;
     color: #1e1e1e;
+    font-family: 'Times New Roman', Times, serif;
   }
   
   .tabcontent {
@@ -287,10 +314,11 @@ div#angleCalc.tabcontent.main-tabcontent{
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-family: 'Times New Roman', Times, serif;
   }
 
   button#theme-toggle.theme-toggle {
-    margin-left: 93%;
+    margin-left: 91%;
     }
   
   button:hover {
@@ -311,10 +339,31 @@ p1 {
   margin-right: 0;
 }
 
-select{
-  padding: 0.5rem;
-  border: 1px solid #000;
-  border-radius: 0.5rem;
+select {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  appearance: none; /* Убираем стандартный стиль */
+  -webkit-appearance: none; /* Для Safari */
+  -moz-appearance: none; /* Для Firefox */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="white"/></svg>'); /* Стрелка вниз */
+  background-repeat: no-repeat;
+  background-position: right 5% center; /* Позиция стрелки */
+  background-size: 10px; /* Размер стрелки */
+  font-family: 'Times New Roman', Times, serif;
+}
+
+select:hover {
+  background-color: #0056b3; /* Цвет при наведении */
+}
+
+select:focus {
+  outline: none; /* Убираем обводку при фокусе */
+  background-color: #0056b3; /* Цвет при фокусе */
 }
 
 .results {
@@ -370,8 +419,11 @@ div#resultDopusck {
  }
 
  input#searchInput {
-  border-radius: 3px;
-  width: 120px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 150px;
  }
 
  .tab-buttons {
