@@ -125,9 +125,10 @@ select {
   position: relative; /* Для позиционирования стрелки */
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="white"/></svg>'); /* Стрелка вниз */
   background-repeat: no-repeat;
-  background-position: right 5% center; /* Позиция стрелки */
+  background-position: right 8% center; /* Позиция стрелки */
   background-size: 10px; /* Размер стрелки */
   font-family: 'Times New Roman', Times, serif;
+  border: 1px solid #ccc;
 }
 
 select:hover {
@@ -353,9 +354,10 @@ select {
   -moz-appearance: none; /* Для Firefox */
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="white"/></svg>'); /* Стрелка вниз */
   background-repeat: no-repeat;
-  background-position: right 5% center; /* Позиция стрелки */
+  background-position: right 8% center; /* Позиция стрелки */
   background-size: 10px; /* Размер стрелки */
   font-family: 'Times New Roman', Times, serif;
+  border: 1px solid #ccc;
 }
 
 select:hover {
