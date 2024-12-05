@@ -3,7 +3,7 @@
   background-color: #121212;
 
 body {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: #121212;
   margin: 8px;
   padding: 20px;
@@ -20,6 +20,7 @@ body {
 h1 {
   text-align: center;
   color: #E0E0E0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .tab-container {
@@ -29,6 +30,7 @@ h1 {
 .tab-buttons {
   display: flex;
   border-bottom: 2px solid #1E1E1E;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .tab-button {
@@ -40,17 +42,18 @@ h1 {
   text-align: center;
   font-weight: bold;
   transition: background-color 0.3s;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .tab-button:hover {
   background-color: #333;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .tab-button.active {
   background-color: #1E1E1E;
   color: #fff;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .tabcontent {
@@ -61,6 +64,8 @@ h1 {
 .tabcontent h2 {
   margin-top: 0px;
   margin-bottom: 5px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
 }
 
 input[type="number"] {
@@ -71,6 +76,8 @@ input[type="number"] {
   border-radius: 4px;
   background-color: #1E1E1E;
   color: #ccc;;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
 }
 
 button {
@@ -81,7 +88,7 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 button#theme-toggle.theme-toggle {
@@ -90,16 +97,19 @@ margin-left: 91%;
 
 button:hover {
   background-color: #333;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .result {
   font-weight: 150;
   color: #e9ecef;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 h2 {
   color: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 /* ШЛИЦЫ */
 p1 {
@@ -127,7 +137,7 @@ select {
   background-repeat: no-repeat;
   background-position: right 8% center; /* Позиция стрелки */
   background-size: 10px; /* Размер стрелки */
-  font-family: 'Times New Roman', Times, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   border: 1px solid #ccc;
 }
 
@@ -144,6 +154,7 @@ select:focus {
   font-weight: 150;
   color: #e9ecef;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 h3 {
@@ -155,6 +166,7 @@ div#resultHole {
   font-weight: 150;
   color: #e9ecef;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 /* Впадина зуба */
@@ -162,24 +174,28 @@ div#resultSocket {
   font-weight: 150;
   color: #e9ecef;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 div#resultPitch {
   font-weight: 150;
   color: #e9ecef;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 /* ДОПУСКИ И ПОСАДКИ */
 
 label {
   color: #e9ecef;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 div#resultDopusck {
   font-weight: 150;
   color: #e9ecef;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .form-group {
@@ -194,6 +210,7 @@ div#resultDopusck {
   border: 1px solid #ddd;
   border-radius: 4px;
   color: #e9ecef;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
  b {
   text-align: center;
@@ -213,12 +230,14 @@ div#resultDopusck {
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 58%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
  }
 
  .tab-buttons {
   overflow-x: auto; /* Включаем горизонтальный скролл */
   white-space: nowrap; /* Запрещаем перенос строк */
   padding: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .imagesTop {
@@ -230,6 +249,10 @@ div#resultDopusck {
 div#angleCalc.tabcontent.main-tabcontent{
   margin-top: 0;
 }
+
+div#results {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
 }
 
 /*СВЕТЛАЯ ТЕМА*/
@@ -238,7 +261,7 @@ div#angleCalc.tabcontent.main-tabcontent{
     background-color: #fff;
 
   body {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
@@ -256,6 +279,11 @@ div#angleCalc.tabcontent.main-tabcontent{
   h1 {
     text-align: center;
     color: #333;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;;
+  }
+
+  h2 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
   .tab-container {
@@ -265,6 +293,7 @@ div#angleCalc.tabcontent.main-tabcontent{
   .tab-buttons {
     display: flex;
     border-bottom: 2px solid #007bff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
   .tab-button {
@@ -277,17 +306,18 @@ div#angleCalc.tabcontent.main-tabcontent{
     text-align: center;
     font-weight: bold;
     transition: background-color 0.3s;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
   .tab-button:hover {
     background-color: #e9ecef;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
   .tab-button.active {
     background-color: #007bff;
     color: #1e1e1e;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
   .tabcontent {
@@ -298,6 +328,7 @@ div#angleCalc.tabcontent.main-tabcontent{
   .tabcontent h2 {
     margin-top: 0px;
     margin-bottom: 5px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
   input[type="number"] {
@@ -306,6 +337,7 @@ div#angleCalc.tabcontent.main-tabcontent{
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
   button {
@@ -316,7 +348,7 @@ div#angleCalc.tabcontent.main-tabcontent{
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 
   button#theme-toggle.theme-toggle {
@@ -331,6 +363,7 @@ div#angleCalc.tabcontent.main-tabcontent{
     font-weight: bold;
     color: black;
     margin-top: 10px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   } 
   /* ШЛИЦЫ */
 p1 {
@@ -356,7 +389,7 @@ select {
   background-repeat: no-repeat;
   background-position: right 8% center; /* Позиция стрелки */
   background-size: 10px; /* Размер стрелки */
-  font-family: 'Times New Roman', Times, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   border: 1px solid #ccc;
 }
 
@@ -372,6 +405,7 @@ select:focus {
 .results {
   font-weight: 150;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 
@@ -379,25 +413,32 @@ select:focus {
 div#resultHole {
   font-weight: 150;;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 /* Впадина зуба */
 div#resultSocket {
   font-weight: 150;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 div#resultPitch {
   font-weight: 150;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 /* ДОПУСКИ И ПОСАДКИ */
 
+label {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
 
 div#resultDopusck {
   font-weight: 150;
   margin-top: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .form-group {
@@ -410,6 +451,7 @@ div#resultDopusck {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
  b {
   text-align: center;
@@ -427,6 +469,7 @@ div#resultDopusck {
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 58%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
  }
 
  .tab-buttons {
@@ -443,5 +486,9 @@ div#resultDopusck {
 
 div#angleCalc.tabcontent.main-tabcontent{
   margin-top: 0;
+}
+
+div#results {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 }
