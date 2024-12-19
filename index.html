@@ -55,19 +55,41 @@
         </div>
 
             <div id="angleCalc" class="tabcontent main-tabcontent" style="display:none;">
-                <h2>Угловые координаты</h2>
-                <img src="src/images/topPoint.png" class="imagesTop">
-                <input type="number" id="diameterBottom" placeholder="Диаметр (Øменьший)">
-                <input type="number" id="angleBottom" placeholder="Угол (Øменьший)">
-                <input type="number" id="cutterDiameterBottom" placeholder="Диаметр фрезы (Øменьший)">
-                <button onclick="calculateCoordinates('bottom')">Рассчитать (Øменьший)</button>
-                <div id="resultBottom" class="result"></div>
-
-                <input type="number" id="diameterTop" placeholder="Диаметр (Øбольший)">
-                <input type="number" id="angleTop" placeholder="Угол (Øбольший)">
-                <input type="number" id="cutterDiameterTop" placeholder="Диаметр фрезы (Øбольший)">
-                <button onclick="calculateCoordinates('top')">Рассчитать (Øбольший)</button>
-                <div id="resultTop" class="result"></div>
+                <h1>Расчёт координат под углом</h1>
+                <label for="windowSelectorCoord">Выберите окно:</label>
+                <select id="windowSelectorCoord">
+                    <option value="none">-- Выберите --</option>
+                    <option value="Kompensaciya">Угол от центра</option>
+                    <option value="Treugolnick">Угол по координатам</option>
+                </select>
+            
+                <div id="KompensaciyaWindow" class="window" style="display:none;">
+                    <h2>Угловые координаты</h2>
+                    <form id="KompensaciyaForm">
+                        <img src="src/images/topPoint.png" class="imagesTop">
+                        <input type="number" id="diameterBottom" placeholder="Диаметр (Øменьший)">
+                        <input type="number" id="angleBottom" placeholder="Угол (Øменьший)">
+                        <input type="number" id="cutterDiameterBottom" placeholder="Диаметр фрезы (Øменьший)">
+                        <button type="button" onclick="calculateCoordinates('bottom')">Рассчитать (Øменьший)</button>
+                        <div id="resultBottom" class="result"></div>
+            
+                        <input type="number" id="diameterTop" placeholder="Диаметр (Øбольший)">
+                        <input type="number" id="angleTop" placeholder="Угол (Øбольший)">
+                        <input type="number" id="cutterDiameterTop" placeholder="Диаметр фрезы (Øбольший)">
+                        <button type="button" onclick="calculateCoordinates('top')">Рассчитать (Øбольший)</button>
+                    </form>
+                    <div id="resultTop" class="result"></div>
+                </div>
+            
+                <div id="TreugolnickWindow" class="window" style="display:none;">
+                    <h2>Угловые координаты</h2>
+                    <form id="TreugolnickForm">
+                        <input type="number" id="CoordinateX" placeholder="Координата по оси X">
+                        <input type="number" id="CoordinateY" placeholder="Координата по оси Y">
+                        <button type="button" onclick="calculateTreugolnick()">Рассчитать</button>
+                    </form>
+                    <div id="TreugolnickResult" class="result"></div>
+                </div>
             </div>
 
             <div id="gearCalc" class="main-tabcontent" style="display:none;">

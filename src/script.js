@@ -76,6 +76,32 @@ function calculateGapWidthValue(gapWidth, index) {
 }
 
 // Расчет угла
+document.getElementById('windowSelectorCoord').addEventListener('change', (event) => {
+    // Получаем выбранное значение
+    const selectedValue = event.target.value;
+
+    // Все окна
+    const windows = {
+        Kompensaciya: document.getElementById('KompensaciyaWindow'),
+        Treugolnick: document.getElementById('TreugolnickWindow'),
+    };
+
+    // Скрываем все окна
+    Object.values(windows).forEach(window => {
+        if (window) {
+            window.classList.remove('active');
+            window.style.display = 'none'; // Скрываем окно
+        }
+    });
+
+    // Показываем только выбранное окно
+    if (windows[selectedValue]) {
+        windows[selectedValue].classList.add('active');
+        windows[selectedValue].style.display = 'block'; // Отображаем окно
+    }
+});
+
+
 function calculateCoordinates(point) {
     let diameterInput, angleInput, cutterDiameterInput, resultElement;
 
@@ -113,7 +139,29 @@ function calculateCoordinates(point) {
     }
 
     resultElement.textContent = `Координаты точки: X = ${x.toFixed(2)}, Y = ${y.toFixed(2)}`;
-}
+    }
+
+    // select second
+    
+        function calculateTreugolnick() {
+        // Находим данные формы в зависимости от типа окна
+        const CoordinateX = parseFloat(document.getElementById('CoordinateX').value);
+        const CoordinateY = parseFloat(document.getElementById('CoordinateY').value);
+    
+        if (!CoordinateX || !CoordinateY) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+        }
+
+            //* Расчёты угла по X и Y
+        const angleCoorRadians = Math.atan2(CoordinateX,CoordinateY);
+
+        const angleCoorDegrees = angleCoorRadians * (180/Math.PI);
+
+        const Pifagor = Math.sqrt(Math.pow(CoordinateX,2) + Math.pow(CoordinateY,2));
+
+        document.getElementById('TreugolnickResult').textContent = `Угол данных координат: ${angleCoorDegrees.toFixed(4)}°, длинна угла: ${Pifagor.toFixed(4)}`;
+    }
 
 // Расчёт координат отверстий
 
