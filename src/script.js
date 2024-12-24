@@ -39,7 +39,11 @@ function calculateDistance() {
     }
 
     const distanceToCenter = calculateDistanceToCenter(diameter, distanceToTop, index);
-    resultElement.textContent = "Расстояние от центра диаметра до вершины паза: " + distanceToCenter.toFixed(3);
+    // Форматируем до 3 знаков после запятой
+    const formattedDistance = distanceToCenter.toFixed(3);
+
+    // Выводим значение в элемент с id "gapResultHeight"
+    document.getElementById("gapResultHeight").innerHTML = `Расстояние от центра диаметра до вершины паза: <strong>${formattedDistance} мм.</strong>`;
 }
 
 function calculateDistanceToCenter(diameter, distanceToTop, index) {
@@ -65,7 +69,11 @@ function calculateGapWidth() {
     }
 
     const gapWidthCalculated = calculateGapWidthValue(gapWidth, indextwo);
-    resultElement.textContent = "Ширина паза: " + gapWidth + " мм, Допуск: " + indextwo + " мм, Середина паза равна: " + gapWidthCalculated.toFixed(4) + " мм.";
+        // Форматируем до 3 знаков после запятой
+        const formattedgapWidth = gapWidthCalculated.toFixed(4);
+
+        // Выводим значение в элемент с id "gapResultWidth"
+        document.getElementById("gapResultWidth").innerHTML = `Ширина паза: ${gapWidth} мм, Допуск: ${indextwo} мм, Середина паза равна: <strong>${formattedgapWidth} мм.</strong>`;
 }
 
 function calculateGapWidthValue(gapWidth, index) {
@@ -138,7 +146,12 @@ function calculateCoordinates(point) {
         y = (radius + cutterDiameter) * Math.sin(angleInRadians);
     }
 
-    resultElement.textContent = `Координаты точки: X = ${x.toFixed(2)}, Y = ${y.toFixed(2)}`;
+            // Форматируем до 3 знаков после запятой
+            const formattedXcenter = x.toFixed(3);
+            const formattedYcenter = y.toFixed(3);
+        
+            // Выводим значение в элемент с id "resultBottom and resultTop"
+            resultElement.innerHTML = `Координаты отверстия: <strong>X = ${formattedXcenter}</strong>, <strong>Y = ${formattedYcenter}</strong>`;
     }
 
     // select second
@@ -160,7 +173,11 @@ function calculateCoordinates(point) {
 
         const Pifagor = Math.sqrt(Math.pow(CoordinateX,2) + Math.pow(CoordinateY,2));
 
-        document.getElementById('TreugolnickResult').textContent = `Угол данных координат: ${angleCoorDegrees.toFixed(4)}°, длинна угла: ${Pifagor.toFixed(4)}`;
+        //Выводим значение в элемент с id "TreugolnickResult"
+        const formattedangle = angleCoorDegrees.toFixed(4);
+        const formattedPifagor = Pifagor.toFixed(4);
+
+        document.getElementById('TreugolnickResult').innerHTML = `Угол данных координат: <strong>${formattedangle}°</strong>, длинна угла: <strong>${formattedPifagor}</strong>`;
     }
 
 // Расчёт координат отверстий
@@ -183,7 +200,12 @@ function calculateHoleCoordinates() {
     const x = radius * Math.cos(angleInRadians);
     const y = radius * Math.sin(angleInRadians);
 
-    resultElement.textContent = `Координаты отверстия: X = ${x.toFixed(2)}, Y = ${y.toFixed(2)}`;
+    // Форматируем до 3 знаков после запятой
+    const formattedX = x.toFixed(2);
+    const formattedY = y.toFixed(2);
+
+    // Выводим значение в элемент с id "resultHole"
+    document.getElementById("resultHole").innerHTML = `Координаты отверстия: <strong>X = ${formattedX}</strong>, <strong>Y = ${formattedY}</strong>`;
 }
 
 // Расчет для эвольвентных шлицов
@@ -259,13 +281,20 @@ function calculateGear() {
 
 
     // Вывод результатов
-    document.getElementById('displacementCoefficient').textContent = `Коэффициент смещения исходного контура: ${displacementCoefficient.toFixed(2)}`;
-    document.getElementById('pitchCircle').textContent = `Делительный диаметр (мм): ${pitchCircle.toFixed(2)}`;
-    document.getElementById('rollerDiameter').textContent = `Диаметр ролика (мм): ${rollerDiameter.toFixed(2)}`;
-    document.getElementById('distanceBetweenRollers').textContent = `Расстояние между роликами (мм): ${distanceBetweenRollers.toFixed(3)}`;
-    document.getElementById('teethOnNormal').textContent = `Число зубьев на длине общей нормали: ${teethOnNormalIntValue}`;
-    document.getElementById('normalLength').textContent = `Длинна общей нормали (мм): ${normalLength.toFixed(3)}`;
-    document.getElementById('FaskaVtulki').textContent = `Фаска или радиус притупления продольной кромки: ${FaskaVtulki.toFixed(2)}`;
+    const formattedDisplacementCoefficient = displacementCoefficient.toFixed(3)
+    const formattedPitchCircle = pitchCircle.toFixed(3)
+    const formattedRollerDiameter = rollerDiameter.toFixed(3)
+    const formattedDistanceBetweenRollers = distanceBetweenRollers.toFixed(3)
+    const formattedTeethOnNormalIntValue = teethOnNormalIntValue
+    const formattedNormalLength = normalLength.toFixed(3)
+    const formattedFaskaVtulki = FaskaVtulki.toFixed(2)
+    document.getElementById('displacementCoefficient').innerHTML = `Коэффициент смещения исходного контура: <strong>${formattedDisplacementCoefficient}</strong>`;
+    document.getElementById('pitchCircle').innerHTML = `Делительный диаметр (мм): <strong>${formattedPitchCircle}</strong>`;
+    document.getElementById('rollerDiameter').innerHTML = `Диаметр ролика (мм): <strong>${formattedRollerDiameter}</strong>`;
+    document.getElementById('distanceBetweenRollers').innerHTML = `Расстояние между роликами (мм): <strong>${formattedDistanceBetweenRollers}</strong>`;
+    document.getElementById('teethOnNormal').innerHTML = `Число зубьев на длине общей нормали: <strong>${formattedTeethOnNormalIntValue}</strong>`;
+    document.getElementById('normalLength').innerHTML = `Длинна общей нормали (мм): <strong>${formattedNormalLength}</strong>`;
+    document.getElementById('FaskaVtulki').innerHTML = `Фаска или радиус притупления продольной кромки: <strong>${formattedFaskaVtulki}</strong>`;
 }
 
 // Впадина зуба
@@ -285,7 +314,8 @@ function calculateSocket() {
     }
 
     const SocketTooth = calculateSocketTooth(pitchTooth, moduleTooth, coeffTooth);
-    resultEl.textContent = "Диаметр впадин зубчатого колеса (df): " + SocketTooth.toFixed(4) + " мм.";
+    const formattedSocketTooth = SocketTooth.toFixed(4)
+    resultEl.innerHTML = `Диаметр впадин зубчатого колеса (df): <strong>${formattedSocketTooth} мм</strong>`;
 
 function calculateSocketTooth(pitchTooth, moduleTooth, coeffTooth) {
     const sockTooth = pitchTooth - 2 * moduleTooth * (1.25 - coeffTooth);
@@ -312,7 +342,8 @@ function calculatePitch() {
     }
 
     const pitchDm = calculatepitchDm(teethNumb, pitchModule, radianPitch);
-    resultEl.textContent = "Делительный диаметр (d): " + pitchDm.toFixed(4) + " мм.";
+    const formattedPitchDm = pitchDm.toFixed(4)
+    resultEl.innerHTML = `Делительный диаметр (d): <strong>${formattedPitchDm} мм</strong>`;
 
 function calculatepitchDm(teethNumb, pitchModule, radianPitch) {
     const dmPitch = (teethNumb * pitchModule) / Math.cos(radianPitch);

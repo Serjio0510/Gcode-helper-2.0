@@ -374,7 +374,6 @@ select#windowSelectorCoord {
   }
   
   .result {
-    font-weight: bold;
     color: black;
     margin-top: 10px;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
