@@ -27,14 +27,13 @@ function calculateDistance() {
     const diameterInput = document.getElementById("diameter");
     const distanceToTopInput = document.getElementById("distanceToTop");
     const indexInput = document.getElementById("index");
-    const resultElement = document.getElementById("gapResultHeight");
 
     const diameter = parseFloat(diameterInput.value);
     const distanceToTop = parseFloat(distanceToTopInput.value);
     const index = parseFloat(indexInput.value);
 
     if (isNaN(diameter) || diameter <= 0 || isNaN(distanceToTop) || distanceToTop < 0 || isNaN(index) || index < 0) {
-        resultElement.textContent = "Пожалуйста, введите корректные данные.";
+        alert ("Пожалуйста, введите корректные данные.");
         return;
     }
 
@@ -58,13 +57,12 @@ function calculateDistanceToCenter(diameter, distanceToTop, index) {
 function calculateGapWidth() {
     const gapWidthInput = document.getElementById("gapWidth");
     const indexInputtwo = document.getElementById("indextwo");
-    const resultElement = document.getElementById("gapResultWidth");
 
     const gapWidth = parseFloat(gapWidthInput.value);
     const indextwo = parseFloat(indexInputtwo.value);
 
     if (isNaN(gapWidth) || gapWidth < 0 || isNaN(indextwo) || indextwo < 0) {
-        resultElement.textContent = "Пожалуйста, введите корректные данные.";
+        alert ("Пожалуйста, введите корректные данные.");
         return;
     }
 
@@ -130,7 +128,7 @@ function calculateCoordinates(point) {
     const cutterDiameter = parseFloat(cutterDiameterInput.value);
 
     if (isNaN(diameter) || diameter <= 0 || isNaN(angle) || angle < 0 || angle > 360 || isNaN(cutterDiameter) || cutterDiameter < 0) {
-        resultElement.textContent = "Пожалуйста, введите корректные данные.";
+        alert ("Пожалуйста, заполните все поля!");
         return;
     }
 
@@ -185,13 +183,12 @@ function calculateCoordinates(point) {
 function calculateHoleCoordinates() {
     const pitchDiameterInput = document.getElementById("pitchDiameter");
     const angleInput = document.getElementById("angleHole");
-    const resultElement = document.getElementById("resultHole");
 
     const pitchDiameter = parseFloat(pitchDiameterInput.value);
     const angle = parseFloat(angleInput.value);
 
     if (isNaN(pitchDiameter) || pitchDiameter <= 0 || isNaN(angle) || angle < 0 || angle > 360) {
-        resultElement.textContent = "Пожалуйста, введите корректные данные.";
+        alert("Пожалуйста, введите корректные данные.");
         return;
     }
 
@@ -214,6 +211,11 @@ function calculateGear() {
     const numTeeth = parseFloat(document.getElementById('numTeeth').value);
     const module = parseFloat(document.getElementById('module').value);
     const diameterNom = parseFloat(document.getElementById('diameterHeight').value);
+
+    if (!numTeeth || !module || !diameterNom ) {
+        alert('Пожалуйста, заполните все поля!');
+        return;
+    }
 
     // Расчёт делительного диаметра
     const pitchCircle = module * numTeeth;
@@ -309,7 +311,7 @@ function calculateSocket() {
     const coeffTooth = parseFloat(toothCoeff.value);
 
     if (isNaN(pitchTooth) || pitchTooth <= 0 || isNaN(moduleTooth) || moduleTooth < 0 || isNaN(coeffTooth) || coeffTooth < -10) {
-        resultEl.textContent = "Пожалуйста, введите корректные данные.";
+        alert ("Пожалуйста, введите корректные данные.");
         return;
     }
 
@@ -337,7 +339,7 @@ function calculatePitch() {
     const radianPitch = (anglePitch * (Math.PI / 180))
 
     if (isNaN(teethNumb) || teethNumb <= 0 || isNaN(pitchModule) || pitchModule < 0 || isNaN(anglePitch) || anglePitch < 0) {
-        resultEl.textContent = "Пожалуйста, введите корректные данные.";
+        alert ("Пожалуйста, введите корректные данные.");
         return;
     }
 
@@ -661,7 +663,7 @@ function calculateTolerance() {
 
         document.getElementById('result').innerHTML = `Диаметр: ${diameterDop} мм <br>Класс точности: ${toleranceClass}<br> Допуск: ${tolerance}`;
     } else {
-        document.getElementById('result').innerHTML = 'Введите диаметр в пределах от 0 до 3150 мм';
+        alert ('Введите диаметр в пределах от 0 до 3150 мм');
     }
 }
 
