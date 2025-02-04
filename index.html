@@ -262,7 +262,114 @@
                 </div>
                 <button class="calculate-button" onclick="calculateTolerance()">Вычислить</button>
                 <div id="result" class="result"></div>
-                    </div>
+                   </div>
+
+                    <div id="timeWorck" class="tabcontent main-tabcontent">
+                        <h1>Расчёт времени обработки электроэрозии BQ</h1>
+                        <label for="windowSelector">Выберите окно:</label>
+                        <select id="windowSelector">
+                            <option value="none">-- Выберите --</option>
+                            <option value="paz">Паз</option>
+                            <option value="evolvent">Эвольвентный шлиц</option>
+                            <option value="pryamobochniy">Прямобочный шлиц</option>
+                            <option value="reyka">Рейка</option>
+                        </select>
+                        <div id="pazWindow" class="window">
+                            <h2>Паз</h2>
+                            <form id="pazForm">
+                                <label for="paz-height">Выберите высоту обработки (мм):</label>
+                                <select id="paz-height" name="paz-height">
+                                    <option value="25">0-25</option>
+                                    <option value="40">25-40</option>
+                                    <option value="50">40-50</option>
+                                    <option value="60">50-60</option>
+                                    <option value="80">60-80</option>
+                                    <option value="120">80-120</option>
+                                    <option value="180">120-180</option>
+                                    <option value="200">180-200</option>
+                                </select>
+                    
+                                <input type="number" id="pazDiameter" name="pazDiameter"  placeholder="Диаметр отверстия (мм)" required>
+                                <input type="number" id="pazDepth" name="pazDepth" placeholder="Глубина паза (мм)" required>
+                                <input type="number" id="pazWidth" name="pazWidth" placeholder="Ширина Паза (мм)" required>
+                                <button type="button" onclick="calculateProcessingTimePaz('paz')">Рассчитать время</button>
+                            </form>
+                            <div id="pazResult" class="Result"></div>
+                        </div>
+                    
+                        <div id="evolventWindow" class="window">
+                            <h2>Эвольвентный шлиц</h2>
+                            <form id="evolventForm">
+                                <label for="evolvent-height">Выберите высоту обработки (мм):</label>
+                                <select id="evolvent-height" name="evolvent-height">
+                                    <option value="25">0-25</option>
+                                    <option value="40">25-40</option>
+                                    <option value="50">40-50</option>
+                                    <option value="60">50-60</option>
+                                    <option value="80">60-80</option>
+                                    <option value="120">80-120</option>
+                                    <option value="180">120-180</option>
+                                    <option value="200">180-200</option>
+                                </select>
+                    
+                                <input type="number" id="evolventTopDiameter" name="evolventTopDiameter" placeholder="Диаметр вершин (мм)" required>
+                                <input type="number" id="evolventBottomDiameter" name="evolventBottomDiameter" placeholder="Диаметр впадин (мм)" required>
+                                <input type="number" id="evolventNumTeeth" name="evolventNumTeeth" placeholder="Количество зубьев" required>
+                                <input type="number" id="evolventModule" name="evolventModule" placeholder="Модуль" required>
+                                <button type="button" onclick="calculateProcessingTimeE('evolvent')">Рассчитать время</button>
+                            </form>
+                            <div id="evolventResult" class="Result"></div>
+                        </div>
+                    
+                        <div id="pryamobochniyWindow" class="window">
+                            <h2>Прямобочный шлиц</h2>
+                            <form id="pryamobochniyForm">
+                                <label for="pryamobochniy-height">Выберите высоту обработки (мм):</label>
+                                <select id="pryamobochniy-height" name="pryamobochniy-height">
+                                    <option value="25">0-25</option>
+                                    <option value="40">25-40</option>
+                                    <option value="50">40-50</option>
+                                    <option value="60">50-60</option>
+                                    <option value="80">60-80</option>
+                                    <option value="120">80-120</option>
+                                    <option value="180">120-180</option>
+                                    <option value="200">180-200</option>
+                                </select>
+
+                                <input type="number" id="pryamobochniyTopDiameter" name="pryamobochniyTopDiameter" placeholder="Диаметр вершин (мм)" required>
+                                <input type="number" id="pryamobochniyBottomDiameter" name="pryamobochniyBottomDiameter" placeholder="Диаметр впадин (мм)" required>
+                                <input type="number" id="pryamobochniyNumTeeth" name="pryamobochniyNumTeeth" placeholder="Количество зубьев" required>
+                                <input type="number" id="pryamobochniyWidth" name="pryamobochniyWidth" placeholder="Ширина шлица (мм)" required>
+                    
+                                <button type="button" onclick="calculateProcessingTimeP('pryamobochniy')">Рассчитать время</button>
+                            </form>
+                            <div id="pryamobochniyResult" class="Result"></div>
+                        </div>
+                    
+                        <div id="reykaWindow" class="window">
+                            <h2>Рейка</h2>
+                            <form id="reykaForm">
+                                <label for="reyka-height">Выберите высоту обработки (мм):</label>
+                                <select id="reyka-height" name="reyka-height">
+                                    <option value="25">0-25</option>
+                                    <option value="40">25-40</option>
+                                    <option value="50">40-50</option>
+                                    <option value="60">50-60</option>
+                                    <option value="80">60-80</option>
+                                    <option value="120">80-120</option>
+                                    <option value="180">120-180</option>
+                                    <option value="200">180-200</option>
+                                </select>
+                    
+                                <input type="number" id="reykaLength" name="reykaLength" placeholder="Длинна нарезанной части рейки (мм)" required>
+                                <input type="number" id="reykaModule" name="reykaModule" placeholder="Модуль" required>
+                                <input type="number" id="reykaNumTeeth" name="reykaNumTeeth" placeholder="Число зубьев" required>
+                    
+                                <button type="button" onclick="calculateProcessingTimeR('reyka')">Рассчитать время</button>
+                            </form>
+                            <div id="reykaResult" class="Result"></div>
+                        </div>
+            </div>
         </div>
     </div>
     <script src="src/script.js"></script>

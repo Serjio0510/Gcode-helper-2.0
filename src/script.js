@@ -3151,6 +3151,161 @@ searchInput.addEventListener('keyup', function() {
     }
 });
 
+// Расёт времени обработки
+document.getElementById('windowSelector').addEventListener('change', (event) => {
+    // Получаем выбранное значение
+    const selectedValue = event.target.value;
+
+    // Все окна
+    const windows = {
+        paz: document.getElementById('pazWindow'),
+        evolvent: document.getElementById('evolventWindow'),
+        pryamobochniy: document.getElementById('pryamobochniyWindow'),
+        reyka: document.getElementById('reykaWindow'),
+    };
+
+    // Скрываем все окна
+    Object.values(windows).forEach(window => window.classList.remove('active'));
+
+    // Показываем только выбранное окно
+    if (windows[selectedValue]) {
+        windows[selectedValue].classList.add('active');
+    }
+});
+
+    //* Эвольвентные ШЛИЦЫ
+    function calculateProcessingTimeE() {
+    // Находим данные формы в зависимости от типа окна
+    const height = parseFloat(document.getElementById(`evolvent-height`).value);
+    const TopDiameter = parseFloat(document.getElementById(`evolventTopDiameter`).value);
+    const BottomDiameter = parseFloat(document.getElementById(`evolventBottomDiameter`).value);
+    const NumTeeth = parseInt(document.getElementById(`evolventNumTeeth`).value);
+    const Module = parseFloat(document.getElementById(`evolventModule`).value);
+
+    if (!height || !TopDiameter || !BottomDiameter || !NumTeeth || !Module ) {
+        alert('Пожалуйста, заполните все поля!');
+        return;
+    }
+
+    // Учитываем коэффициенты для разных высот и модулей
+    const baseTimePerTooth = 20; // минут на зуб
+    let heightFactor = height / 100; // коэффициент на основе высоты детали
+    let moduleFactor = Module / 5; // коэффициент на основе модуля, предположим модуль 5 как базовый
+
+    // Скорректированное время обработки на зуб с учетом высоты и модуля
+    const adjustedTimePerTooth = baseTimePerTooth * heightFactor * moduleFactor;
+
+    // Общее время для всех зубьев
+    const totalProcessingTime = adjustedTimePerTooth * NumTeeth;
+
+    const hours = Math.trunc(totalProcessingTime/60);
+    const minutes = totalProcessingTime % 60;
+    const timeValueE = Math.round(minutes);
+
+    document.getElementById('evolventResult').innerHTML = `Примерное время обработки: <strong>${hours} ч. ${timeValueE} м.</strong>`;
+}
+    //*
+
+    //* Прямобочные Шлицы
+    function calculateProcessingTimeP() {
+        // Находим данные формы в зависимости от типа окна
+        const height = parseFloat(document.getElementById(`pryamobochniy-height`).value);
+        const TopDiameter = parseFloat(document.getElementById(`pryamobochniyTopDiameter`).value);
+        const BottomDiameter = parseFloat(document.getElementById(`pryamobochniyBottomDiameter`).value);
+        const NumTeeth = parseInt(document.getElementById(`pryamobochniyNumTeeth`).value);
+        const Width = parseFloat(document.getElementById(`pryamobochniyWidth`).value);
+    
+        if (!height || !TopDiameter || !BottomDiameter || !NumTeeth || !Width ) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+        }
+
+    // Учитываем коэффициенты для разных высот и модулей
+    const pryamobochniyTimeTooth = 32; // минут на зуб
+    let pryamobochniyHeightFactor = height / 100; // коэффициент на основе высоты детали
+    let pryamobochniyWidthFactor = Width / 19; // коэффициент на основе ширины, предположим ширина 10 как базовый
+
+    // Скорректированное время обработки на зуб с учетом высоты и ширины
+    const pryamobochniyAdjustedTimePerTooth = pryamobochniyTimeTooth * pryamobochniyHeightFactor * pryamobochniyWidthFactor;
+
+    // Общее время для всех зубьев
+    const pryamobochniyTotalProcessingTime = pryamobochniyAdjustedTimePerTooth * NumTeeth;
+
+    const hoursP = Math.trunc(pryamobochniyTotalProcessingTime/60);
+    const minutesP = pryamobochniyTotalProcessingTime % 60;
+    const timeValue = Math.round(minutesP);
+
+    document.getElementById('pryamobochniyResult').innerHTML = `Примерное время обработки: <strong>${hoursP} ч. ${timeValue} м.</strong>`;
+    }
+    //*
+
+    //* ПАЗ
+    function calculateProcessingTimePaz() {
+        // Находим данные формы в зависимости от типа окна
+        const height = parseFloat(document.getElementById(`paz-height`).value);
+        const Diameter = parseFloat(document.getElementById(`pazDiameter`).value);
+        const Depth = parseInt(document.getElementById(`pazDepth`).value);
+        const Width = parseFloat(document.getElementById(`pazWidth`).value);
+    
+        if (!height || !Depth || !Diameter || !Width ) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+        }
+    // Учитываем коэффициенты для разных высот и модулей
+    const PazTimeTooth = 42; // минут на паз
+    let PazHeightFactor = height / 55; // коэффициент на основе высоты детали
+    let WidthFactor = Width / 28; // коэффициент на основе ширины, предположим ширина 28 как базовая
+    let DepthFactor = Depth / 6.4 // коэффициент на основе глубины, предположим глубина 6.5 как базовая
+
+    // Скорректированное время обработки на зуб с учетом высоты и модуля
+    const PazTotalProcessing = PazTimeTooth * PazHeightFactor * WidthFactor * DepthFactor;
+
+    // Общее время для всех зубьев
+
+    const hoursPaz = Math.trunc(PazTotalProcessing/60);
+    const minutesPaz = PazTotalProcessing % 60;
+    const timeValuePaz = Math.round(minutesPaz);
+
+    document.getElementById('pazResult').innerHTML = `Примерное время обработки: <strong>${hoursPaz} ч. ${timeValuePaz} м.</strong>`;
+    }
+
+    //*
+
+    //* РЕЙКА
+
+        function calculateProcessingTimeR() {
+            // Находим данные формы в зависимости от типа окна
+            const height = parseFloat(document.getElementById(`reyka-height`).value);
+            const Length = parseFloat(document.getElementById(`reykaLength`).value);
+            const Module = parseInt(document.getElementById(`reykaModule`).value);
+            const NumTeeth = parseFloat(document.getElementById(`reykaNumTeeth`).value);
+        
+            if (!height || !Length || !Module || !NumTeeth ) {
+                alert('Пожалуйста, заполните все поля!');
+                return;
+            }
+        // Учитываем коэффициенты для разных высот и модулей
+        const reykaTimeTooth = 34; // минут на зуб
+        const baseRackLength = 755; // длинна рейки
+        let reykaHeightFactor = height / 79; // коэффициент на основе высоты детали
+        let reykaModuleFactor = Module / 8; // коэффициент на основе модуля, предположим модуль 8 как базовый
+        const rackFactor = Length/baseRackLength;
+    
+        // Скорректированное время обработки на зуб с учетом высоты ,модуля, длинны.
+        const reykaAdjustedTimePerTooth = reykaTimeTooth * reykaHeightFactor * reykaModuleFactor * rackFactor;
+    
+        // Общее время для всех зубьев
+        const reykaTotalProcessingTime = reykaAdjustedTimePerTooth * NumTeeth;
+    
+        const hoursR = Math.trunc(reykaTotalProcessingTime/60);
+        const minutesR = reykaTotalProcessingTime % 60;
+        const timeValueR = Math.round(minutesR);
+    
+        document.getElementById('reykaResult').innerHTML = `Примерное время обработки: <strong>${hoursR} ч. ${timeValueR} м.</strong>`;
+        }
+
+        //*
+
 /// тёмная и светлая тема
 const themeToggleButton = document.getElementById('theme-toggle');
 const body = document.body;
