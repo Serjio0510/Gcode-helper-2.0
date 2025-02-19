@@ -90,6 +90,7 @@ document.getElementById('windowSelectorCoord').addEventListener('change', (event
     const windows = {
         Kompensaciya: document.getElementById('KompensaciyaWindow'),
         Treugolnick: document.getElementById('TreugolnickWindow'),
+        FaskaAngle: document.getElementById('FaskaAngleWindow'),
     };
 
     // Скрываем все окна
@@ -153,6 +154,29 @@ function calculateCoordinates(point) {
     }
 
     // select second
+
+    function calculateFaskaAngle() {
+        // Находим данные формы в зависимости от типа окна
+        const CoordinateOsi = parseFloat(document.getElementById('CoordinateOsi').value);
+        const CoordinateAngle = parseFloat(document.getElementById('CoordinateAngle').value);
+    
+        if (!CoordinateOsi || !CoordinateAngle) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+        }
+
+            //* Расчёты угла по X и Y
+        const RadianFask = (CoordinateAngle * Math.PI) / 180;
+        const AngCoodinateTan = Math.tan(RadianFask);
+        const ResultCoordinate = AngCoodinateTan * CoordinateOsi
+
+        //Выводим значение в элемент с id "TreugolnickResult"
+        const ResultFix = ResultCoordinate.toFixed(4);
+
+        document.getElementById('FaskaAngleResult').innerHTML = `Координата оси: <strong>${ResultFix}°</strong>`;
+    }
+
+        // select three
     
         function calculateTreugolnick() {
         // Находим данные формы в зависимости от типа окна
