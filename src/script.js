@@ -483,6 +483,57 @@ function calculateTolerance() {
             case 'JS18':
                 tolerance = getToleranceJS18(diameterDop);
                 break;
+            case 'A9':
+                tolerance = getToleranceA9(diameterDop);
+                break;
+            case 'A10':
+                tolerance = getToleranceA10(diameterDop);
+                break;
+            case 'A11':
+                tolerance = getToleranceA11(diameterDop);
+                break;
+            case 'A12':
+                tolerance = getToleranceA12(diameterDop);
+                break;
+            case 'A13':
+                tolerance = getToleranceA13(diameterDop);
+                break;
+            case 'B8':
+                tolerance = getToleranceB8(diameterDop);
+                break;
+            case 'B9':
+                tolerance = getToleranceB9(diameterDop);
+                break;
+            case 'B10':
+                tolerance = getToleranceB10(diameterDop);
+                break;
+            case 'B11':
+                tolerance = getToleranceB11(diameterDop);
+                break;
+            case 'B12':
+                tolerance = getToleranceB12(diameterDop);
+                break;
+            case 'B13':
+                tolerance = getToleranceB13(diameterDop);
+                break;
+            case 'C8':
+                tolerance = getToleranceC8(diameterDop);
+                break;
+            case 'C9':
+                tolerance = getToleranceC9(diameterDop);
+                break;
+            case 'C10':
+                tolerance = getToleranceC10(diameterDop);
+                break;
+            case 'C11':
+                tolerance = getToleranceC11(diameterDop);
+                break;
+            case 'C12':
+                tolerance = getToleranceC12(diameterDop);
+                break;
+            case 'C13':
+                tolerance = getToleranceC13(diameterDop);
+                break;
             case 'D6':
                 tolerance = getToleranceD6(diameterDop);
                 break;
@@ -1507,6 +1558,465 @@ function getToleranceJS18(diameterDop) {
     if (diameterDop <= 2000) return '<b>±11.5 мм';
     if (diameterDop <= 2500) return '<b>±14 мм';
     if (diameterDop <= 3150) return '<b>±16.5 мм';
+    return 'Не рассчитан';
+}
+
+function getToleranceA9(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.295 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.3 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.316 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.333 мм <br> +0.29 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.352 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.372 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.382 мм <br> +0.32 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.414 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.434 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.467 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.497 мм <br> +0.41 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.56 мм <br> +0.46 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.62 мм <br> +0.52 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.68 мм <br> +0.58 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.775 мм <br> +0.66 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.855 мм <br> +0.74 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.935 мм <br> +0.82 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1.05 мм <br> +0.92 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.18 мм <br> +1.05 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+1.34 мм <br> +1.2 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.49 мм <br> +1.35 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.655 мм <br> +1.5 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.805 мм <br> +1.65 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceA10(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.31 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.318 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.338 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.36 мм <br> +0.29 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.384 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.41 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.42 мм <br> +0.32 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.46 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.48 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.52 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.55 мм <br> +0.41 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.62 мм <br> +0.46 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.68 мм <br> +0.52 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.74 мм <br> +0.58 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.845 мм <br> +0.66 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.925 мм <br> +0.74 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+1.005 мм <br> +0.82 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1.13 мм <br> +0.92 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.26 мм <br> +1.05 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+1.43 мм <br> +1.2 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.58 мм <br> +1.35 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.75 мм <br> +1.5 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.9 мм <br> +1.65 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceA11(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.33 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.345 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.37 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.4 мм <br> +0.29 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.43 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.47 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.48 мм <br> +0.32 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.53 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.55 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.6 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.63 мм <br> +0.41 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.71 мм <br> +0.46 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.77 мм <br> +0.52 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.83 мм <br> +0.58 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.95 мм <br> +0.66 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+1.03 мм <br> +0.74 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+1.11 мм <br> +0.82 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1.24 мм <br> +0.92 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.37 мм <br> +1.05 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+1.56 мм <br> +1.2 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.71 мм <br> +1.35 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.9 мм <br> +1.5 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+2.05 мм <br> +1.65 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceA12(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.37 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.39 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.43 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.47 мм <br> +0.29 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.51 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.56 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.57 мм <br> +0.32 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.64 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.66 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.73 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.76 мм <br> +0.41 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.86 мм <br> +0.46 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.92 мм <br> +0.52 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.98 мм <br> +0.58 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+1.12 мм <br> +0.66 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+1.2 мм <br> +0.74 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+1.28 мм <br> +0.82 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1.44 мм <br> +0.92 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.57 мм <br> +1.05 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+1.77 мм <br> +1.2 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.92 мм <br> +1.35 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+2.13 мм <br> +1.5 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+2.28 мм <br> +1.65 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceA13(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.41 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.45 мм <br> +0.27 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.5 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.56 мм <br> +0.29 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.63 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.7 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.71 мм <br> +0.32 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.8 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.82 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.92 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.95 мм <br> +0.41 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+1.09 мм <br> +0.46 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+1.15 мм <br> +0.52 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+1.21 мм <br> +0.58 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+1.38 мм <br> +0.66 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+1.46 мм <br> +0.74 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+1.54 мм <br> +0.82 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1.73 мм <br> +0.92 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.86 мм <br> +1.05 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+2.09 мм <br> +1.2 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+2.24 мм <br> +1.35 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+2.47 мм <br> +1.5 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+2.62 мм <br> +1.65 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceB8(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.154 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.158 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.172 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.177 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.193 мм <br> +0.16 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.209 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.219 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.236 мм <br> +0.19 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.246 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.274 мм <br> +0.22 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.294 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.323 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.343 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.373 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.412 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.452 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.492 мм <br> +0.42 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.561 мм <br> +0.48 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.621 мм <br> +0.54 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.689 мм <br> +0.6 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.769 мм <br> +0.68 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+0.857 мм <br> +0.76 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+0.937 мм <br> +0.84 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceB9(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.165 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.17 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.186 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.193 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.212 мм <br> +0.16 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.232 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.242 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.264 мм <br> +0.19 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.274 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.307 мм <br> +0.22 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.327 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.36 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.38 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.41 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.455 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.495 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.535 мм <br> +0.42 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.61 мм <br> +0.48 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.67 мм <br> +0.54 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.74 мм <br> +0.6 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.82 мм <br> +0.68 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+0.915 мм <br> +0.76 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+0.995 мм <br> +0.84 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceB10(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.18 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.188 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.208 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.22 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.244 мм <br> +0.16 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.27 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.28 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.31 мм <br> +0.19 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.32 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.36 мм <br> +0.22 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.38 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.42 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.44 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.47 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.525 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.565 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.605 мм <br> +0.42 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.69 мм <br> +0.48 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.75 мм <br> +0.54 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.83 мм <br> +0.6 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.91 мм <br> +0.68 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.01 мм <br> +0.76 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.09 мм <br> +0.84 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceB11(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.2 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.215 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.24 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.26 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.29 мм <br> +0.16 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.33 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.34 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.38 мм <br> +0.19 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.39 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.44 мм <br> +0.22 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.46 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.51 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.53 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.56 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.63 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.67 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.71 мм <br> +0.42 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.8 мм <br> +0.48 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.86 мм <br> +0.54 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.96 мм <br> +0.6 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.04 мм <br> +0.68 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.16 мм <br> +0.76 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.24 мм <br> +0.84 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceB12(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.24 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.26 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.3 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.33 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.37 мм <br> +0.16 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.42 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.43 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.49 мм <br> +0.19 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.5 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.57 мм <br> +0.22 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.59 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.66 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.68 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.71 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.8 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.84 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.88 мм <br> +0.42 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1 мм <br> +0.48 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.06 мм <br> +0.54 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+1.17 мм <br> +0.6 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.25 мм <br> +0.68 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.39 мм <br> +0.76 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.47 мм <br> +0.84 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceB13(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.28 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.32 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.37 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.42 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.49 мм <br> +0.16 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.56 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.57 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.65 мм <br> +0.19 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.66 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.76 мм <br> +0.22 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.78 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.89 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.91 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.94 мм <br> +0.31 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+1.06 мм <br> +0.34 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+1.1 мм <br> +0.38 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+1.14 мм <br> +0.42 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1.29 мм <br> +0.48 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.35 мм <br> +0.54 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+1.49 мм <br> +0.6 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.57 мм <br> +0.68 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.73 мм <br> +0.76 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.81 мм <br> +0.84 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceC8(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.074 мм <br> +0.06 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.088 мм <br> +0.07 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.102 мм <br> +0.08 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.122 мм <br> +0.095 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.143 мм <br> +0.11 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.159 мм <br> +0.12 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.169 мм <br> +0.13 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.186 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.196 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.224 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.234 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.263 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.273 мм <br> +0.21 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.293 мм <br> +0.23 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.312 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.332 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.352 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.381 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.411 мм <br> +0.33 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.449 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.489 мм <br> +0.4 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+0.537 мм <br> +0.44 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+0.577 мм <br> +0.48 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceC9(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.085 мм <br> +0.06 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.1 мм <br> +0.07 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.116 мм <br> +0.08 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.138 мм <br> +0.095 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.162 мм <br> +0.11 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.182 мм <br> +0.12 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.192 мм <br> +0.13 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.214 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.224 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.257 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.267 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.3 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.31 мм <br> +0.21 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.33 мм <br> +0.23 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.355 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.375 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.395 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.43 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.46 мм <br> +0.33 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.5 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.54 мм <br> +0.4 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+0.595 мм <br> +0.44 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+0.635 мм <br> +0.48 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceC10(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.1 мм <br> +0.06 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.118 мм <br> +0.07 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.138 мм <br> +0.08 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.165 мм <br> +0.095 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.194 мм <br> +0.11 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.22 мм <br> +0.12 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.23 мм <br> +0.13 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.26 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.27 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.31 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.32 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.36 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.37 мм <br> +0.21 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.39 мм <br> +0.23 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.425 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.445 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.465 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.51 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.54 мм <br> +0.33 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.59 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.63 мм <br> +0.4 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+0.69 мм <br> +0.44 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+0.73 мм <br> +0.48 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceC11(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.12 мм <br> +0.06 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.145 мм <br> +0.07 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.17 мм <br> +0.08 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.205 мм <br> +0.095 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.24 мм <br> +0.11 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.28 мм <br> +0.12 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.29 мм <br> +0.13 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.33 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.34 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.39 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.4 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.45 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.46 мм <br> +0.21 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.48 мм <br> +0.23 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.53 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.55 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.57 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.62 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.65 мм <br> +0.33 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.72 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.76 мм <br> +0.4 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+0.84 мм <br> +0.44 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+0.88 мм <br> +0.48 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceC12(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.16 мм <br> +0.06 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.19 мм <br> +0.07 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.23 мм <br> +0.08 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.275 мм <br> +0.095 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.32 мм <br> +0.11 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.37 мм <br> +0.12 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.38 мм <br> +0.13 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.44 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.45 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.52 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.53 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.6 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.61 мм <br> +0.21 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.63 мм <br> +0.23 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.7 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.72 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+0.74 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+0.82 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+0.85 мм <br> +0.33 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+0.93 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+0.97 мм <br> +0.4 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.07 мм <br> +0.44 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.11 мм <br> +0.48 мм</p></b>`;
+    return 'Не рассчитан';
+}
+
+function getToleranceC13(diameterDop) {
+    if (diameterDop <= 3) return `<p><b>+0.2 мм <br> +0.06 мм</p></b>`;
+    if (diameterDop <= 6) return `<p><b>+0.25 мм <br> +0.07 мм</p></b>`;
+    if (diameterDop <= 10) return `<p><b>+0.3 мм <br> +0.08 мм</p></b>`;
+    if (diameterDop <= 18) return `<p><b>+0.365 мм <br> +0.095 мм</p></b>`;
+    if (diameterDop <= 30) return `<p><b>+0.44 мм <br> +0.11 мм</p></b>`;
+    if (diameterDop <= 40) return `<p><b>+0.51 мм <br> +0.12 мм</p></b>`;
+    if (diameterDop <= 50) return `<p><b>+0.52 мм <br> +0.13 мм</p></b>`;
+    if (diameterDop <= 65) return `<p><b>+0.6 мм <br> +0.14 мм</p></b>`;
+    if (diameterDop <= 80) return `<p><b>+0.61 мм <br> +0.15 мм</p></b>`;
+    if (diameterDop <= 100) return `<p><b>+0.71 мм <br> +0.17 мм</p></b>`;
+    if (diameterDop <= 120) return `<p><b>+0.72 мм <br> +0.18 мм</p></b>`;
+    if (diameterDop <= 140) return `<p><b>+0.83 мм <br> +0.2 мм</p></b>`;
+    if (diameterDop <= 160) return `<p><b>+0.84 мм <br> +0.21 мм</p></b>`;
+    if (diameterDop <= 180) return `<p><b>+0.86 мм <br> +0.23 мм</p></b>`;
+    if (diameterDop <= 200) return `<p><b>+0.96 мм <br> +0.24 мм</p></b>`;
+    if (diameterDop <= 225) return `<p><b>+0.98 мм <br> +0.26 мм</p></b>`;
+    if (diameterDop <= 250) return `<p><b>+1 мм <br> +0.28 мм</p></b>`;
+    if (diameterDop <= 280) return `<p><b>+1.11 мм <br> +0.3 мм</p></b>`;
+    if (diameterDop <= 315) return `<p><b>+1.14 мм <br> +0.33 мм</p></b>`;
+    if (diameterDop <= 355) return `<p><b>+1.25 мм <br> +0.36 мм</p></b>`;
+    if (diameterDop <= 400) return `<p><b>+1.29 мм <br> +0.4 мм</p></b>`;
+    if (diameterDop <= 450) return `<p><b>+1.41 мм <br> +0.44 мм</p></b>`;
+    if (diameterDop <= 500) return `<p><b>+1.45 мм <br> +0.48 мм</p></b>`;
     return 'Не рассчитан';
 }
 
