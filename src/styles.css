@@ -301,6 +301,9 @@ div#reykaResult {
     display: block;
     color: #e9ecef;
    }
+  select#windowSelector {
+    background-position: right 5% center; /* Позиция стрелки */ 
+}
 }
 
 /*СВЕТЛАЯ ТЕМА*/
@@ -581,4 +584,7 @@ p2 {
   text-align: center;
   display: block;
  }
+select#windowSelector {
+  background-position: right 5% center; /* Позиция стрелки */ 
+}
 }
