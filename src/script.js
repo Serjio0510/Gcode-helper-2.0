@@ -173,7 +173,7 @@ function calculateCoordinates(point) {
         //Выводим значение в элемент с id "TreugolnickResult"
         const ResultFix = ResultCoordinate.toFixed(4);
 
-        document.getElementById('FaskaAngleResult').innerHTML = `Координата оси: <strong>${ResultFix}°</strong>`;
+        document.getElementById('FaskaAngleResult').innerHTML = `Координата оси(Х/Y): <strong>${ResultFix} мм</strong>`;
     }
 
         // select three
