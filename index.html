@@ -132,7 +132,21 @@
                     <p1 id="teethOnNormal">Число зубьев на длине общей нормали: </p1>
                     <p1 id="FaskaVtulki">Фаска или радиус притупления продольной кромки: </p1>
                 </div>
-        </div>
+
+                <h2>Диаметр окружности точек касания измерительного инструмента</h2>
+                <div class="input-container">
+                    <input type="number" id="normalW" min="0" step="0.001" placeholder="Длина общей нормали W (мм)">
+            </div>
+                <div class="input-container">
+                    <input type="number" id="dopuskW" min="-1" step="0.001" placeholder="Допуск длины общей нормали (мм)">
+            </div>
+                <button class="calculate-button" onclick="calculateContactCircle()">Вычислить</button>
+                <div id="resultsW">
+                <h3>Результаты расчета:</h3>
+                <p1 id="contactCircleDiameter_tolerance">Диаметр окружности точек касания: </p1>
+                </div>
+            </div>
+
         <div id="toothCalc" class="main-tabcontent" style="display:none;" >
                 <h2>Расчёт впадины зуба ГОСТ 16532-70</h2>
                 <div class="input-container">

@@ -323,6 +323,38 @@ function calculateGear() {
     document.getElementById('FaskaVtulki').innerHTML = `Фаска или радиус притупления продольной кромки: <strong>${formattedFaskaVtulki}</strong>`;
 }
 
+function calculateContactCircle() {
+    // Получение данных из формы
+    const numTeeth = parseFloat(document.getElementById('numTeeth').value);
+    const module = parseFloat(document.getElementById('module').value);
+    const normalW = parseFloat(document.getElementById('normalW').value);
+    const dopuskW = parseFloat(document.getElementById('dopuskW').value);
+
+    // Проверка корректности данных
+    if (!numTeeth || !module) {
+        alert('Сначала выполните расчёт шестерни!');
+        return;
+    }
+
+    if (isNaN(normalW) || normalW <= 0 || isNaN(dopuskW) || dopuskW < -1) {
+        alert('Пожалуйста, введите корректные данные для длины общей нормали и допуска!');
+        return;
+    }
+
+    // Угол профиля в радианах (30 градусов)
+    const profileAngle = 30 * (Math.PI / 180);
+
+    // Диаметр основной окружности
+    const Db = module * numTeeth * Math.cos(profileAngle);
+
+    // Расчёт диаметра окружности точек касания с учётом допуска
+    const W_with_tolerance = normalW + dopuskW;
+    const contactDiameter_with_tolerance = 2 * Math.sqrt(Math.pow(Db / 2, 2) + Math.pow(W_with_tolerance / 2, 2));
+
+    // Вывод результатов
+    document.getElementById('contactCircleDiameter_tolerance').innerHTML = `Диаметр окружности точек касания (с допуском, мм): <strong>${contactDiameter_with_tolerance.toFixed(3)}</strong>`;
+}
+
 // Впадина зуба
 function calculateSocket() {
     const toothPitch = document.getElementById("pitchTooth");
