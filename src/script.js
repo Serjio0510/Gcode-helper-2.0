@@ -1,5 +1,200 @@
 document.getElementById("defaultOpen").click();
 
+// Функция-помощник для отображения ошибок
+function showError(elementId, errorText) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.innerHTML = `<div class="error-message">⚠️ ${errorText}</div>`;
+        element.style.display = 'block';
+    }
+}
+
+// Функция-помощник для отображения результатов
+function showResult(elementId, resultHTML) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.innerHTML = `<div class="result-message">${resultHTML}</div>`;
+        element.style.display = 'block';
+    }
+}
+
+// Класс для кастомного Select
+class CustomSelect {
+    constructor(selectElement) {
+        this.select = selectElement;
+        this.wrapper = null;
+        this.trigger = null;
+        this.dropdown = null;
+        this.isOpen = false;
+        this.init();
+    }
+
+    init() {
+        // Скрыть оригинальный select
+        this.select.style.display = 'none';
+
+        // Создать wrapper
+        this.wrapper = document.createElement('div');
+        this.wrapper.className = 'custom-select-wrapper';
+
+        // Создать trigger (видимая часть)
+        this.trigger = document.createElement('div');
+        this.trigger.className = 'custom-select-trigger';
+        this.trigger.textContent = this.select.options[this.select.selectedIndex].text || 'Выбрать...';
+
+        // Создать dropdown
+        this.dropdown = document.createElement('div');
+        this.dropdown.className = 'custom-select-dropdown';
+
+        // Добавить опции в dropdown
+        this.renderOptions();
+
+        // Сборка
+        this.wrapper.appendChild(this.trigger);
+        this.wrapper.appendChild(this.dropdown);
+        this.select.parentNode.insertBefore(this.wrapper, this.select.nextSibling);
+
+        // События
+        this.trigger.addEventListener('click', () => this.toggle());
+        document.addEventListener('click', (e) => this.handleClickOutside(e));
+    }
+
+    renderOptions() {
+        this.dropdown.innerHTML = '';
+        
+        for (let i = 0; i < this.select.children.length; i++) {
+            const child = this.select.children[i];
+
+            if (child.tagName === 'OPTGROUP') {
+                // Создать заголовок группы
+                const groupLabel = document.createElement('div');
+                groupLabel.className = 'custom-select-optgroup-label';
+                groupLabel.textContent = child.label;
+                this.dropdown.appendChild(groupLabel);
+
+                // Добавить опции из группы
+                for (let j = 0; j < child.children.length; j++) {
+                    const option = child.children[j];
+                    this.createOptionElement(option);
+                }
+            } else if (child.tagName === 'OPTION') {
+                this.createOptionElement(child);
+            }
+        }
+    }
+
+    createOptionElement(option) {
+        const optionEl = document.createElement('div');
+        optionEl.className = 'custom-select-option';
+        optionEl.textContent = option.text;
+        optionEl.dataset.value = option.value;
+
+        if (option.selected) {
+            optionEl.classList.add('selected');
+        }
+
+        optionEl.addEventListener('click', () => {
+            this.select.value = option.value;
+            this.trigger.textContent = option.text;
+            
+            // Обновить все опции - убрать selected
+            const allOptions = this.dropdown.querySelectorAll('.custom-select-option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            optionEl.classList.add('selected');
+
+            this.select.dispatchEvent(new Event('change', { bubbles: true }));
+            this.close();
+        });
+
+        this.dropdown.appendChild(optionEl);
+    }
+
+    toggle() {
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+
+    open() {
+        this.isOpen = true;
+        this.trigger.classList.add('active');
+        this.dropdown.classList.add('active');
+    }
+
+    close() {
+        this.isOpen = false;
+        this.trigger.classList.remove('active');
+        this.dropdown.classList.remove('active');
+    }
+
+    handleClickOutside(e) {
+        if (!this.wrapper.contains(e.target)) {
+            this.close();
+        }
+    }
+}
+
+// Класс для управления темой
+class ThemeManager {
+    constructor() {
+        this.body = document.body;
+        this.themeToggleButton = document.getElementById('theme-toggle');
+        this.init();
+    }
+
+    init() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            this.body.classList.add('dark-theme');
+            this.themeToggleButton.textContent = '☀️';
+        } else {
+            this.body.classList.add('light-theme');
+            this.themeToggleButton.textContent = '🌙';
+        }
+        this.themeToggleButton.addEventListener('click', () => this.toggle());
+    }
+
+    toggle() {
+        this.body.classList.toggle('dark-theme');
+        this.body.classList.toggle('light-theme');
+        
+        if (this.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
+            this.themeToggleButton.textContent = '☀️';
+        } else {
+            localStorage.setItem('theme', 'light');
+            this.themeToggleButton.textContent = '🌙';
+        }
+    }
+}
+
+// Инициализация темы при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    new ThemeManager();
+    
+    // Инициализировать кастомные select для всех select элементов
+    const selectElements = document.querySelectorAll('select');
+    selectElements.forEach(select => {
+        if (!select.dataset.customSelectInit) {
+            select.dataset.customSelectInit = 'true';
+            new CustomSelect(select);
+        }
+    });
+
+    // Наблюдать за новыми select элементами (на случай динамического создания)
+    const observer = new MutationObserver(() => {
+        const newSelects = document.querySelectorAll('select:not([data-custom-select-init])');
+        newSelects.forEach(select => {
+            select.dataset.customSelectInit = 'true';
+            new CustomSelect(select);
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+
 function openMainTab(evt, tabName) {
     var tabcontents = document.getElementsByClassName("main-tabcontent");
     var tabButtons = document.getElementsByClassName("tab-button");
@@ -33,7 +228,7 @@ function calculateDistance() {
     const index = parseFloat(indexInput.value);
 
     if (isNaN(diameter) || diameter <= 0 || isNaN(distanceToTop) || distanceToTop < 0 || isNaN(index) || index < 0) {
-        alert ("Пожалуйста, введите корректные данные.");
+        showError('gapResultHeight', 'Пожалуйста, введите корректные данные.');
         return;
     }
 
@@ -62,7 +257,7 @@ function calculateGapWidth() {
     const indextwo = parseFloat(indexInputtwo.value);
 
     if (isNaN(gapWidth) || gapWidth < 0 || isNaN(indextwo) || indextwo < 0) {
-        alert ("Пожалуйста, введите корректные данные.");
+        showError('gapResultWidth', 'Пожалуйста, введите корректные данные.');
         return;
     }
 
@@ -129,7 +324,7 @@ function calculateCoordinates(point) {
     const cutterDiameter = parseFloat(cutterDiameterInput.value);
 
     if (isNaN(diameter) || diameter <= 0 || isNaN(angle) || angle < 0 || angle > 360 || isNaN(cutterDiameter) || cutterDiameter < 0) {
-        alert ("Пожалуйста, заполните все поля!");
+        showError(point === 'bottom' ? 'resultBottom' : 'resultTop', 'Пожалуйста, заполните все поля!');
         return;
     }
 
@@ -161,7 +356,7 @@ function calculateCoordinates(point) {
         const CoordinateAngle = parseFloat(document.getElementById('CoordinateAngle').value);
     
         if (!CoordinateOsi || !CoordinateAngle) {
-            alert('Пожалуйста, заполните все поля!');
+            showError('FaskaAngleResult', 'Пожалуйста, заполните все поля!');
             return;
         }
 
@@ -184,7 +379,7 @@ function calculateCoordinates(point) {
         const CoordinateY = parseFloat(document.getElementById('CoordinateY').value);
     
         if (!CoordinateX || !CoordinateY) {
-            alert('Пожалуйста, заполните все поля!');
+            showError('TreugolnickResult', 'Пожалуйста, заполните все поля!');
             return;
         }
 
@@ -212,7 +407,7 @@ function calculateHoleCoordinates() {
     const angle = parseFloat(angleInput.value);
 
     if (isNaN(pitchDiameter) || pitchDiameter <= 0 || isNaN(angle) || angle < 0 || angle > 360) {
-        alert("Пожалуйста, введите корректные данные.");
+        showError('resultHole', 'Пожалуйста, введите корректные данные.');
         return;
     }
 
@@ -237,7 +432,7 @@ function calculateGear() {
     const diameterNom = parseFloat(document.getElementById('diameterHeight').value);
 
     if (!numTeeth || !module || !diameterNom ) {
-        alert('Пожалуйста, заполните все поля!');
+        showError('results', 'Пожалуйста, заполните все поля!');
         return;
     }
 
@@ -332,12 +527,12 @@ function calculateContactCircle() {
 
     // Проверка корректности данных
     if (!numTeeth || !module) {
-        alert('Сначала выполните расчёт шестерни!');
+        showError('resultsW', 'Сначала выполните расчёт шестерни!');
         return;
     }
 
     if (isNaN(normalW) || normalW <= 0 || isNaN(dopuskW) || dopuskW < -1) {
-        alert('Пожалуйста, введите корректные данные для длины общей нормали и допуска!');
+        showError('resultsW', 'Пожалуйста, введите корректные данные для длины общей нормали и допуска!');
         return;
     }
 
@@ -367,7 +562,7 @@ function calculateSocket() {
     const coeffTooth = parseFloat(toothCoeff.value);
 
     if (isNaN(pitchTooth) || pitchTooth <= 0 || isNaN(moduleTooth) || moduleTooth < 0 || isNaN(coeffTooth) || coeffTooth < -10) {
-        alert ("Пожалуйста, введите корректные данные.");
+        showError('resultSocket', 'Пожалуйста, введите корректные данные.');
         return;
     }
 
@@ -395,7 +590,7 @@ function calculatePitch() {
     const radianPitch = (anglePitch * (Math.PI / 180))
 
     if (isNaN(teethNumb) || teethNumb <= 0 || isNaN(pitchModule) || pitchModule < 0 || isNaN(anglePitch) || anglePitch < 0) {
-        alert ("Пожалуйста, введите корректные данные.");
+        showError('pitchDmResult', "Пожалуйста, введите корректные данные.");
         return;
     }
 
@@ -411,10 +606,40 @@ function calculatepitchDm(teethNumb, pitchModule, radianPitch) {
 }
 
 // Допуски и посадки
-function calculateTolerance() {
+// Переключение между вкладками отверстия/валы
+function switchTolTab(evt, tabName) {
+    var tabcontents = document.getElementsByClassName("tolerance-tab");
+    for (var i = 0; i < tabcontents.length; i++) {
+        tabcontents[i].style.display = "none";
+    }
+    document.getElementById(tabName).style.display = "block";
+    
+    // Обновление активной кнопки
+    var buttons = evt.currentTarget.parentElement.getElementsByClassName("tab-button");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+    }
+    evt.currentTarget.classList.add("active");
+}
+
+function calculateTolerance(type) {
+    if (type === 'holes') {
+        calculateHolesTolerance();
+    } else if (type === 'shafts') {
+        calculateShaftsTolerance();
+    }
+}
+
+function calculateHolesTolerance() {
     const diameterDop = parseFloat(document.getElementById('diameterDop').value);
     const toleranceClass = document.getElementById('toleranceClass').value;
     let tolerance = '';
+
+    // Валидация входных данных
+    if (!diameterDop || diameterDop < 0 || diameterDop > 3150) {
+        document.getElementById('result').innerHTML = `<span style="color: #FF6B6B;">⚠️ Ошибка: Введите диаметр в пределах от 0 до 3150 мм</span>`;
+        return;
+    }
 
     if (diameterDop >= 0 && diameterDop <= 3150) {
         // Здесь вычисляем допуск в зависимости от класса точности
@@ -768,9 +993,9 @@ function calculateTolerance() {
                 tolerance = 'Неверный класс точности';
         }
 
-        document.getElementById('result').innerHTML = `Диаметр: ${diameterDop} мм <br>Класс точности: ${toleranceClass}<br> Допуск: ${tolerance}`;
+        document.getElementById('result').innerHTML = `Диаметр: <strong>${diameterDop} мм</strong><br>Класс точности: <strong>${toleranceClass}</strong><br>Допуск: ${tolerance}`;
     } else {
-        alert ('Введите диаметр в пределах от 0 до 3150 мм');
+        showError('result', 'Введите диаметр в пределах от 0 до 3150 мм');
     }
 }
 
@@ -3708,12 +3933,94 @@ const select = document.getElementById('toleranceClass');
 
 searchInput.addEventListener('keyup', function() {
     const filter = searchInput.value.toLowerCase();
-    const options = select.options;
+    const wrapper = select.nextElementSibling;
+    
+    if (wrapper && wrapper.classList.contains('custom-select-wrapper')) {
+        const options = wrapper.querySelectorAll('.custom-select-option');
+        const labels = wrapper.querySelectorAll('.custom-select-optgroup-label');
+        
+        // Скрыть все labels изначально
+        labels.forEach(label => {
+            label.style.display = 'none';
+        });
+        
+        // Отслеживать видимые группы
+        let currentLabel = null;
+        
+        options.forEach(option => {
+            // Получить только текст опции (не label)
+            const txtValue = option.textContent.trim().toLowerCase();
+            
+            if (filter === '' || txtValue.includes(filter)) {
+                option.style.display = '';
+                // Показать label перед этой опцией если она есть
+                let prev = option.previousElementSibling;
+                while (prev) {
+                    if (prev.classList.contains('custom-select-optgroup-label')) {
+                        prev.style.display = '';
+                        break;
+                    }
+                    prev = prev.previousElementSibling;
+                }
+            } else {
+                option.style.display = 'none';
+            }
+        });
+    } else {
+        // Fallback для встроенного select
+        const options = select.options;
+        for (let i = 0; i < options.length; i++) {
+            const option = options[i];
+            const txtValue = option.text.toLowerCase();
+            option.style.display = txtValue.includes(filter) ? '' : 'none';
+        }
+    }
+});
 
-    for (let i = 0; i < options.length; i++) {
-        const option = options[i];
-        const txtValue = option.text.toLowerCase();
-        option.style.display = txtValue.includes(filter) ? '' : 'none';
+// Поиск класса точности для валов
+const searchInputShaft = document.getElementById('searchInputShaft');
+const selectShaft = document.getElementById('toleranceClassShaft');
+
+searchInputShaft.addEventListener('keyup', function() {
+    const filter = searchInputShaft.value.toLowerCase();
+    const wrapper = selectShaft.nextElementSibling;
+    
+    if (wrapper && wrapper.classList.contains('custom-select-wrapper')) {
+        const options = wrapper.querySelectorAll('.custom-select-option');
+        const labels = wrapper.querySelectorAll('.custom-select-optgroup-label');
+        
+        // Скрыть все labels изначально
+        labels.forEach(label => {
+            label.style.display = 'none';
+        });
+        
+        options.forEach(option => {
+            // Получить только текст опции (не label)
+            const txtValue = option.textContent.trim().toLowerCase();
+            
+            if (filter === '' || txtValue.includes(filter)) {
+                option.style.display = '';
+                // Показать label перед этой опцией если она есть
+                let prev = option.previousElementSibling;
+                while (prev) {
+                    if (prev.classList.contains('custom-select-optgroup-label')) {
+                        prev.style.display = '';
+                        break;
+                    }
+                    prev = prev.previousElementSibling;
+                }
+            } else {
+                option.style.display = 'none';
+            }
+        });
+    } else {
+        // Fallback для встроенного select
+        const options = selectShaft.options;
+        for (let i = 0; i < options.length; i++) {
+            const option = options[i];
+            const txtValue = option.text.toLowerCase();
+            option.style.display = txtValue.includes(filter) ? '' : 'none';
+        }
     }
 });
 
@@ -3749,7 +4056,7 @@ document.getElementById('windowSelector').addEventListener('change', (event) => 
     const Module = parseFloat(document.getElementById(`evolventModule`).value);
 
     if (!height || !TopDiameter || !BottomDiameter || !NumTeeth || !Module ) {
-        alert('Пожалуйста, заполните все поля!');
+        showError('evolventResult', 'Пожалуйста, заполните все поля!');
         return;
     }
 
@@ -3782,7 +4089,7 @@ document.getElementById('windowSelector').addEventListener('change', (event) => 
         const Width = parseFloat(document.getElementById(`pryamobochniyWidth`).value);
     
         if (!height || !TopDiameter || !BottomDiameter || !NumTeeth || !Width ) {
-            alert('Пожалуйста, заполните все поля!');
+            showError('pryamobochniyResult', 'Пожалуйста, заполните все поля!');
             return;
         }
 
@@ -3814,7 +4121,7 @@ document.getElementById('windowSelector').addEventListener('change', (event) => 
         const Width = parseFloat(document.getElementById(`pazWidth`).value);
     
         if (!height || !Depth || !Diameter || !Width ) {
-            alert('Пожалуйста, заполните все поля!');
+            showError('pazResult', 'Пожалуйста, заполните все поля!');
             return;
         }
     // Учитываем коэффициенты для разных высот и модулей
@@ -3847,7 +4154,7 @@ document.getElementById('windowSelector').addEventListener('change', (event) => 
             const NumTeeth = parseFloat(document.getElementById(`reykaNumTeeth`).value);
         
             if (!height || !Length || !Module || !NumTeeth ) {
-                alert('Пожалуйста, заполните все поля!');
+                showError('reykaResult', 'Пожалуйста, заполните все поля!');
                 return;
             }
         // Учитываем коэффициенты для разных высот и модулей
@@ -3872,33 +4179,2497 @@ document.getElementById('windowSelector').addEventListener('change', (event) => 
 
         //*
 
-/// тёмная и светлая тема
-const themeToggleButton = document.getElementById('theme-toggle');
-const body = document.body;
 
-// Проверяем, есть ли сохранённая тема в localStorage
-if (localStorage.getItem('theme') === 'dark') {
-    body.classList.add('dark-theme');
-} else {
-    body.classList.add('light-theme');
+
+// ДОПУСКИ И ПОСАДКИ ВАЛОВ
+function calculateShaftsTolerance() {
+    const diameterShaft = parseFloat(document.getElementById('diameterShaft').value);
+    const toleranceClass = document.getElementById('toleranceClassShaft').value;
+    let tolerance = '';
+
+    // Валидация входных данных
+    if (!diameterShaft || diameterShaft < 0 || diameterShaft > 3150) {
+        document.getElementById('resultShaft').innerHTML = `<span style="color: #FF6B6B;">⚠️ Ошибка: Введите диаметр в пределах от 0 до 3150 мм</span>`;
+        return;
+    }
+
+    if (diameterShaft >= 0 && diameterShaft <= 3150) {
+        // Получаем допуск для вала
+        tolerance = getShaftTolerance(toleranceClass, diameterShaft);
+        
+        // Выводим результат с дополнительной информацией
+        document.getElementById('resultShaft').innerHTML = `Диаметр вала: <strong>${diameterShaft} мм</strong><br>
+                                                           Класс точности: <strong>${toleranceClass}</strong><br>
+                                                           Допуск: <strong>${tolerance}</strong>`;
+    } else {
+        showError('resultShaft', 'Введите диаметр в пределах от 0 до 3150 мм');
+    }
 }
 
-// Обработчик события для переключения темы
-themeToggleButton.addEventListener('click', () => {
-    body.classList.toggle('dark-theme');
-    body.classList.toggle('light-theme');
+function getShaftTolerance(toleranceClass, diameterShaft) {
+    // Полная таблица допусков валов согласно ГОСТ 25346-89
+const shaftTolerances = {
+    'h1': [
+        {range: [0, 3], upper: 0, lower: -0.0008},
+        {range: [3, 6], upper: 0, lower: -0.001},
+        {range: [6, 10], upper: 0, lower: -0.0012},
+        {range: [10, 18], upper: 0, lower: -0.0015},
+        {range: [18, 30], upper: 0, lower: -0.002},
+        {range: [30, 50], upper: 0, lower: -0.0024},
+        {range: [50, 80], upper: 0, lower: -0.003},
+        {range: [80, 120], upper: 0, lower: -0.0035},
+        {range: [120, 180], upper: 0, lower: -0.004},
+        {range: [180, 250], upper: 0, lower: -0.0048},
+        {range: [250, 315], upper: 0, lower: -0.0055},
+        {range: [315, 400], upper: 0, lower: -0.006},
+        {range: [400, 500], upper: 0, lower: -0.0065},
+        {range: [500, 630], upper: 0, lower: -0.007},
+        {range: [630, 800], upper: 0, lower: -0.008},
+        {range: [800, 1000], upper: 0, lower: -0.0085},
+        {range: [1000, 1250], upper: 0, lower: -0.0095},
+        {range: [1250, 1600], upper: 0, lower: -0.011},
+        {range: [1600, 2000], upper: 0, lower: -0.013},
+        {range: [2000, 2500], upper: 0, lower: -0.015},
+        {range: [2500, 3150], upper: 0, lower: -0.0175}
+    ],
+    'h2': [
+        {range: [0, 3], upper: 0, lower: -0.0012},
+        {range: [3, 6], upper: 0, lower: -0.0015},
+        {range: [6, 10], upper: 0, lower: -0.0018},
+        {range: [10, 18], upper: 0, lower: -0.002},
+        {range: [18, 30], upper: 0, lower: -0.0025},
+        {range: [30, 50], upper: 0, lower: -0.003},
+        {range: [50, 80], upper: 0, lower: -0.0035},
+        {range: [80, 120], upper: 0, lower: -0.004},
+        {range: [120, 180], upper: 0, lower: -0.0048},
+        {range: [180, 250], upper: 0, lower: -0.0055},
+        {range: [250, 315], upper: 0, lower: -0.0065},
+        {range: [315, 400], upper: 0, lower: -0.0075},
+        {range: [400, 500], upper: 0, lower: -0.0085},
+        {range: [500, 630], upper: 0, lower: -0.0095},
+        {range: [630, 800], upper: 0, lower: -0.011},
+        {range: [800, 1000], upper: 0, lower: -0.012},
+        {range: [1000, 1250], upper: 0, lower: -0.0145},
+        {range: [1250, 1600], upper: 0, lower: -0.0165},
+        {range: [1600, 2000], upper: 0, lower: -0.0195},
+        {range: [2000, 2500], upper: 0, lower: -0.0225},
+        {range: [2500, 3150], upper: 0, lower: -0.026}
+    ],
+    'h3': [
+        {range: [0, 3], upper: 0, lower: -0.002},
+        {range: [3, 6], upper: 0, lower: -0.0025},
+        {range: [6, 10], upper: 0, lower: -0.0025},
+        {range: [10, 18], upper: 0, lower: -0.003},
+        {range: [18, 30], upper: 0, lower: -0.004},
+        {range: [30, 50], upper: 0, lower: -0.004},
+        {range: [50, 80], upper: 0, lower: -0.005},
+        {range: [80, 120], upper: 0, lower: -0.006},
+        {range: [120, 180], upper: 0, lower: -0.008},
+        {range: [180, 250], upper: 0, lower: -0.01},
+        {range: [250, 315], upper: 0, lower: -0.012},
+        {range: [315, 400], upper: 0, lower: -0.013},
+        {range: [400, 500], upper: 0, lower: -0.015},
+        {range: [500, 630], upper: 0, lower: -0.016},
+        {range: [630, 800], upper: 0, lower: -0.018},
+        {range: [800, 1000], upper: 0, lower: -0.021},
+        {range: [1000, 1250], upper: 0, lower: -0.024},
+        {range: [1250, 1600], upper: 0, lower: -0.029},
+        {range: [1600, 2000], upper: 0, lower: -0.035},
+        {range: [2000, 2500], upper: 0, lower: -0.041},
+        {range: [2500, 3150], upper: 0, lower: -0.05}
+    ],
+    'h4': [
+        {range: [0, 3], upper: 0, lower: -0.003},
+        {range: [3, 6], upper: 0, lower: -0.004},
+        {range: [6, 10], upper: 0, lower: -0.004},
+        {range: [10, 18], upper: 0, lower: -0.005},
+        {range: [18, 30], upper: 0, lower: -0.006},
+        {range: [30, 50], upper: 0, lower: -0.007},
+        {range: [50, 80], upper: 0, lower: -0.008},
+        {range: [80, 120], upper: 0, lower: -0.01},
+        {range: [120, 180], upper: 0, lower: -0.012},
+        {range: [180, 250], upper: 0, lower: -0.014},
+        {range: [250, 315], upper: 0, lower: -0.016},
+        {range: [315, 400], upper: 0, lower: -0.018},
+        {range: [400, 500], upper: 0, lower: -0.02},
+        {range: [500, 630], upper: 0, lower: -0.022},
+        {range: [630, 800], upper: 0, lower: -0.025},
+        {range: [800, 1000], upper: 0, lower: -0.028},
+        {range: [1000, 1250], upper: 0, lower: -0.033},
+        {range: [1250, 1600], upper: 0, lower: -0.039},
+        {range: [1600, 2000], upper: 0, lower: -0.046},
+        {range: [2000, 2500], upper: 0, lower: -0.055},
+        {range: [2500, 3150], upper: 0, lower: -0.068}
+    ],
+    'h5': [
+        {range: [0, 3], upper: 0, lower: -0.004},
+        {range: [3, 6], upper: 0, lower: -0.005},
+        {range: [6, 10], upper: 0, lower: -0.006},
+        {range: [10, 18], upper: 0, lower: -0.008},
+        {range: [18, 30], upper: 0, lower: -0.009},
+        {range: [30, 50], upper: 0, lower: -0.011},
+        {range: [50, 80], upper: 0, lower: -0.013},
+        {range: [80, 120], upper: 0, lower: -0.015},
+        {range: [120, 180], upper: 0, lower: -0.018},
+        {range: [180, 250], upper: 0, lower: -0.02},
+        {range: [250, 315], upper: 0, lower: -0.023},
+        {range: [315, 400], upper: 0, lower: -0.025},
+        {range: [400, 500], upper: 0, lower: -0.027},
+        {range: [500, 630], upper: 0, lower: -0.032},
+        {range: [630, 800], upper: 0, lower: -0.036},
+        {range: [800, 1000], upper: 0, lower: -0.04},
+        {range: [1000, 1250], upper: 0, lower: -0.047},
+        {range: [1250, 1600], upper: 0, lower: -0.055},
+        {range: [1600, 2000], upper: 0, lower: -0.065},
+        {range: [2000, 2500], upper: 0, lower: -0.078},
+        {range: [2500, 3150], upper: 0, lower: -0.096}
+    ],
+    'h6': [
+        {range: [0, 3], upper: 0, lower: -0.006},
+        {range: [3, 6], upper: 0, lower: -0.008},
+        {range: [6, 10], upper: 0, lower: -0.009},
+        {range: [10, 18], upper: 0, lower: -0.011},
+        {range: [18, 30], upper: 0, lower: -0.013},
+        {range: [30, 50], upper: 0, lower: -0.016},
+        {range: [50, 80], upper: 0, lower: -0.019},
+        {range: [80, 120], upper: 0, lower: -0.022},
+        {range: [120, 180], upper: 0, lower: -0.025},
+        {range: [180, 250], upper: 0, lower: -0.029},
+        {range: [250, 315], upper: 0, lower: -0.032},
+        {range: [315, 400], upper: 0, lower: -0.036},
+        {range: [400, 500], upper: 0, lower: -0.04},
+        {range: [500, 630], upper: 0, lower: -0.044},
+        {range: [630, 800], upper: 0, lower: -0.05},
+        {range: [800, 1000], upper: 0, lower: -0.056},
+        {range: [1000, 1250], upper: 0, lower: -0.066},
+        {range: [1250, 1600], upper: 0, lower: -0.078},
+        {range: [1600, 2000], upper: 0, lower: -0.092},
+        {range: [2000, 2500], upper: 0, lower: -0.11},
+        {range: [2500, 3150], upper: 0, lower: -0.135}
+    ],
+    'h7': [
+        {range: [0, 3], upper: 0, lower: -0.01},
+        {range: [3, 6], upper: 0, lower: -0.012},
+        {range: [6, 10], upper: 0, lower: -0.015},
+        {range: [10, 18], upper: 0, lower: -0.018},
+        {range: [18, 30], upper: 0, lower: -0.021},
+        {range: [30, 50], upper: 0, lower: -0.025},
+        {range: [50, 80], upper: 0, lower: -0.03},
+        {range: [80, 120], upper: 0, lower: -0.035},
+        {range: [120, 180], upper: 0, lower: -0.04},
+        {range: [180, 250], upper: 0, lower: -0.046},
+        {range: [250, 315], upper: 0, lower: -0.052},
+        {range: [315, 400], upper: 0, lower: -0.057},
+        {range: [400, 500], upper: 0, lower: -0.063},
+        {range: [500, 630], upper: 0, lower: -0.07},
+        {range: [630, 800], upper: 0, lower: -0.08},
+        {range: [800, 1000], upper: 0, lower: -0.09},
+        {range: [1000, 1250], upper: 0, lower: -0.105},
+        {range: [1250, 1600], upper: 0, lower: -0.125},
+        {range: [1600, 2000], upper: 0, lower: -0.15},
+        {range: [2000, 2500], upper: 0, lower: -0.175},
+        {range: [2500, 3150], upper: 0, lower: -0.21}
+    ],
+    'h8': [
+        {range: [0, 3], upper: 0, lower: -0.014},
+        {range: [3, 6], upper: 0, lower: -0.018},
+        {range: [6, 10], upper: 0, lower: -0.022},
+        {range: [10, 18], upper: 0, lower: -0.027},
+        {range: [18, 30], upper: 0, lower: -0.033},
+        {range: [30, 50], upper: 0, lower: -0.039},
+        {range: [50, 80], upper: 0, lower: -0.046},
+        {range: [80, 120], upper: 0, lower: -0.054},
+        {range: [120, 180], upper: 0, lower: -0.063},
+        {range: [180, 250], upper: 0, lower: -0.072},
+        {range: [250, 315], upper: 0, lower: -0.081},
+        {range: [315, 400], upper: 0, lower: -0.089},
+        {range: [400, 500], upper: 0, lower: -0.097},
+        {range: [500, 630], upper: 0, lower: -0.11},
+        {range: [630, 800], upper: 0, lower: -0.125},
+        {range: [800, 1000], upper: 0, lower: -0.14},
+        {range: [1000, 1250], upper: 0, lower: -0.165},
+        {range: [1250, 1600], upper: 0, lower: -0.195},
+        {range: [1600, 2000], upper: 0, lower: -0.23},
+        {range: [2000, 2500], upper: 0, lower: -0.28},
+        {range: [2500, 3150], upper: 0, lower: -0.33}
+    ],
+    'h9': [
+        {range: [0, 3], upper: 0, lower: -0.025},
+        {range: [3, 6], upper: 0, lower: -0.03},
+        {range: [6, 10], upper: 0, lower: -0.036},
+        {range: [10, 18], upper: 0, lower: -0.043},
+        {range: [18, 30], upper: 0, lower: -0.052},
+        {range: [30, 50], upper: 0, lower: -0.062},
+        {range: [50, 80], upper: 0, lower: -0.074},
+        {range: [80, 120], upper: 0, lower: -0.087},
+        {range: [120, 180], upper: 0, lower: -0.1},
+        {range: [180, 250], upper: 0, lower: -0.115},
+        {range: [250, 315], upper: 0, lower: -0.13},
+        {range: [315, 400], upper: 0, lower: -0.14},
+        {range: [400, 500], upper: 0, lower: -0.155},
+        {range: [500, 630], upper: 0, lower: -0.175},
+        {range: [630, 800], upper: 0, lower: -0.2},
+        {range: [800, 1000], upper: 0, lower: -0.23},
+        {range: [1000, 1250], upper: 0, lower: -0.26},
+        {range: [1250, 1600], upper: 0, lower: -0.31},
+        {range: [1600, 2000], upper: 0, lower: -0.37},
+        {range: [2000, 2500], upper: 0, lower: -0.44},
+        {range: [2500, 3150], upper: 0, lower: -0.54}
+    ],
+    'h10': [
+        {range: [0, 3], upper: 0, lower: -0.04},
+        {range: [3, 6], upper: 0, lower: -0.048},
+        {range: [6, 10], upper: 0, lower: -0.058},
+        {range: [10, 18], upper: 0, lower: -0.07},
+        {range: [18, 30], upper: 0, lower: -0.084},
+        {range: [30, 50], upper: 0, lower: -0.1},
+        {range: [50, 80], upper: 0, lower: -0.12},
+        {range: [80, 120], upper: 0, lower: -0.14},
+        {range: [120, 180], upper: 0, lower: -0.16},
+        {range: [180, 250], upper: 0, lower: -0.185},
+        {range: [250, 315], upper: 0, lower: -0.21},
+        {range: [315, 400], upper: 0, lower: -0.23},
+        {range: [400, 500], upper: 0, lower: -0.25},
+        {range: [500, 630], upper: 0, lower: -0.28},
+        {range: [630, 800], upper: 0, lower: -0.32},
+        {range: [800, 1000], upper: 0, lower: -0.36},
+        {range: [1000, 1250], upper: 0, lower: -0.42},
+        {range: [1250, 1600], upper: 0, lower: -0.5},
+        {range: [1600, 2000], upper: 0, lower: -0.6},
+        {range: [2000, 2500], upper: 0, lower: -0.7},
+        {range: [2500, 3150], upper: 0, lower: -0.86}
+    ],
+    'h11': [
+        {range: [0, 3], upper: 0, lower: -0.06},
+        {range: [3, 6], upper: 0, lower: -0.075},
+        {range: [6, 10], upper: 0, lower: -0.09},
+        {range: [10, 18], upper: 0, lower: -0.11},
+        {range: [18, 30], upper: 0, lower: -0.13},
+        {range: [30, 50], upper: 0, lower: -0.16},
+        {range: [50, 80], upper: 0, lower: -0.19},
+        {range: [80, 120], upper: 0, lower: -0.22},
+        {range: [120, 180], upper: 0, lower: -0.25},
+        {range: [180, 250], upper: 0, lower: -0.29},
+        {range: [250, 315], upper: 0, lower: -0.32},
+        {range: [315, 400], upper: 0, lower: -0.36},
+        {range: [400, 500], upper: 0, lower: -0.4},
+        {range: [500, 630], upper: 0, lower: -0.44},
+        {range: [630, 800], upper: 0, lower: -0.5},
+        {range: [800, 1000], upper: 0, lower: -0.56},
+        {range: [1000, 1250], upper: 0, lower: -0.66},
+        {range: [1250, 1600], upper: 0, lower: -0.78},
+        {range: [1600, 2000], upper: 0, lower: -0.92},
+        {range: [2000, 2500], upper: 0, lower: -1.1},
+        {range: [2500, 3150], upper: 0, lower: -1.35}
+    ],
+    'h12': [
+        {range: [0, 3], upper: 0, lower: -0.1},
+        {range: [3, 6], upper: 0, lower: -0.12},
+        {range: [6, 10], upper: 0, lower: -0.15},
+        {range: [10, 18], upper: 0, lower: -0.18},
+        {range: [18, 30], upper: 0, lower: -0.21},
+        {range: [30, 50], upper: 0, lower: -0.25},
+        {range: [50, 80], upper: 0, lower: -0.3},
+        {range: [80, 120], upper: 0, lower: -0.35},
+        {range: [120, 180], upper: 0, lower: -0.4},
+        {range: [180, 250], upper: 0, lower: -0.46},
+        {range: [250, 315], upper: 0, lower: -0.52},
+        {range: [315, 400], upper: 0, lower: -0.57},
+        {range: [400, 500], upper: 0, lower: -0.63},
+        {range: [500, 630], upper: 0, lower: -0.7},
+        {range: [630, 800], upper: 0, lower: -0.8},
+        {range: [800, 1000], upper: 0, lower: -0.9},
+        {range: [1000, 1250], upper: 0, lower: -1.05},
+        {range: [1250, 1600], upper: 0, lower: -1.25},
+        {range: [1600, 2000], upper: 0, lower: -1.5},
+        {range: [2000, 2500], upper: 0, lower: -1.75},
+        {range: [2500, 3150], upper: 0, lower: -2.1}
+    ],
+    'h13': [
+        {range: [0, 3], upper: 0, lower: -0.14},
+        {range: [3, 6], upper: 0, lower: -0.18},
+        {range: [6, 10], upper: 0, lower: -0.22},
+        {range: [10, 18], upper: 0, lower: -0.27},
+        {range: [18, 30], upper: 0, lower: -0.33},
+        {range: [30, 50], upper: 0, lower: -0.39},
+        {range: [50, 80], upper: 0, lower: -0.46},
+        {range: [80, 120], upper: 0, lower: -0.54},
+        {range: [120, 180], upper: 0, lower: -0.63},
+        {range: [180, 250], upper: 0, lower: -0.72},
+        {range: [250, 315], upper: 0, lower: -0.81},
+        {range: [315, 400], upper: 0, lower: -0.89},
+        {range: [400, 500], upper: 0, lower: -0.97},
+        {range: [500, 630], upper: 0, lower: -1.1},
+        {range: [630, 800], upper: 0, lower: -1.25},
+        {range: [800, 1000], upper: 0, lower: -1.4},
+        {range: [1000, 1250], upper: 0, lower: -1.65},
+        {range: [1250, 1600], upper: 0, lower: -1.95},
+        {range: [1600, 2000], upper: 0, lower: -2.3},
+        {range: [2000, 2500], upper: 0, lower: -2.8},
+        {range: [2500, 3150], upper: 0, lower: -3.3}
+    ],
+    'h14': [
+        {range: [0, 3], upper: 0, lower: -0.25},
+        {range: [3, 6], upper: 0, lower: -0.3},
+        {range: [6, 10], upper: 0, lower: -0.36},
+        {range: [10, 18], upper: 0, lower: -0.43},
+        {range: [18, 30], upper: 0, lower: -0.52},
+        {range: [30, 50], upper: 0, lower: -0.62},
+        {range: [50, 80], upper: 0, lower: -0.74},
+        {range: [80, 120], upper: 0, lower: -0.87},
+        {range: [120, 180], upper: 0, lower: -1},
+        {range: [180, 250], upper: 0, lower: -1.15},
+        {range: [250, 315], upper: 0, lower: -1.3},
+        {range: [315, 400], upper: 0, lower: -1.4},
+        {range: [400, 500], upper: 0, lower: -1.55},
+        {range: [500, 630], upper: 0, lower: -1.75},
+        {range: [630, 800], upper: 0, lower: -2},
+        {range: [800, 1000], upper: 0, lower: -2.3},
+        {range: [1000, 1250], upper: 0, lower: -2.6},
+        {range: [1250, 1600], upper: 0, lower: -3.1},
+        {range: [1600, 2000], upper: 0, lower: -3.7},
+        {range: [2000, 2500], upper: 0, lower: -4.4},
+        {range: [2500, 3150], upper: 0, lower: -5.4}
+    ],
+    'h15': [
+        {range: [0, 3], upper: 0, lower: -0.4},
+        {range: [3, 6], upper: 0, lower: -0.48},
+        {range: [6, 10], upper: 0, lower: -0.58},
+        {range: [10, 18], upper: 0, lower: -0.7},
+        {range: [18, 30], upper: 0, lower: -0.84},
+        {range: [30, 50], upper: 0, lower: -1},
+        {range: [50, 80], upper: 0, lower: -1.2},
+        {range: [80, 120], upper: 0, lower: -1.4},
+        {range: [120, 180], upper: 0, lower: -1.6},
+        {range: [180, 250], upper: 0, lower: -1.85},
+        {range: [250, 315], upper: 0, lower: -2.1},
+        {range: [315, 400], upper: 0, lower: -2.3},
+        {range: [400, 500], upper: 0, lower: -2.5},
+        {range: [500, 630], upper: 0, lower: -2.8},
+        {range: [630, 800], upper: 0, lower: -3.2},
+        {range: [800, 1000], upper: 0, lower: -3.6},
+        {range: [1000, 1250], upper: 0, lower: -4.2},
+        {range: [1250, 1600], upper: 0, lower: -5},
+        {range: [1600, 2000], upper: 0, lower: -6},
+        {range: [2000, 2500], upper: 0, lower: -7},
+        {range: [2500, 3150], upper: 0, lower: -8.6}
+    ],
+    'h16': [
+        {range: [0, 3], upper: 0, lower: -0.6},
+        {range: [3, 6], upper: 0, lower: -0.75},
+        {range: [6, 10], upper: 0, lower: -0.9},
+        {range: [10, 18], upper: 0, lower: -1.1},
+        {range: [18, 30], upper: 0, lower: -1.3},
+        {range: [30, 50], upper: 0, lower: -1.6},
+        {range: [50, 80], upper: 0, lower: -1.9},
+        {range: [80, 120], upper: 0, lower: -2.2},
+        {range: [120, 180], upper: 0, lower: -2.5},
+        {range: [180, 250], upper: 0, lower: -2.9},
+        {range: [250, 315], upper: 0, lower: -3.2},
+        {range: [315, 400], upper: 0, lower: -3.6},
+        {range: [400, 500], upper: 0, lower: -4},
+        {range: [500, 630], upper: 0, lower: -4.4},
+        {range: [630, 800], upper: 0, lower: -5},
+        {range: [800, 1000], upper: 0, lower: -5.6},
+        {range: [1000, 1250], upper: 0, lower: -6.6},
+        {range: [1250, 1600], upper: 0, lower: -7.8},
+        {range: [1600, 2000], upper: 0, lower: -9.2},
+        {range: [2000, 2500], upper: 0, lower: -11},
+        {range: [2500, 3150], upper: 0, lower: -13.5}
+    ],
+    'h17': [
+        {range: [3, 6], upper: 0, lower: -1.2},
+        {range: [6, 10], upper: 0, lower: -1.5},
+        {range: [10, 18], upper: 0, lower: -1.8},
+        {range: [18, 30], upper: 0, lower: -2.1},
+        {range: [30, 50], upper: 0, lower: -2.5},
+        {range: [50, 80], upper: 0, lower: -3},
+        {range: [80, 120], upper: 0, lower: -3.5},
+        {range: [120, 180], upper: 0, lower: -4},
+        {range: [180, 250], upper: 0, lower: -4.6},
+        {range: [250, 315], upper: 0, lower: -5.2},
+        {range: [315, 400], upper: 0, lower: -5.7},
+        {range: [400, 500], upper: 0, lower: -6.3},
+        {range: [500, 630], upper: 0, lower: -7},
+        {range: [630, 800], upper: 0, lower: -8},
+        {range: [800, 1000], upper: 0, lower: -9},
+        {range: [1000, 1250], upper: 0, lower: -10.5},
+        {range: [1250, 1600], upper: 0, lower: -12.5},
+        {range: [1600, 2000], upper: 0, lower: -15},
+        {range: [2000, 2500], upper: 0, lower: -17.5},
+        {range: [2500, 3150], upper: 0, lower: -21}
+    ],
+    'h18': [
+        {range: [3, 6], upper: 0, lower: -1.8},
+        {range: [6, 10], upper: 0, lower: -2.2},
+        {range: [10, 18], upper: 0, lower: -2.7},
+        {range: [18, 30], upper: 0, lower: -3.3},
+        {range: [30, 50], upper: 0, lower: -3.9},
+        {range: [50, 80], upper: 0, lower: -4.6},
+        {range: [80, 120], upper: 0, lower: -5.4},
+        {range: [120, 180], upper: 0, lower: -6.3},
+        {range: [180, 250], upper: 0, lower: -7.2},
+        {range: [250, 315], upper: 0, lower: -8.1},
+        {range: [315, 400], upper: 0, lower: -8.9},
+        {range: [400, 500], upper: 0, lower: -9.7},
+        {range: [500, 630], upper: 0, lower: -11},
+        {range: [630, 800], upper: 0, lower: -12.5},
+        {range: [800, 1000], upper: 0, lower: -14},
+        {range: [1000, 1250], upper: 0, lower: -16.5},
+        {range: [1250, 1600], upper: 0, lower: -19.5},
+        {range: [1600, 2000], upper: 0, lower: -23},
+        {range: [2000, 2500], upper: 0, lower: -28},
+        {range: [2500, 3150], upper: 0, lower: -33}
+    ],
+    'js5': [
+        {range: [0, 3], upper: 0.002, lower: -0.002},
+        {range: [3, 6], upper: 0.0025, lower: -0.0025},
+        {range: [6, 10], upper: 0.003, lower: -0.003},
+        {range: [10, 18], upper: 0.004, lower: -0.004},
+        {range: [18, 30], upper: 0.0045, lower: -0.0045},
+        {range: [30, 50], upper: 0.0055, lower: -0.0055},
+        {range: [50, 80], upper: 0.0065, lower: -0.0065},
+        {range: [80, 120], upper: 0.0075, lower: -0.0075},
+        {range: [120, 180], upper: 0.009, lower: -0.009},
+        {range: [180, 250], upper: 0.01, lower: -0.01},
+        {range: [250, 315], upper: 0.0115, lower: -0.0115},
+        {range: [315, 400], upper: 0.0125, lower: -0.0125},
+        {range: [400, 500], upper: 0.0135, lower: -0.0135},
+        {range: [500, 630], upper: 0.016, lower: -0.016},
+        {range: [630, 800], upper: 0.018, lower: -0.018},
+        {range: [800, 1000], upper: 0.02, lower: -0.02},
+        {range: [1000, 1250], upper: 0.0235, lower: -0.0235},
+        {range: [1250, 1600], upper: 0.0275, lower: -0.0275},
+        {range: [1600, 2000], upper: 0.0325, lower: -0.0325},
+        {range: [2000, 2500], upper: 0.039, lower: -0.039},
+        {range: [2500, 3150], upper: 0.048, lower: -0.048}
+    ],
+    'js6': [
+        {range: [0, 3], upper: 0.003, lower: -0.003},
+        {range: [3, 6], upper: 0.004, lower: -0.004},
+        {range: [6, 10], upper: 0.0045, lower: -0.0045},
+        {range: [10, 18], upper: 0.0055, lower: -0.0055},
+        {range: [18, 30], upper: 0.0065, lower: -0.0065},
+        {range: [30, 50], upper: 0.008, lower: -0.008},
+        {range: [50, 80], upper: 0.0095, lower: -0.0095},
+        {range: [80, 120], upper: 0.011, lower: -0.011},
+        {range: [120, 180], upper: 0.0125, lower: -0.0125},
+        {range: [180, 250], upper: 0.0145, lower: -0.0145},
+        {range: [250, 315], upper: 0.016, lower: -0.016},
+        {range: [315, 400], upper: 0.018, lower: -0.018},
+        {range: [400, 500], upper: 0.02, lower: -0.02},
+        {range: [500, 630], upper: 0.022, lower: -0.022},
+        {range: [630, 800], upper: 0.025, lower: -0.025},
+        {range: [800, 1000], upper: 0.028, lower: -0.028},
+        {range: [1000, 1250], upper: 0.033, lower: -0.033},
+        {range: [1250, 1600], upper: 0.039, lower: -0.039},
+        {range: [1600, 2000], upper: 0.046, lower: -0.046},
+        {range: [2000, 2500], upper: 0.055, lower: -0.055},
+        {range: [2500, 3150], upper: 0.0675, lower: -0.0675}
+    ],
+    'js7': [
+        {range: [0, 3], upper: 0.005, lower: -0.005},
+        {range: [3, 6], upper: 0.006, lower: -0.006},
+        {range: [6, 10], upper: 0.0075, lower: -0.0075},
+        {range: [10, 18], upper: 0.009, lower: -0.009},
+        {range: [18, 30], upper: 0.0105, lower: -0.0105},
+        {range: [30, 50], upper: 0.0125, lower: -0.0125},
+        {range: [50, 80], upper: 0.015, lower: -0.015},
+        {range: [80, 120], upper: 0.0175, lower: -0.0175},
+        {range: [120, 180], upper: 0.02, lower: -0.02},
+        {range: [180, 250], upper: 0.023, lower: -0.023},
+        {range: [250, 315], upper: 0.026, lower: -0.026},
+        {range: [315, 400], upper: 0.0285, lower: -0.0285},
+        {range: [400, 500], upper: 0.0315, lower: -0.0315},
+        {range: [500, 630], upper: 0.035, lower: -0.035},
+        {range: [630, 800], upper: 0.04, lower: -0.04},
+        {range: [800, 1000], upper: 0.045, lower: -0.045},
+        {range: [1000, 1250], upper: 0.0525, lower: -0.0525},
+        {range: [1250, 1600], upper: 0.0625, lower: -0.0625},
+        {range: [1600, 2000], upper: 0.075, lower: -0.075},
+        {range: [2000, 2500], upper: 0.0875, lower: -0.0875},
+        {range: [2500, 3150], upper: 0.105, lower: -0.105}
+    ],
+    'js8': [
+        {range: [0, 3], upper: 0.007, lower: -0.007},
+        {range: [3, 6], upper: 0.009, lower: -0.009},
+        {range: [6, 10], upper: 0.011, lower: -0.011},
+        {range: [10, 18], upper: 0.0135, lower: -0.0135},
+        {range: [18, 30], upper: 0.0165, lower: -0.0165},
+        {range: [30, 50], upper: 0.0195, lower: -0.0195},
+        {range: [50, 80], upper: 0.023, lower: -0.023},
+        {range: [80, 120], upper: 0.027, lower: -0.027},
+        {range: [120, 180], upper: 0.0315, lower: -0.0315},
+        {range: [180, 250], upper: 0.036, lower: -0.036},
+        {range: [250, 315], upper: 0.0405, lower: -0.0405},
+        {range: [315, 400], upper: 0.0445, lower: -0.0445},
+        {range: [400, 500], upper: 0.0485, lower: -0.0485},
+        {range: [500, 630], upper: 0.055, lower: -0.055},
+        {range: [630, 800], upper: 0.0625, lower: -0.0625},
+        {range: [800, 1000], upper: 0.07, lower: -0.07},
+        {range: [1000, 1250], upper: 0.0825, lower: -0.0825},
+        {range: [1250, 1600], upper: 0.0975, lower: -0.0975},
+        {range: [1600, 2000], upper: 0.115, lower: -0.115},
+        {range: [2000, 2500], upper: 0.14, lower: -0.14},
+        {range: [2500, 3150], upper: 0.165, lower: -0.165}
+    ],
+    'js9': [
+        {range: [0, 3], upper: 0.0125, lower: -0.0125},
+        {range: [3, 6], upper: 0.015, lower: -0.015},
+        {range: [6, 10], upper: 0.018, lower: -0.018},
+        {range: [10, 18], upper: 0.0215, lower: -0.0215},
+        {range: [18, 30], upper: 0.026, lower: -0.026},
+        {range: [30, 50], upper: 0.031, lower: -0.031},
+        {range: [50, 80], upper: 0.037, lower: -0.037},
+        {range: [80, 120], upper: 0.0435, lower: -0.0435},
+        {range: [120, 180], upper: 0.05, lower: -0.05},
+        {range: [180, 250], upper: 0.0575, lower: -0.0575},
+        {range: [250, 315], upper: 0.065, lower: -0.065},
+        {range: [315, 400], upper: 0.07, lower: -0.07},
+        {range: [400, 500], upper: 0.0775, lower: -0.0775},
+        {range: [500, 630], upper: 0.0875, lower: -0.0875},
+        {range: [630, 800], upper: 0.1, lower: -0.1},
+        {range: [800, 1000], upper: 0.115, lower: -0.115},
+        {range: [1000, 1250], upper: 0.13, lower: -0.13},
+        {range: [1250, 1600], upper: 0.155, lower: -0.155},
+        {range: [1600, 2000], upper: 0.185, lower: -0.185},
+        {range: [2000, 2500], upper: 0.22, lower: -0.22},
+        {range: [2500, 3150], upper: 0.27, lower: -0.27}
+    ],
+    'js10': [
+        {range: [0, 3], upper: 0.02, lower: -0.02},
+        {range: [3, 6], upper: 0.024, lower: -0.024},
+        {range: [6, 10], upper: 0.029, lower: -0.029},
+        {range: [10, 18], upper: 0.035, lower: -0.035},
+        {range: [18, 30], upper: 0.042, lower: -0.042},
+        {range: [30, 50], upper: 0.05, lower: -0.05},
+        {range: [50, 80], upper: 0.06, lower: -0.06},
+        {range: [80, 120], upper: 0.07, lower: -0.07},
+        {range: [120, 180], upper: 0.08, lower: -0.08},
+        {range: [180, 250], upper: 0.0925, lower: -0.0925},
+        {range: [250, 315], upper: 0.105, lower: -0.105},
+        {range: [315, 400], upper: 0.115, lower: -0.115},
+        {range: [400, 500], upper: 0.125, lower: -0.125},
+        {range: [500, 630], upper: 0.14, lower: -0.14},
+        {range: [630, 800], upper: 0.16, lower: -0.16},
+        {range: [800, 1000], upper: 0.18, lower: -0.18},
+        {range: [1000, 1250], upper: 0.21, lower: -0.21},
+        {range: [1250, 1600], upper: 0.25, lower: -0.25},
+        {range: [1600, 2000], upper: 0.3, lower: -0.3},
+        {range: [2000, 2500], upper: 0.35, lower: -0.35},
+        {range: [2500, 3150], upper: 0.43, lower: -0.43}
+    ],
+    'js11': [
+        {range: [0, 3], upper: 0.03, lower: -0.03},
+        {range: [3, 6], upper: 0.0375, lower: -0.0375},
+        {range: [6, 10], upper: 0.045, lower: -0.045},
+        {range: [10, 18], upper: 0.055, lower: -0.055},
+        {range: [18, 30], upper: 0.065, lower: -0.065},
+        {range: [30, 50], upper: 0.08, lower: -0.08},
+        {range: [50, 80], upper: 0.095, lower: -0.095},
+        {range: [80, 120], upper: 0.11, lower: -0.11},
+        {range: [120, 180], upper: 0.125, lower: -0.125},
+        {range: [180, 250], upper: 0.145, lower: -0.145},
+        {range: [250, 315], upper: 0.16, lower: -0.16},
+        {range: [315, 400], upper: 0.18, lower: -0.18},
+        {range: [400, 500], upper: 0.2, lower: -0.2},
+        {range: [500, 630], upper: 0.22, lower: -0.22},
+        {range: [630, 800], upper: 0.25, lower: -0.25},
+        {range: [800, 1000], upper: 0.28, lower: -0.28},
+        {range: [1000, 1250], upper: 0.33, lower: -0.33},
+        {range: [1250, 1600], upper: 0.39, lower: -0.39},
+        {range: [1600, 2000], upper: 0.46, lower: -0.46},
+        {range: [2000, 2500], upper: 0.55, lower: -0.55},
+        {range: [2500, 3150], upper: 0.675, lower: -0.675}
+    ],
+    'js12': [
+        {range: [0, 3], upper: 0.05, lower: -0.05},
+        {range: [3, 6], upper: 0.06, lower: -0.06},
+        {range: [6, 10], upper: 0.075, lower: -0.075},
+        {range: [10, 18], upper: 0.09, lower: -0.09},
+        {range: [18, 30], upper: 0.105, lower: -0.105},
+        {range: [30, 50], upper: 0.125, lower: -0.125},
+        {range: [50, 80], upper: 0.15, lower: -0.15},
+        {range: [80, 120], upper: 0.175, lower: -0.175},
+        {range: [120, 180], upper: 0.2, lower: -0.2},
+        {range: [180, 250], upper: 0.23, lower: -0.23},
+        {range: [250, 315], upper: 0.26, lower: -0.26},
+        {range: [315, 400], upper: 0.285, lower: -0.285},
+        {range: [400, 500], upper: 0.315, lower: -0.315},
+        {range: [500, 630], upper: 0.35, lower: -0.35},
+        {range: [630, 800], upper: 0.4, lower: -0.4},
+        {range: [800, 1000], upper: 0.45, lower: -0.45},
+        {range: [1000, 1250], upper: 0.525, lower: -0.525},
+        {range: [1250, 1600], upper: 0.625, lower: -0.625},
+        {range: [1600, 2000], upper: 0.75, lower: -0.75},
+        {range: [2000, 2500], upper: 0.875, lower: -0.875},
+        {range: [2500, 3150], upper: 1.05, lower: -1.05}
+    ],
+    'js13': [
+        {range: [0, 3], upper: 0.07, lower: -0.07},
+        {range: [3, 6], upper: 0.09, lower: -0.09},
+        {range: [6, 10], upper: 0.11, lower: -0.11},
+        {range: [10, 18], upper: 0.135, lower: -0.135},
+        {range: [18, 30], upper: 0.165, lower: -0.165},
+        {range: [30, 50], upper: 0.195, lower: -0.195},
+        {range: [50, 80], upper: 0.23, lower: -0.23},
+        {range: [80, 120], upper: 0.27, lower: -0.27},
+        {range: [120, 180], upper: 0.315, lower: -0.315},
+        {range: [180, 250], upper: 0.36, lower: -0.36},
+        {range: [250, 315], upper: 0.405, lower: -0.405},
+        {range: [315, 400], upper: 0.445, lower: -0.445},
+        {range: [400, 500], upper: 0.485, lower: -0.485},
+        {range: [500, 630], upper: 0.55, lower: -0.55},
+        {range: [630, 800], upper: 0.625, lower: -0.625},
+        {range: [800, 1000], upper: 0.7, lower: -0.7},
+        {range: [1000, 1250], upper: 0.825, lower: -0.825},
+        {range: [1250, 1600], upper: 0.975, lower: -0.975},
+        {range: [1600, 2000], upper: 1.15, lower: -1.15},
+        {range: [2000, 2500], upper: 1.4, lower: -1.4},
+        {range: [2500, 3150], upper: 1.65, lower: -1.65}
+    ],
+    'js14': [
+        {range: [0, 3], upper: 0.125, lower: -0.125},
+        {range: [3, 6], upper: 0.15, lower: -0.15},
+        {range: [6, 10], upper: 0.18, lower: -0.18},
+        {range: [10, 18], upper: 0.215, lower: -0.215},
+        {range: [18, 30], upper: 0.26, lower: -0.26},
+        {range: [30, 50], upper: 0.31, lower: -0.31},
+        {range: [50, 80], upper: 0.37, lower: -0.37},
+        {range: [80, 120], upper: 0.435, lower: -0.435},
+        {range: [120, 180], upper: 0.5, lower: -0.5},
+        {range: [180, 250], upper: 0.575, lower: -0.575},
+        {range: [250, 315], upper: 0.65, lower: -0.65},
+        {range: [315, 400], upper: 0.7, lower: -0.7},
+        {range: [400, 500], upper: 0.775, lower: -0.775},
+        {range: [500, 630], upper: 0.875, lower: -0.875},
+        {range: [630, 800], upper: 1, lower: -1},
+        {range: [800, 1000], upper: 1.15, lower: -1.15},
+        {range: [1000, 1250], upper: 1.3, lower: -1.3},
+        {range: [1250, 1600], upper: 1.55, lower: -1.55},
+        {range: [1600, 2000], upper: 1.85, lower: -1.85},
+        {range: [2000, 2500], upper: 2.2, lower: -2.2},
+        {range: [2500, 3150], upper: 2.7, lower: -2.7}
+    ],
+    'js15': [
+        {range: [0, 3], upper: 0.2, lower: -0.2},
+        {range: [3, 6], upper: 0.24, lower: -0.24},
+        {range: [6, 10], upper: 0.29, lower: -0.29},
+        {range: [10, 18], upper: 0.35, lower: -0.35},
+        {range: [18, 30], upper: 0.42, lower: -0.42},
+        {range: [30, 50], upper: 0.5, lower: -0.5},
+        {range: [50, 80], upper: 0.6, lower: -0.6},
+        {range: [80, 120], upper: 0.7, lower: -0.7},
+        {range: [120, 180], upper: 0.8, lower: -0.8},
+        {range: [180, 250], upper: 0.925, lower: -0.925},
+        {range: [250, 315], upper: 1.05, lower: -1.05},
+        {range: [315, 400], upper: 1.15, lower: -1.15},
+        {range: [400, 500], upper: 1.25, lower: -1.25},
+        {range: [500, 630], upper: 1.4, lower: -1.4},
+        {range: [630, 800], upper: 1.6, lower: -1.6},
+        {range: [800, 1000], upper: 1.8, lower: -1.8},
+        {range: [1000, 1250], upper: 2.1, lower: -2.1},
+        {range: [1250, 1600], upper: 2.5, lower: -2.5},
+        {range: [1600, 2000], upper: 3, lower: -3},
+        {range: [2000, 2500], upper: 3.5, lower: -3.5},
+        {range: [2500, 3150], upper: 4.3, lower: -4.3}
+    ],
+    'js16': [
+        {range: [0, 3], upper: 0.3, lower: -0.3},
+        {range: [3, 6], upper: 0.375, lower: -0.375},
+        {range: [6, 10], upper: 0.45, lower: -0.45},
+        {range: [10, 18], upper: 0.55, lower: -0.55},
+        {range: [18, 30], upper: 0.65, lower: -0.65},
+        {range: [30, 50], upper: 0.8, lower: -0.8},
+        {range: [50, 80], upper: 0.95, lower: -0.95},
+        {range: [80, 120], upper: 1.1, lower: -1.1},
+        {range: [120, 180], upper: 1.25, lower: -1.25},
+        {range: [180, 250], upper: 1.45, lower: -1.45},
+        {range: [250, 315], upper: 1.6, lower: -1.6},
+        {range: [315, 400], upper: 1.8, lower: -1.8},
+        {range: [400, 500], upper: 0.2, lower: -0.2},
+        {range: [500, 630], upper: 2.2, lower: -2.2},
+        {range: [630, 800], upper: 2.5, lower: -2.5},
+        {range: [800, 1000], upper: 2.8, lower: -2.8},
+        {range: [1000, 1250], upper: 3.3, lower: -3.3},
+        {range: [1250, 1600], upper: 3.9, lower: -3.9},
+        {range: [1600, 2000], upper: 4.6, lower: -4.6},
+        {range: [2000, 2500], upper: 5.5, lower: -5.5},
+        {range: [2500, 3150], upper: 6.75, lower: -6.75}
+    ],
+    'js17': [
+        {range: [3, 6], upper: 0.6, lower: -0.6},
+        {range: [6, 10], upper: 0.75, lower: -0.75},
+        {range: [10, 18], upper: 0.9, lower: -0.9},
+        {range: [18, 30], upper: 1.05, lower: -1.05},
+        {range: [30, 50], upper: 1.25, lower: -1.25},
+        {range: [50, 80], upper: 1.5, lower: -1.5},
+        {range: [80, 120], upper: 1.75, lower: -1.75},
+        {range: [120, 180], upper: 2.0, lower: -2.0},
+        {range: [180, 250], upper: 2.3, lower: -2.3},
+        {range: [250, 315], upper: 2.6, lower: -2.6},
+        {range: [315, 400], upper: 2.85, lower: -2.85},
+        {range: [400, 500], upper: 3.15, lower: -3.15},
+        {range: [500, 630], upper: 3.5, lower: -3.5},
+        {range: [630, 800], upper: 4, lower: -4},
+        {range: [800, 1000], upper: 4.5, lower: -4.5},
+        {range: [1000, 1250], upper: 5.25, lower: -5.25},
+        {range: [1250, 1600], upper: 6.25, lower: -6.25},
+        {range: [1600, 2000], upper: 7.5, lower: -7.5},
+        {range: [2000, 2500], upper: 8.75, lower: -8.75},
+        {range: [2500, 3150], upper: 10.5, lower: -10.5}
+    ],
+    'js18': [
+        {range: [3, 6], upper: 0.9, lower: -0.9},
+        {range: [6, 10], upper: 1.1, lower: -1.1},
+        {range: [10, 18], upper: 1.35, lower: -1.35},
+        {range: [18, 30], upper: 1.65, lower: -1.65},
+        {range: [30, 50], upper: 1.95, lower: -1.95},
+        {range: [50, 80], upper: 2.3, lower: -2.3},
+        {range: [80, 120], upper: 2.7, lower: -2.7},
+        {range: [120, 180], upper: 3.15, lower: -3.15},
+        {range: [180, 250], upper: 3.6, lower: -3.6},
+        {range: [250, 315], upper: 4.05, lower: -4.05},
+        {range: [315, 400], upper: 4.45, lower: -4.45},
+        {range: [400, 500], upper: 4.85, lower: -4.85},
+        {range: [500, 630], upper: 5.5, lower: -5.5},
+        {range: [630, 800], upper: 6.25, lower: -6.25},
+        {range: [800, 1000], upper: 7, lower: -7},
+        {range: [1000, 1250], upper: 8.25, lower: -8.25},
+        {range: [1250, 1600], upper: 9.75, lower: -9.75},
+        {range: [1600, 2000], upper: 11.5, lower: -11.5},
+        {range: [2000, 2500], upper: 14, lower: -14},
+        {range: [2500, 3150], upper: 16.5, lower: -16.5}
+    ],
+    'a9': [
+        {range: [0, 3], upper: -0.27, lower: -0.295},
+        {range: [3, 6], upper: -0.27, lower: -0.3},
+        {range: [6, 10], upper: -0.28, lower: -0.316},
+        {range: [10, 18], upper: -0.29, lower: -0.333},
+        {range: [18, 30], upper: -0.3, lower: -0.352},
+        {range: [30, 40], upper: -0.31, lower: -0.372},
+        {range: [40, 50], upper: -0.32, lower: -0.382},
+        {range: [50, 65], upper: -0.34, lower: -0.414},
+        {range: [65, 80], upper: -0.36, lower: -0.434},
+        {range: [80, 100], upper: -0.38, lower: -0.467},
+        {range: [100, 120], upper: -0.41, lower: -0.497},
+        {range: [120, 140], upper: -0.46, lower: -0.56},
+        {range: [140, 160], upper: -0.52, lower: -0.62},
+        {range: [160, 180], upper: -0.58, lower: -0.68},
+        {range: [180, 200], upper: -0.66, lower: -0.775},
+        {range: [200, 225], upper: -0.74, lower: -0.855},
+        {range: [225, 250], upper: -0.82, lower: -0.935},
+        {range: [250, 280], upper: -0.92, lower: -1.05},
+        {range: [280, 315], upper: -1.05, lower: -1.18},
+        {range: [315, 355], upper: -1.2, lower: -1.34},
+        {range: [355, 400], upper: -1.35, lower: -1.49},
+        {range: [400, 450], upper: -1.5, lower: -1.655},
+        {range: [450, 500], upper: -1.65, lower: -1.805}
+    ],
+    'a10': [
+        {range: [0, 3], upper: -0.27, lower: -0.31},
+        {range: [3, 6], upper: -0.27, lower: -0.318},
+        {range: [6, 10], upper: -0.28, lower: -0.338},
+        {range: [10, 18], upper: -0.29, lower: -0.36},
+        {range: [18, 30], upper: -0.3, lower: -0.384},
+        {range: [30, 40], upper: -0.31, lower: -0.41},
+        {range: [40, 50], upper: -0.32, lower: -0.42},
+        {range: [50, 65], upper: -0.34, lower: -0.46},
+        {range: [65, 80], upper: -0.36, lower: -0.48},
+        {range: [80, 100], upper: -0.38, lower: -0.52},
+        {range: [100, 120], upper: -0.41, lower: -0.55},
+        {range: [120, 140], upper: -0.46, lower: -0.62},
+        {range: [140, 160], upper: -0.52, lower: -0.68},
+        {range: [160, 180], upper: -0.58, lower: -0.74},
+        {range: [180, 200], upper: -0.66, lower: -0.845},
+        {range: [200, 225], upper: -0.74, lower: -0.925},
+        {range: [225, 250], upper: -0.82, lower: -1.005},
+        {range: [250, 280], upper: -0.92, lower: -1.13},
+        {range: [280, 315], upper: -1.05, lower: -1.26},
+        {range: [315, 355], upper: -1.2, lower: -1.43},
+        {range: [355, 400], upper: -1.35, lower: -1.58},
+        {range: [400, 450], upper: -1.5, lower: -1.75},
+        {range: [450, 500], upper: -1.65, lower: -1.9}
+    ],
+    'a11': [
+        {range: [0, 3], upper: -0.27, lower: -0.33},
+        {range: [3, 6], upper: -0.27, lower: -0.345},
+        {range: [6, 10], upper: -0.28, lower: -0.37},
+        {range: [10, 18], upper: -0.29, lower: -0.4},
+        {range: [18, 30], upper: -0.3, lower: -0.43},
+        {range: [30, 40], upper: -0.31, lower: -0.47},
+        {range: [40, 50], upper: -0.32, lower: -0.48},
+        {range: [50, 65], upper: -0.34, lower: -0.53},
+        {range: [65, 80], upper: -0.36, lower: -0.55},
+        {range: [80, 100], upper: -0.38, lower: -0.6},
+        {range: [100, 120], upper: -0.41, lower: -0.63},
+        {range: [120, 140], upper: -0.46, lower: -0.71},
+        {range: [140, 160], upper: -0.52, lower: -0.77},
+        {range: [160, 180], upper: -0.58, lower: -0.83},
+        {range: [180, 200], upper: -0.66, lower: -0.95},
+        {range: [200, 225], upper: -0.74, lower: -1.03},
+        {range: [225, 250], upper: -0.82, lower: -1.11},
+        {range: [250, 280], upper: -0.92, lower: -1.24},
+        {range: [280, 315], upper: -1.05, lower: -1.37},
+        {range: [315, 355], upper: -1.2, lower: -1.56},
+        {range: [355, 400], upper: -1.35, lower: -1.71},
+        {range: [400, 450], upper: -1.5, lower: -1.9},
+        {range: [450, 500], upper: -1.65, lower: -2.05}
+    ],
+    'a12': [
+        {range: [0, 3], upper: -0.27, lower: -0.37},
+        {range: [3, 6], upper: -0.27, lower: -0.39},
+        {range: [6, 10], upper: -0.28, lower: -0.43},
+        {range: [10, 18], upper: -0.29, lower: -0.47},
+        {range: [18, 30], upper: -0.3, lower: -0.51},
+        {range: [30, 40], upper: -0.31, lower: -0.56},
+        {range: [40, 50], upper: -0.32, lower: -0.57},
+        {range: [50, 65], upper: -0.34, lower: -0.64},
+        {range: [65, 80], upper: -0.36, lower: -0.66},
+        {range: [80, 100], upper: -0.38, lower: -0.73},
+        {range: [100, 120], upper: -0.41, lower: -0.76},
+        {range: [120, 140], upper: -0.46, lower: -0.86},
+        {range: [140, 160], upper: -0.52, lower: -0.92},
+        {range: [160, 180], upper: -0.58, lower: -0.98},
+        {range: [180, 200], upper: -0.66, lower: -1.12},
+        {range: [200, 225], upper: -0.74, lower: -1.2},
+        {range: [225, 250], upper: -0.82, lower: -1.28},
+        {range: [250, 280], upper: -0.92, lower: -1.44},
+        {range: [280, 315], upper: -1.05, lower: -1.57},
+        {range: [315, 355], upper: -1.2, lower: -1.77},
+        {range: [355, 400], upper: -1.35, lower: -1.92},
+        {range: [400, 450], upper: -1.5, lower: -2.13},
+        {range: [450, 500], upper: -1.65, lower: -2.28}
+    ],
+    'a13': [
+        {range: [0, 3], upper: -0.27, lower: -0.41},
+        {range: [3, 6], upper: -0.27, lower: -0.45},
+        {range: [6, 10], upper: -0.28, lower: -0.5},
+        {range: [10, 18], upper: -0.29, lower: -0.56},
+        {range: [18, 30], upper: -0.3, lower: -0.63},
+        {range: [30, 40], upper: -0.31, lower: -0.7},
+        {range: [40, 50], upper: -0.32, lower: -0.71},
+        {range: [50, 65], upper: -0.34, lower: -0.8},
+        {range: [65, 80], upper: -0.36, lower: -0.82},
+        {range: [80, 100], upper: -0.38, lower: -0.92},
+        {range: [100, 120], upper: -0.41, lower: -0.95},
+        {range: [120, 140], upper: -0.46, lower: -1.09},
+        {range: [140, 160], upper: -0.52, lower: -1.15},
+        {range: [160, 180], upper: -0.58, lower: -1.21},
+        {range: [180, 200], upper: -0.66, lower: -1.38},
+        {range: [200, 225], upper: -0.74, lower: -1.46},
+        {range: [225, 250], upper: -0.82, lower: -1.54},
+        {range: [250, 280], upper: -0.92, lower: -1.73},
+        {range: [280, 315], upper: -1.05, lower: -1.86},
+        {range: [315, 355], upper: -1.2, lower: -2.09},
+        {range: [355, 400], upper: -1.35, lower: -2.24},
+        {range: [400, 450], upper: -1.5, lower: -2.47},
+        {range: [450, 500], upper: -1.65, lower: -2.62}
+    ],
+    'b8': [
+        {range: [0, 3], upper: -0.14, lower: -0.154},
+        {range: [3, 6], upper: -0.14, lower: -0.158},
+        {range: [6, 10], upper: -0.15, lower: -0.172},
+        {range: [10, 18], upper: -0.15, lower: -0.177},
+        {range: [18, 30], upper: -0.16, lower: -0.193},
+        {range: [30, 40], upper: -0.17, lower: -0.209},
+        {range: [40, 50], upper: -0.18, lower: -0.219},
+        {range: [50, 65], upper: -0.19, lower: -0.236},
+        {range: [65, 80], upper: -0.2, lower: -0.246},
+        {range: [80, 100], upper: -0.22, lower: -0.274},
+        {range: [100, 120], upper: -0.24, lower: -0.294},
+        {range: [120, 140], upper: -0.26, lower: -0.323},
+        {range: [140, 160], upper: -0.28, lower: -0.343},
+        {range: [160, 180], upper: -0.31, lower: -0.373},
+        {range: [180, 200], upper: -0.34, lower: -0.412},
+        {range: [200, 225], upper: -0.38, lower: -0.452},
+        {range: [225, 250], upper: -0.42, lower: -0.492},
+        {range: [250, 280], upper: -0.48, lower: -0.561},
+        {range: [280, 315], upper: -0.54, lower: -0.621},
+        {range: [315, 355], upper: -0.6, lower: -0.689},
+        {range: [355, 400], upper: -0.68, lower: -0.769},
+        {range: [400, 450], upper: -0.76, lower: -0.857},
+        {range: [450, 500], upper: -0.84, lower: -0.937}
+    ],
+    'b9': [
+        {range: [0, 3], upper: -0.14, lower: -0.154},
+        {range: [3, 6], upper: -0.14, lower: -0.158},
+        {range: [6, 10], upper: -0.15, lower: -0.172},
+        {range: [10, 18], upper: -0.15, lower: -0.177},
+        {range: [18, 30], upper: -0.16, lower: -0.193},
+        {range: [30, 40], upper: -0.17, lower: -0.209},
+        {range: [40, 50], upper: -0.18, lower: -0.219},
+        {range: [50, 65], upper: -0.19, lower: -0.236},
+        {range: [65, 80], upper: -0.2, lower: -0.246},
+        {range: [80, 100], upper: -0.22, lower: -0.274},
+        {range: [100, 120], upper: -0.24, lower: -0.294},
+        {range: [120, 140], upper: -0.26, lower: -0.323},
+        {range: [140, 160], upper: -0.28, lower: -0.343},
+        {range: [160, 180], upper: -0.31, lower: -0.373},
+        {range: [180, 200], upper: -0.34, lower: -0.412},
+        {range: [200, 225], upper: -0.38, lower: -0.452},
+        {range: [225, 250], upper: -0.42, lower: -0.492},
+        {range: [250, 280], upper: -0.48, lower: -0.561},
+        {range: [280, 315], upper: -0.54, lower: -0.621},
+        {range: [315, 355], upper: -0.6, lower: -0.689},
+        {range: [355, 400], upper: -0.68, lower: -0.769},
+        {range: [400, 450], upper: -0.76, lower: -0.857},
+        {range: [450, 500], upper: -0.84, lower: -0.937}
+    ],
+    'b10': [
+        {range: [0, 3], upper: -0.14, lower: -0.165},
+        {range: [3, 6], upper: -0.14, lower: -0.17},
+        {range: [6, 10], upper: -0.15, lower: -0.186},
+        {range: [10, 18], upper: -0.15, lower: -0.193},
+        {range: [18, 30], upper: -0.16, lower: -0.212},
+        {range: [30, 40], upper: -0.17, lower: -0.232},
+        {range: [40, 50], upper: -0.18, lower: -0.242},
+        {range: [50, 65], upper: -0.19, lower: -0.264},
+        {range: [65, 80], upper: -0.2, lower: -0.274},
+        {range: [80, 100], upper: -0.22, lower: -0.307},
+        {range: [100, 120], upper: -0.24, lower: -0.327},
+        {range: [120, 140], upper: -0.26, lower: -0.36},
+        {range: [140, 160], upper: -0.28, lower: -0.38},
+        {range: [160, 180], upper: -0.31, lower: -0.41},
+        {range: [180, 200], upper: -0.34, lower: -0.455},
+        {range: [200, 225], upper: -0.38, lower: -0.495},
+        {range: [225, 250], upper: -0.42, lower: -0.535},
+        {range: [250, 280], upper: -0.48, lower: -0.61},
+        {range: [280, 315], upper: -0.54, lower: -0.67},
+        {range: [315, 355], upper: -0.6, lower: -0.74},
+        {range: [355, 400], upper: -0.68, lower: -0.82},
+        {range: [400, 450], upper: -0.76, lower: -0.915},
+        {range: [450, 500], upper: -0.84, lower: -0.995}
+    ],
+    'b11': [
+        {range: [0, 3], upper: -0.14, lower: -0.18},
+        {range: [3, 6], upper: -0.14, lower: -0.188},
+        {range: [6, 10], upper: -0.15, lower: -0.208},
+        {range: [10, 18], upper: -0.15, lower: -0.22},
+        {range: [18, 30], upper: -0.16, lower: -0.244},
+        {range: [30, 40], upper: -0.17, lower: -0.27},
+        {range: [40, 50], upper: -0.18, lower: -0.28},
+        {range: [50, 65], upper: -0.19, lower: -0.31},
+        {range: [65, 80], upper: -0.2, lower: -0.32},
+        {range: [80, 100], upper: -0.22, lower: -0.36},
+        {range: [100, 120], upper: -0.24, lower: -0.38},
+        {range: [120, 140], upper: -0.26, lower: -0.42},
+        {range: [140, 160], upper: -0.28, lower: -0.44},
+        {range: [160, 180], upper: -0.31, lower: -0.47},
+        {range: [180, 200], upper: -0.34, lower: -0.525},
+        {range: [200, 225], upper: -0.38, lower: -0.565},
+        {range: [225, 250], upper: -0.42, lower: -0.605},
+        {range: [250, 280], upper: -0.48, lower: -0.69},
+        {range: [280, 315], upper: -0.54, lower: -0.75},
+        {range: [315, 355], upper: -0.6, lower: -0.83},
+        {range: [355, 400], upper: -0.68, lower: -0.91},
+        {range: [400, 450], upper: -0.76, lower: -1.01},
+        {range: [450, 500], upper: -0.84, lower: -1.09}
+    ],
+    'b12': [
+        {range: [0, 3], upper: -0.14, lower: -0.2},
+        {range: [3, 6], upper: -0.14, lower: -0.215},
+        {range: [6, 10], upper: -0.15, lower: -0.24},
+        {range: [10, 18], upper: -0.15, lower: -0.26},
+        {range: [18, 30], upper: -0.16, lower: -0.29},
+        {range: [30, 40], upper: -0.17, lower: -0.33},
+        {range: [40, 50], upper: -0.18, lower: -0.34},
+        {range: [50, 65], upper: -0.19, lower: -0.38},
+        {range: [65, 80], upper: -0.2, lower: -0.39},
+        {range: [80, 100], upper: -0.22, lower: -0.44},
+        {range: [100, 120], upper: -0.24, lower: -0.46},
+        {range: [120, 140], upper: -0.26, lower: -0.51},
+        {range: [140, 160], upper: -0.28, lower: -0.53},
+        {range: [160, 180], upper: -0.31, lower: -0.56},
+        {range: [180, 200], upper: -0.34, lower: -0.63},
+        {range: [200, 225], upper: -0.38, lower: -0.67},
+        {range: [225, 250], upper: -0.42, lower: -0.71},
+        {range: [250, 280], upper: -0.48, lower: -0.8},
+        {range: [280, 315], upper: -0.54, lower: -0.86},
+        {range: [315, 355], upper: -0.6, lower: -0.96},
+        {range: [355, 400], upper: -0.68, lower: -1.04},
+        {range: [400, 450], upper: -0.76, lower: -1.16},
+        {range: [450, 500], upper: -0.84, lower: -1.24}
+    ],
+    'b13': [
+        {range: [0, 3], upper: -0.14, lower: -0.24},
+        {range: [3, 6], upper: -0.14, lower: -0.26},
+        {range: [6, 10], upper: -0.15, lower: -0.3},
+        {range: [10, 18], upper: -0.15, lower: -0.33},
+        {range: [18, 30], upper: -0.16, lower: -0.37},
+        {range: [30, 40], upper: -0.17, lower: -0.42},
+        {range: [40, 50], upper: -0.18, lower: -0.43},
+        {range: [50, 65], upper: -0.19, lower: -0.49},
+        {range: [65, 80], upper: -0.2, lower: -0.5},
+        {range: [80, 100], upper: -0.22, lower: -0.57},
+        {range: [100, 120], upper: -0.24, lower: -0.59},
+        {range: [120, 140], upper: -0.26, lower: -0.66},
+        {range: [140, 160], upper: -0.28, lower: -0.68},
+        {range: [160, 180], upper: -0.31, lower: -0.71},
+        {range: [180, 200], upper: -0.34, lower: -0.8},
+        {range: [200, 225], upper: -0.38, lower: -0.84},
+        {range: [225, 250], upper: -0.42, lower: -0.88},
+        {range: [250, 280], upper: -0.48, lower: -1},
+        {range: [280, 315], upper: -0.54, lower: -1.06},
+        {range: [315, 355], upper: -0.6, lower: -1.17},
+        {range: [355, 400], upper: -0.68, lower: -1.25},
+        {range: [400, 450], upper: -0.76, lower: -1.39},
+        {range: [450, 500], upper: -0.84, lower: -1.47}
+    ],
+    'c8': [
+        {range: [0, 3], upper: -0.06, lower: -0.074},
+        {range: [3, 6], upper: -0.07, lower: -0.088},
+        {range: [6, 10], upper: -0.08, lower: -0.102},
+        {range: [10, 18], upper: -0.095, lower: -0.122},
+        {range: [18, 30], upper: -0.11, lower: -0.143},
+        {range: [30, 40], upper: -0.12, lower: -0.159},
+        {range: [40, 50], upper: -0.13, lower: -0.169},
+        {range: [50, 65], upper: -0.14, lower: -0.186},
+        {range: [65, 80], upper: -0.15, lower: -0.196},
+        {range: [80, 100], upper: -0.17, lower: -0.224},
+        {range: [100, 120], upper: -0.18, lower: -0.234},
+        {range: [120, 140], upper: -0.2, lower: -0.263},
+        {range: [140, 160], upper: -0.21, lower: -0.273},
+        {range: [160, 180], upper: -0.23, lower: -0.293},
+        {range: [180, 200], upper: -0.24, lower: -0.312},
+        {range: [200, 225], upper: -0.26, lower: -0.332},
+        {range: [225, 250], upper: -0.28, lower: -0.352},
+        {range: [250, 280], upper: -0.3, lower: -0.381},
+        {range: [280, 315], upper: -0.33, lower: -0.411},
+        {range: [315, 355], upper: -0.36, lower: -0.449},
+        {range: [355, 400], upper: -0.4, lower: -0.489},
+        {range: [400, 450], upper: -0.44, lower: -0.537},
+        {range: [450, 500], upper: -0.48, lower: -0.577}
+    ],
+    'c9': [
+        {range: [0, 3], upper: -0.06, lower: -0.074},
+        {range: [3, 6], upper: -0.07, lower: -0.088},
+        {range: [6, 10], upper: -0.08, lower: -0.102},
+        {range: [10, 18], upper: -0.095, lower: -0.122},
+        {range: [18, 30], upper: -0.11, lower: -0.143},
+        {range: [30, 40], upper: -0.12, lower: -0.159},
+        {range: [40, 50], upper: -0.13, lower: -0.169},
+        {range: [50, 65], upper: -0.14, lower: -0.186},
+        {range: [65, 80], upper: -0.15, lower: -0.196},
+        {range: [80, 100], upper: -0.17, lower: -0.224},
+        {range: [100, 120], upper: -0.18, lower: -0.234},
+        {range: [120, 140], upper: -0.2, lower: -0.263},
+        {range: [140, 160], upper: -0.21, lower: -0.273},
+        {range: [160, 180], upper: -0.23, lower: -0.293},
+        {range: [180, 200], upper: -0.24, lower: -0.312},
+        {range: [200, 225], upper: -0.26, lower: -0.332},
+        {range: [225, 250], upper: -0.28, lower: -0.352},
+        {range: [250, 280], upper: -0.3, lower: -0.381},
+        {range: [280, 315], upper: -0.33, lower: -0.411},
+        {range: [315, 355], upper: -0.36, lower: -0.449},
+        {range: [355, 400], upper: -0.4, lower: -0.489},
+        {range: [400, 450], upper: -0.44, lower: -0.537},
+        {range: [450, 500], upper: -0.48, lower: -0.577}
+    ],
+    'c10': [
+        {range: [0, 3], upper: -0.06, lower: -0.085},
+        {range: [3, 6], upper: -0.07, lower: -0.1},
+        {range: [6, 10], upper: -0.08, lower: -0.116},
+        {range: [10, 18], upper: -0.095, lower: -0.138},
+        {range: [18, 30], upper: -0.11, lower: -0.162},
+        {range: [30, 40], upper: -0.12, lower: -0.182},
+        {range: [40, 50], upper: -0.13, lower: -0.192},
+        {range: [50, 65], upper: -0.14, lower: -0.214},
+        {range: [65, 80], upper: -0.15, lower: -0.224},
+        {range: [80, 100], upper: -0.17, lower: -0.257},
+        {range: [100, 120], upper: -0.18, lower: -0.267},
+        {range: [120, 140], upper: -0.2, lower: -0.3},
+        {range: [140, 160], upper: -0.21, lower: -0.31},
+        {range: [160, 180], upper: -0.23, lower: -0.33},
+        {range: [180, 200], upper: -0.24, lower: -0.355},
+        {range: [200, 225], upper: -0.26, lower: -0.375},
+        {range: [225, 250], upper: -0.28, lower: -0.395},
+        {range: [250, 280], upper: -0.3, lower: -0.43},
+        {range: [280, 315], upper: -0.33, lower: -0.46},
+        {range: [315, 355], upper: -0.36, lower: -0.5},
+        {range: [355, 400], upper: -0.4, lower: -0.54},
+        {range: [400, 450], upper: -0.44, lower: -0.595},
+        {range: [450, 500], upper: -0.48, lower: -0.635}
+    ],
+    'c11': [
+        {range: [0, 3], upper: -0.06, lower: -0.1},
+        {range: [3, 6], upper: -0.07, lower: -0.118},
+        {range: [6, 10], upper: -0.08, lower: -0.138},
+        {range: [10, 18], upper: -0.095, lower: -0.165},
+        {range: [18, 30], upper: -0.11, lower: -0.194},
+        {range: [30, 40], upper: -0.12, lower: -0.22},
+        {range: [40, 50], upper: -0.13, lower: -0.23},
+        {range: [50, 65], upper: -0.14, lower: -0.26},
+        {range: [65, 80], upper: -0.15, lower: -0.27},
+        {range: [80, 100], upper: -0.17, lower: -0.31},
+        {range: [100, 120], upper: -0.18, lower: -0.32},
+        {range: [120, 140], upper: -0.2, lower: -0.36},
+        {range: [140, 160], upper: -0.21, lower: -0.37},
+        {range: [160, 180], upper: -0.23, lower: -0.39},
+        {range: [180, 200], upper: -0.24, lower: -0.425},
+        {range: [200, 225], upper: -0.26, lower: -0.445},
+        {range: [225, 250], upper: -0.28, lower: -0.465},
+        {range: [250, 280], upper: -0.3, lower: -0.51},
+        {range: [280, 315], upper: -0.33, lower: -0.54},
+        {range: [315, 355], upper: -0.36, lower: -0.59},
+        {range: [355, 400], upper: -0.4, lower: -0.63},
+        {range: [400, 450], upper: -0.44, lower: -0.69},
+        {range: [450, 500], upper: -0.48, lower: -0.73}
+    ],
+    'c12': [
+        {range: [0, 3], upper: -0.06, lower: -0.12},
+        {range: [3, 6], upper: -0.07, lower: -0.145},
+        {range: [6, 10], upper: -0.08, lower: -0.17},
+        {range: [10, 18], upper: -0.095, lower: -0.205},
+        {range: [18, 30], upper: -0.11, lower: -0.24},
+        {range: [30, 40], upper: -0.12, lower: -0.28},
+        {range: [40, 50], upper: -0.13, lower: -0.29},
+        {range: [50, 65], upper: -0.14, lower: -0.33},
+        {range: [65, 80], upper: -0.15, lower: -0.34},
+        {range: [80, 100], upper: -0.17, lower: -0.39},
+        {range: [100, 120], upper: -0.18, lower: -0.4},
+        {range: [120, 140], upper: -0.2, lower: -0.45},
+        {range: [140, 160], upper: -0.21, lower: -0.46},
+        {range: [160, 180], upper: -0.23, lower: -0.48},
+        {range: [180, 200], upper: -0.24, lower: -0.53},
+        {range: [200, 225], upper: -0.26, lower: -0.55},
+        {range: [225, 250], upper: -0.28, lower: -0.57},
+        {range: [250, 280], upper: -0.3, lower: -0.62},
+        {range: [280, 315], upper: -0.33, lower: -0.65},
+        {range: [315, 355], upper: -0.36, lower: -0.72},
+        {range: [355, 400], upper: -0.4, lower: -0.76},
+        {range: [400, 450], upper: -0.44, lower: -0.84},
+        {range: [450, 500], upper: -0.48, lower: -0.88}
+    ],
+    'd5': [
+        {range: [0, 3], upper: -0.02, lower: -0.024},
+        {range: [3, 6], upper: -0.03, lower: -0.035},
+        {range: [6, 10], upper: -0.04, lower: -0.046},
+        {range: [10, 18], upper: -0.05, lower: -0.058},
+        {range: [18, 30], upper: -0.065, lower: -0.074},
+        {range: [30, 50], upper: -0.08, lower: -0.091},
+        {range: [50, 80], upper: -0.1, lower: -0.113},
+        {range: [80, 120], upper: -0.12, lower: -0.135},
+        {range: [120, 180], upper: -0.145, lower: -0.163},
+        {range: [180, 250], upper: -0.17, lower: -0.19},
+        {range: [250, 315], upper: -0.19, lower: -0.213},
+        {range: [315, 400], upper: -0.21, lower: -0.235},
+        {range: [400, 500], upper: -0.23, lower: -0.257}
+    ],
+    'd6': [
+        {range: [0, 3], upper: -0.02, lower: -0.026},
+        {range: [3, 6], upper: -0.03, lower: -0.038},
+        {range: [6, 10], upper: -0.04, lower: -0.049},
+        {range: [10, 18], upper: -0.05, lower: -0.061},
+        {range: [18, 30], upper: -0.065, lower: -0.078},
+        {range: [30, 50], upper: -0.08, lower: -0.096},
+        {range: [50, 80], upper: -0.1, lower: -0.119},
+        {range: [80, 120], upper: -0.12, lower: -0.142},
+        {range: [120, 180], upper: -0.145, lower: -0.17},
+        {range: [180, 250], upper: -0.17, lower: -0.199},
+        {range: [250, 315], upper: -0.19, lower: -0.222},
+        {range: [315, 400], upper: -0.21, lower: -0.246},
+        {range: [400, 500], upper: -0.23, lower: -0.27}
+    ],
+    'd7': [
+        {range: [0, 3], upper: -0.02, lower: -0.03},
+        {range: [3, 6], upper: -0.03, lower: -0.042},
+        {range: [6, 10], upper: -0.04, lower: -0.055},
+        {range: [10, 18], upper: -0.05, lower: -0.068},
+        {range: [18, 30], upper: -0.065, lower: -0.086},
+        {range: [30, 50], upper: -0.08, lower: -0.105},
+        {range: [50, 80], upper: -0.1, lower: -0.13},
+        {range: [80, 120], upper: -0.12, lower: -0.155},
+        {range: [120, 180], upper: -0.145, lower: -0.185},
+        {range: [180, 250], upper: -0.17, lower: -0.216},
+        {range: [250, 315], upper: -0.19, lower: -0.242},
+        {range: [315, 400], upper: -0.21, lower: -0.267},
+        {range: [400, 500], upper: -0.23, lower: -0.293},
+        {range: [500, 630], upper: -0.26, lower: -0.33},
+        {range: [630, 800], upper: -0.29, lower: -0.37},
+        {range: [800, 1000], upper: -0.32, lower: -0.41},
+        {range: [1000, 1250], upper: -0.35, lower: -0.455},
+        {range: [1250, 1600], upper: -0.39, lower: -0.515},
+        {range: [1600, 2000], upper: -0.43, lower: -0.58},
+        {range: [2000, 2500], upper: -0.48, lower: -0.655},
+        {range: [2500, 3150], upper: -0.52, lower: -0.73}
+    ],
+    'd8': [
+        {range: [0, 3], upper: -0.02, lower: -0.034},
+        {range: [3, 6], upper: -0.03, lower: -0.048},
+        {range: [6, 10], upper: -0.04, lower: -0.062},
+        {range: [10, 18], upper: -0.05, lower: -0.077},
+        {range: [18, 30], upper: -0.065, lower: -0.098},
+        {range: [30, 50], upper: -0.08, lower: -0.119},
+        {range: [50, 80], upper: -0.1, lower: -0.146},
+        {range: [80, 120], upper: -0.12, lower: -0.174},
+        {range: [120, 180], upper: -0.145, lower: -0.208},
+        {range: [180, 250], upper: -0.17, lower: -0.242},
+        {range: [250, 315], upper: -0.19, lower: -0.271},
+        {range: [315, 400], upper: -0.21, lower: -0.299},
+        {range: [400, 500], upper: -0.23, lower: -0.327},
+        {range: [500, 630], upper: -0.26, lower: -0.37},
+        {range: [630, 800], upper: -0.29, lower: -0.415},
+        {range: [800, 1000], upper: -0.32, lower: -0.46},
+        {range: [1000, 1250], upper: -0.35, lower: -0.515},
+        {range: [1250, 1600], upper: -0.39, lower: -0.585},
+        {range: [1600, 2000], upper: -0.43, lower: -0.66},
+        {range: [2000, 2500], upper: -0.48, lower: -0.76},
+        {range: [2500, 3150], upper: -0.52, lower: -0.85}
+    ],
+    'd9': [
+        {range: [0, 3], upper: -0.02, lower: -0.045},
+        {range: [3, 6], upper: -0.03, lower: -0.06},
+        {range: [6, 10], upper: -0.04, lower: -0.076},
+        {range: [10, 18], upper: -0.05, lower: -0.093},
+        {range: [18, 30], upper: -0.065, lower: -0.117},
+        {range: [30, 50], upper: -0.08, lower: -0.142},
+        {range: [50, 80], upper: -0.1, lower: -0.174},
+        {range: [80, 120], upper: -0.12, lower: -0.207},
+        {range: [120, 180], upper: -0.145, lower: -0.245},
+        {range: [180, 250], upper: -0.17, lower: -0.285},
+        {range: [250, 315], upper: -0.19, lower: -0.32},
+        {range: [315, 400], upper: -0.21, lower: -0.35},
+        {range: [400, 500], upper: -0.23, lower: -0.385},
+        {range: [500, 630], upper: -0.26, lower: -0.435},
+        {range: [630, 800], upper: -0.29, lower: -0.49},
+        {range: [800, 1000], upper: -0.32, lower: -0.55},
+        {range: [1000, 1250], upper: -0.35, lower: -0.61},
+        {range: [1250, 1600], upper: -0.39, lower: -0.7},
+        {range: [1600, 2000], upper: -0.43, lower: -0.8},
+        {range: [2000, 2500], upper: -0.48, lower: -0.92},
+        {range: [2500, 3150], upper: -0.52, lower: -1.06}
+    ],
+    'd10': [
+        {range: [0, 3], upper: -0.02, lower: -0.06},
+        {range: [3, 6], upper: -0.03, lower: -0.078},
+        {range: [6, 10], upper: -0.04, lower: -0.098},
+        {range: [10, 18], upper: -0.05, lower: -0.12},
+        {range: [18, 30], upper: -0.065, lower: -0.149},
+        {range: [30, 50], upper: -0.08, lower: -0.18},
+        {range: [50, 80], upper: -0.1, lower: -0.22},
+        {range: [80, 120], upper: -0.12, lower: -0.26},
+        {range: [120, 180], upper: -0.145, lower: -0.305},
+        {range: [180, 250], upper: -0.17, lower: -0.355},
+        {range: [250, 315], upper: -0.19, lower: -0.4},
+        {range: [315, 400], upper: -0.21, lower: -0.44},
+        {range: [400, 500], upper: -0.23, lower: -0.48},
+        {range: [500, 630], upper: -0.26, lower: -0.54},
+        {range: [630, 800], upper: -0.29, lower: -0.61},
+        {range: [800, 1000], upper: -0.32, lower: -0.68},
+        {range: [1000, 1250], upper: -0.35, lower: -0.77},
+        {range: [1250, 1600], upper: -0.39, lower: -0.89},
+        {range: [1600, 2000], upper: -0.43, lower: -1.03},
+        {range: [2000, 2500], upper: -0.48, lower: -1.18},
+        {range: [2500, 3150], upper: -0.52, lower: -1.38}
+    ],
+    'd11': [
+        {range: [0, 3], upper: -0.02, lower: -0.08},
+        {range: [3, 6], upper: -0.03, lower: -0.105},
+        {range: [6, 10], upper: -0.04, lower: -0.13},
+        {range: [10, 18], upper: -0.05, lower: -0.16},
+        {range: [18, 30], upper: -0.065, lower: -0.195},
+        {range: [30, 50], upper: -0.08, lower: -0.24},
+        {range: [50, 80], upper: -0.1, lower: -0.29},
+        {range: [80, 120], upper: -0.12, lower: -0.34},
+        {range: [120, 180], upper: -0.145, lower: -0.395},
+        {range: [180, 250], upper: -0.17, lower: -0.46},
+        {range: [250, 315], upper: -0.19, lower: -0.51},
+        {range: [315, 400], upper: -0.21, lower: -0.57},
+        {range: [400, 500], upper: -0.23, lower: -0.63},
+        {range: [500, 630], upper: -0.26, lower: -0.7},
+        {range: [630, 800], upper: -0.29, lower: -0.79},
+        {range: [800, 1000], upper: -0.32, lower: -0.88},
+        {range: [1000, 1250], upper: -0.35, lower: -1.01},
+        {range: [1250, 1600], upper: -0.39, lower: -1.17},
+        {range: [1600, 2000], upper: -0.43, lower: -1.35},
+        {range: [2000, 2500], upper: -0.48, lower: -1.58},
+        {range: [2500, 3150], upper: -0.52, lower: -1.87}
+    ],
+    'd12': [
+        {range: [0, 3], upper: -0.02, lower: -0.12},
+        {range: [3, 6], upper: -0.03, lower: -0.15},
+        {range: [6, 10], upper: -0.04, lower: -0.19},
+        {range: [10, 18], upper: -0.05, lower: -0.23},
+        {range: [18, 30], upper: -0.065, lower: -0.275},
+        {range: [30, 50], upper: -0.08, lower: -0.33},
+        {range: [50, 80], upper: -0.1, lower: -0.4},
+        {range: [80, 120], upper: -0.12, lower: -0.47},
+        {range: [120, 180], upper: -0.145, lower: -0.545},
+        {range: [180, 250], upper: -0.17, lower: -0.63},
+        {range: [250, 315], upper: -0.19, lower: -0.71},
+        {range: [315, 400], upper: -0.21, lower: -0.78},
+        {range: [400, 500], upper: -0.23, lower: -0.86},
+        {range: [500, 630], upper: -0.26, lower: -1.0},
+        {range: [630, 800], upper: -0.29, lower: -1.12}
+    ],
+    'd13': [
+        {range: [0, 3], upper: -0.02, lower: -0.16},
+        {range: [3, 6], upper: -0.03, lower: -0.21},
+        {range: [6, 10], upper: -0.04, lower: -0.26},
+        {range: [10, 18], upper: -0.05, lower: -0.32},
+        {range: [18, 30], upper: -0.065, lower: -0.395},
+        {range: [30, 50], upper: -0.08, lower: -0.47},
+        {range: [50, 80], upper: -0.1, lower: -0.56},
+        {range: [80, 120], upper: -0.12, lower: -0.66},
+        {range: [120, 180], upper: -0.145, lower: -0.775},
+        {range: [180, 250], upper: -0.17, lower: -0.89},
+        {range: [250, 315], upper: -0.19, lower: -1.0},
+        {range: [315, 400], upper: -0.21, lower: -1.1},
+        {range: [400, 500], upper: -0.23, lower: -1.2}
+    ],
+    'e5': [
+        {range: [0, 3], upper: -0.014, lower: -0.018},
+        {range: [3, 6], upper: -0.02, lower: -0.025},
+        {range: [6, 10], upper: -0.025, lower: -0.031},
+        {range: [10, 18], upper: -0.032, lower: -0.04},
+        {range: [18, 30], upper: -0.04, lower: -0.049},
+        {range: [30, 50], upper: -0.05, lower: -0.061},
+        {range: [50, 80], upper: -0.06, lower: -0.073},
+        {range: [80, 120], upper: -0.072, lower: -0.087},
+        {range: [120, 180], upper: -0.085, lower: -0.103},
+        {range: [180, 250], upper: -0.1, lower: -0.12},
+        {range: [250, 315], upper: -0.11, lower: -0.133},
+        {range: [315, 400], upper: -0.125, lower: -0.15},
+        {range: [400, 500], upper: -0.135, lower: -0.162}
+    ],
+    'e6': [
+        {range: [0, 3], upper: -0.014, lower: -0.02},
+        {range: [3, 6], upper: -0.02, lower: -0.028},
+        {range: [6, 10], upper: -0.025, lower: -0.034},
+        {range: [10, 18], upper: -0.032, lower: -0.043},
+        {range: [18, 30], upper: -0.04, lower: -0.053},
+        {range: [30, 50], upper: -0.05, lower: -0.066},
+        {range: [50, 80], upper: -0.06, lower: -0.079},
+        {range: [80, 120], upper: -0.072, lower: -0.094},
+        {range: [120, 180], upper: -0.085, lower: -0.11},
+        {range: [180, 250], upper: -0.1, lower: -0.129},
+        {range: [250, 315], upper: -0.11, lower: -0.142},
+        {range: [315, 400], upper: -0.125, lower: -0.161},
+        {range: [400, 500], upper: -0.135, lower: -0.175},
+        {range: [500, 630], upper: -0.145, lower: -0.189},
+        {range: [630, 800], upper: -0.16, lower: -0.21},
+        {range: [800, 1000], upper: -0.17, lower: -0.226},
+        {range: [1000, 1250], upper: -0.195, lower: -0.261},
+        {range: [1250, 1600], upper: -0.22, lower: -0.298},
+        {range: [1600, 2000], upper: -0.24, lower: -0.332},
+        {range: [2000, 2500], upper: -0.26, lower: -0.37},
+        {range: [2500, 3150], upper: -0.29, lower: -0.425}
+    ],
+    'e7': [
+        {range: [0, 3], upper: -0.014, lower: -0.024},
+        {range: [3, 6], upper: -0.02, lower: -0.032},
+        {range: [6, 10], upper: -0.025, lower: -0.04},
+        {range: [10, 18], upper: -0.032, lower: -0.05},
+        {range: [18, 30], upper: -0.04, lower: -0.061},
+        {range: [30, 50], upper: -0.05, lower: -0.075},
+        {range: [50, 80], upper: -0.06, lower: -0.09},
+        {range: [80, 120], upper: -0.072, lower: -0.107},
+        {range: [120, 180], upper: -0.085, lower: -0.125},
+        {range: [180, 250], upper: -0.1, lower: -0.146},
+        {range: [250, 315], upper: -0.11, lower: -0.162},
+        {range: [315, 400], upper: -0.125, lower: -0.182},
+        {range: [400, 500], upper: -0.135, lower: -0.198},
+        {range: [500, 630], upper: -0.145, lower: -0.215},
+        {range: [630, 800], upper: -0.16, lower: -0.24},
+        {range: [800, 1000], upper: -0.17, lower: -0.26},
+        {range: [1000, 1250], upper: -0.195, lower: -0.3},
+        {range: [1250, 1600], upper: -0.22, lower: -0.345},
+        {range: [1600, 2000], upper: -0.24, lower: -0.39},
+        {range: [2000, 2500], upper: -0.26, lower: -0.435},
+        {range: [2500, 3150], upper: -0.29, lower: -0.5}
+    ],
+    'e8': [
+        {range: [0, 3], upper: -0.014, lower: -0.028},
+        {range: [3, 6], upper: -0.02, lower: -0.038},
+        {range: [6, 10], upper: -0.025, lower: -0.047},
+        {range: [10, 18], upper: -0.032, lower: -0.059},
+        {range: [18, 30], upper: -0.04, lower: -0.073},
+        {range: [30, 50], upper: -0.05, lower: -0.089},
+        {range: [50, 80], upper: -0.06, lower: -0.106},
+        {range: [80, 120], upper: -0.072, lower: -0.126},
+        {range: [120, 180], upper: -0.085, lower: -0.148},
+        {range: [180, 250], upper: -0.1, lower: -0.172},
+        {range: [250, 315], upper: -0.11, lower: -0.191},
+        {range: [315, 400], upper: -0.125, lower: -0.214},
+        {range: [400, 500], upper: -0.135, lower: -0.232},
+        {range: [500, 630], upper: -0.145, lower: -0.255},
+        {range: [630, 800], upper: -0.16, lower: -0.285},
+        {range: [800, 1000], upper: -0.17, lower: -0.31},
+        {range: [1000, 1250], upper: -0.195, lower: -0.36},
+        {range: [1250, 1600], upper: -0.22, lower: -0.415},
+        {range: [1600, 2000], upper: -0.24, lower: -0.47},
+        {range: [2000, 2500], upper: -0.26, lower: -0.54},
+        {range: [2500, 3150], upper: -0.29, lower: -0.62}
+    ],
+    'e9': [
+        {range: [0, 3], upper: -0.014, lower: -0.039},
+        {range: [3, 6], upper: -0.02, lower: -0.05},
+        {range: [6, 10], upper: -0.025, lower: -0.061},
+        {range: [10, 18], upper: -0.032, lower: -0.075},
+        {range: [18, 30], upper: -0.04, lower: -0.092},
+        {range: [30, 50], upper: -0.05, lower: -0.112},
+        {range: [50, 80], upper: -0.06, lower: -0.134},
+        {range: [80, 120], upper: -0.072, lower: -0.159},
+        {range: [120, 180], upper: -0.085, lower: -0.185},
+        {range: [180, 250], upper: -0.1, lower: -0.215},
+        {range: [250, 315], upper: -0.11, lower: -0.24},
+        {range: [315, 400], upper: -0.125, lower: -0.265},
+        {range: [400, 500], upper: -0.135, lower: -0.29},
+        {range: [500, 630], upper: -0.145, lower: -0.32},
+        {range: [630, 800], upper: -0.16, lower: -0.36},
+        {range: [800, 1000], upper: -0.17, lower: -0.4},
+        {range: [1000, 1250], upper: -0.195, lower: -0.455},
+        {range: [1250, 1600], upper: -0.22, lower: -0.53},
+        {range: [1600, 2000], upper: -0.24, lower: -0.61},
+        {range: [2000, 2500], upper: -0.26, lower: -0.7},
+        {range: [2500, 3150], upper: -0.29, lower: -0.83}
+    ],
+    'e10': [
+        {range: [0, 3], upper: -0.014, lower: -0.054},
+        {range: [3, 6], upper: -0.02, lower: -0.068},
+        {range: [6, 10], upper: -0.025, lower: -0.083},
+        {range: [10, 18], upper: -0.032, lower: -0.102},
+        {range: [18, 30], upper: -0.04, lower: -0.124},
+        {range: [30, 50], upper: -0.05, lower: -0.15},
+        {range: [50, 80], upper: -0.06, lower: -0.18},
+        {range: [80, 120], upper: -0.072, lower: -0.212},
+        {range: [120, 180], upper: -0.085, lower: -0.245},
+        {range: [180, 250], upper: -0.1, lower: -0.285},
+        {range: [250, 315], upper: -0.11, lower: -0.32},
+        {range: [315, 400], upper: -0.125, lower: -0.355},
+        {range: [400, 500], upper: -0.135, lower: -0.385},
+        {range: [500, 630], upper: -0.145, lower: -0.425},
+        {range: [630, 800], upper: -0.16, lower: -0.48},
+        {range: [800, 1000], upper: -0.17, lower: -0.53},
+        {range: [1000, 1250], upper: -0.195, lower: -0.615},
+        {range: [1250, 1600], upper: -0.22, lower: -0.72},
+        {range: [1600, 2000], upper: -0.24, lower: -0.84},
+        {range: [2000, 2500], upper: -0.26, lower: -0.96},
+        {range: [2500, 3150], upper: -0.29, lower: -1.15}
+    ],
+    'f3': [
+        {range: [0, 3], upper: -0.006, lower: -0.008},
+        {range: [3, 6], upper: -0.01, lower: -0.0125},
+        {range: [6, 10], upper: -0.013, lower: -0.0155},
+        {range: [10, 18], upper: -0.016, lower: -0.019},
+        {range: [18, 30], upper: -0.02, lower: -0.024},
+        {range: [30, 50], upper: -0.025, lower: -0.029}
+    ],
+    'f4': [
+        {range: [0, 3], upper: -0.006, lower: -0.009},
+        {range: [3, 6], upper: -0.01, lower: -0.014},
+        {range: [6, 10], upper: -0.013, lower: -0.017},
+        {range: [10, 18], upper: -0.016, lower: -0.021},
+        {range: [18, 30], upper: -0.02, lower: -0.026},
+        {range: [30, 50], upper: -0.025, lower: -0.032},
+        {range: [50, 80], upper: -0.03, lower: -0.038},
+        {range: [80, 120], upper: -0.036, lower: -0.046},
+        {range: [120, 180], upper: -0.043, lower: -0.055},
+        {range: [180, 250], upper: -0.05, lower: -0.064},
+        {range: [250, 315], upper: -0.056, lower: -0.072},
+        {range: [315, 400], upper: -0.062, lower: -0.08},
+        {range: [400, 500], upper: -0.068, lower: -0.088}
+    ],
+    'f5': [
+        {range: [0, 3], upper: -0.006, lower: -0.01},
+        {range: [3, 6], upper: -0.01, lower: -0.015},
+        {range: [6, 10], upper: -0.013, lower: -0.019},
+        {range: [10, 18], upper: -0.016, lower: -0.024},
+        {range: [18, 30], upper: -0.02, lower: -0.029},
+        {range: [30, 50], upper: -0.025, lower: -0.036},
+        {range: [50, 80], upper: -0.03, lower: -0.043},
+        {range: [80, 120], upper: -0.036, lower: -0.051},
+        {range: [120, 180], upper: -0.043, lower: -0.061},
+        {range: [180, 250], upper: -0.05, lower: -0.07},
+        {range: [250, 315], upper: -0.056, lower: -0.079},
+        {range: [315, 400], upper: -0.062, lower: -0.087},
+        {range: [400, 500], upper: -0.068, lower: -0.095}
+    ],
+    'f6': [
+        {range: [0, 3], upper: -0.006, lower: -0.012},
+        {range: [3, 6], upper: -0.01, lower: -0.018},
+        {range: [6, 10], upper: -0.013, lower: -0.022},
+        {range: [10, 18], upper: -0.016, lower: -0.027},
+        {range: [18, 30], upper: -0.02, lower: -0.033},
+        {range: [30, 50], upper: -0.025, lower: -0.041},
+        {range: [50, 80], upper: -0.03, lower: -0.049},
+        {range: [80, 120], upper: -0.036, lower: -0.058},
+        {range: [120, 180], upper: -0.043, lower: -0.068},
+        {range: [180, 250], upper: -0.05, lower: -0.079},
+        {range: [250, 315], upper: -0.056, lower: -0.088},
+        {range: [315, 400], upper: -0.062, lower: -0.098},
+        {range: [400, 500], upper: -0.068, lower: -0.108},
+        {range: [500, 630], upper: -0.076, lower: -0.12}
+    ],
+    'f7': [
+        {range: [0, 3], upper: -0.006, lower: -0.016},
+        {range: [3, 6], upper: -0.01, lower: -0.022},
+        {range: [6, 10], upper: -0.013, lower: -0.028},
+        {range: [10, 18], upper: -0.016, lower: -0.034},
+        {range: [18, 30], upper: -0.02, lower: -0.041},
+        {range: [30, 50], upper: -0.025, lower: -0.05},
+        {range: [50, 80], upper: -0.03, lower: -0.06},
+        {range: [80, 120], upper: -0.036, lower: -0.071},
+        {range: [120, 180], upper: -0.043, lower: -0.083},
+        {range: [180, 250], upper: -0.05, lower: -0.096},
+        {range: [250, 315], upper: -0.056, lower: -0.108},
+        {range: [315, 400], upper: -0.062, lower: -0.119},
+        {range: [400, 500], upper: -0.068, lower: -0.131},
+        {range: [500, 630], upper: -0.076, lower: -0.146},
+        {range: [630, 800], upper: -0.08, lower: -0.16},
+        {range: [800, 1000], upper: -0.086, lower: -0.176},
+        {range: [1000, 1250], upper: -0.098, lower: -0.203},
+        {range: [1250, 1600], upper: -0.11, lower: -0.235},
+        {range: [1600, 2000], upper: -0.12, lower: -0.27},
+        {range: [2000, 2500], upper: -0.13, lower: -0.305},
+        {range: [2500, 3150], upper: -0.145, lower: -0.355}
+    ],
+    'f8': [
+        {range: [0, 3], upper: -0.006, lower: -0.02},
+        {range: [3, 6], upper: -0.01, lower: -0.028},
+        {range: [6, 10], upper: -0.013, lower: -0.035},
+        {range: [10, 18], upper: -0.016, lower: -0.043},
+        {range: [18, 30], upper: -0.02, lower: -0.053},
+        {range: [30, 50], upper: -0.025, lower: -0.064},
+        {range: [50, 80], upper: -0.03, lower: -0.076},
+        {range: [80, 120], upper: -0.036, lower: -0.09},
+        {range: [120, 180], upper: -0.043, lower: -0.106},
+        {range: [180, 250], upper: -0.05, lower: -0.122},
+        {range: [250, 315], upper: -0.056, lower: -0.137},
+        {range: [315, 400], upper: -0.062, lower: -0.151},
+        {range: [400, 500], upper: -0.068, lower: -0.165},
+        {range: [500, 630], upper: -0.076, lower: -0.186},
+        {range: [630, 800], upper: -0.08, lower: -0.205},
+        {range: [800, 1000], upper: -0.086, lower: -0.226},
+        {range: [1000, 1250], upper: -0.098, lower: -0.263},
+        {range: [1250, 1600], upper: -0.11, lower: -0.305},
+        {range: [1600, 2000], upper: -0.12, lower: -0.35},
+        {range: [2000, 2500], upper: -0.13, lower: -0.41},
+        {range: [2500, 3150], upper: -0.145, lower: -0.475}
+    ],
+    'f9': [
+        {range: [0, 3], upper: -0.006, lower: -0.031},
+        {range: [3, 6], upper: -0.01, lower: -0.04},
+        {range: [6, 10], upper: -0.013, lower: -0.049},
+        {range: [10, 18], upper: -0.016, lower: -0.059},
+        {range: [18, 30], upper: -0.02, lower: -0.072},
+        {range: [30, 50], upper: -0.025, lower: -0.087},
+        {range: [50, 80], upper: -0.03, lower: -0.104},
+        {range: [80, 120], upper: -0.036, lower: -0.123},
+        {range: [120, 180], upper: -0.043, lower: -0.143},
+        {range: [180, 250], upper: -0.05, lower: -0.165},
+        {range: [250, 315], upper: -0.056, lower: -0.186},
+        {range: [315, 400], upper: -0.062, lower: -0.202},
+        {range: [400, 500], upper: -0.068, lower: -0.223},
+        {range: [500, 630], upper: -0.076, lower: -0.251},
+        {range: [630, 800], upper: -0.08, lower: -0.28},
+        {range: [800, 1000], upper: -0.086, lower: -0.316},
+        {range: [1000, 1250], upper: -0.098, lower: -0.358},
+        {range: [1250, 1600], upper: -0.11, lower: -0.42},
+        {range: [1600, 2000], upper: -0.12, lower: -0.49},
+        {range: [2000, 2500], upper: -0.13, lower: -0.57},
+        {range: [2500, 3150], upper: -0.145, lower: -0.685}
+    ],
+    'f10': [
+        {range: [0, 3], upper: -0.006, lower: -0.046},
+        {range: [3, 6], upper: -0.01, lower: -0.058},
+        {range: [6, 10], upper: -0.013, lower: -0.071},
+        {range: [10, 18], upper: -0.016, lower: -0.086},
+        {range: [18, 30], upper: -0.02, lower: -0.104},
+        {range: [30, 50], upper: -0.025, lower: -0.125},
+        {range: [50, 80], upper: -0.03, lower: -0.15},
+        {range: [80, 120], upper: -0.036, lower: -0.175},
+        {range: [120, 180], upper: -0.043, lower: -0.205},
+        {range: [180, 250], upper: -0.05, lower: -0.244},
+        {range: [250, 315], upper: -0.056, lower: -0.281},
+        {range: [315, 400], upper: -0.062, lower: -0.327},
+        {range: [400, 500], upper: -0.068, lower: -0.373},
+        {range: [500, 630], upper: -0.076, lower: -0.443},
+        {range: [630, 800], upper: -0.08, lower: -0.517},
+        {range: [800, 1000], upper: -0.086, lower: -0.603},
+        {range: [1000, 1250], upper: -0.098, lower: -0.717},
+        {range: [1250, 1600], upper: -0.11, lower: -0.864},
+        {range: [1600, 2000], upper: -0.12, lower: -1.006},
+        {range: [2000, 2500], upper: -0.13, lower: -1.188},
+        {range: [2500, 3150], upper: -0.145, lower: -1.404}
+    ],
+    'g3': [
+        {range: [0, 3], upper: -0.002, lower: -0.004},
+        {range: [3, 6], upper: -0.004, lower: -0.0065},
+        {range: [6, 10], upper: -0.005, lower: -0.0075},
+        {range: [10, 18], upper: -0.006, lower: -0.009},
+        {range: [18, 30], upper: -0.007, lower: -0.011},
+        {range: [30, 50], upper: -0.009, lower: -0.013}
+    ],
+    'g4': [
+        {range: [0, 3], upper: -0.002, lower: -0.005},
+        {range: [3, 6], upper: -0.004, lower: -0.008},
+        {range: [6, 10], upper: -0.005, lower: -0.009},
+        {range: [10, 18], upper: -0.006, lower: -0.011},
+        {range: [18, 30], upper: -0.007, lower: -0.013},
+        {range: [30, 50], upper: -0.009, lower: -0.016},
+        {range: [50, 80], upper: -0.01, lower: -0.018},
+        {range: [80, 120], upper: -0.012, lower: -0.022},
+        {range: [120, 180], upper: -0.014, lower: -0.026},
+        {range: [180, 250], upper: -0.015, lower: -0.029},
+        {range: [250, 315], upper: -0.017, lower: -0.033},
+        {range: [315, 400], upper: -0.018, lower: -0.036},
+        {range: [400, 500], upper: -0.02, lower: -0.04}
+    ],
+    'g5': [
+        {range: [0, 3], upper: -0.002, lower: -0.006},
+        {range: [3, 6], upper: -0.004, lower: -0.009},
+        {range: [6, 10], upper: -0.005, lower: -0.011},
+        {range: [10, 18], upper: -0.006, lower: -0.014},
+        {range: [18, 30], upper: -0.007, lower: -0.016},
+        {range: [30, 50], upper: -0.009, lower: -0.02},
+        {range: [50, 80], upper: -0.01, lower: -0.023},
+        {range: [80, 120], upper: -0.012, lower: -0.027},
+        {range: [120, 180], upper: -0.014, lower: -0.032},
+        {range: [180, 250], upper: -0.015, lower: -0.035},
+        {range: [250, 315], upper: -0.017, lower: -0.04},
+        {range: [315, 400], upper: -0.018, lower: -0.043},
+        {range: [400, 500], upper: -0.02, lower: -0.047}
+    ],
+    'g6': [
+        {range: [0, 3], upper: -0.002, lower: -0.008},
+        {range: [3, 6], upper: -0.004, lower: -0.012},
+        {range: [6, 10], upper: -0.005, lower: -0.014},
+        {range: [10, 18], upper: -0.006, lower: -0.017},
+        {range: [18, 30], upper: -0.007, lower: -0.02},
+        {range: [30, 50], upper: -0.009, lower: -0.025},
+        {range: [50, 80], upper: -0.01, lower: -0.029},
+        {range: [80, 120], upper: -0.012, lower: -0.034},
+        {range: [120, 180], upper: -0.014, lower: -0.039},
+        {range: [180, 250], upper: -0.015, lower: -0.044},
+        {range: [250, 315], upper: -0.017, lower: -0.049},
+        {range: [315, 400], upper: -0.018, lower: -0.054},
+        {range: [400, 500], upper: -0.02, lower: -0.06},
+        {range: [500, 630], upper: -0.022, lower: -0.066},
+        {range: [630, 800], upper: -0.024, lower: -0.074},
+        {range: [800, 1000], upper: -0.026, lower: -0.082},
+        {range: [1000, 1250], upper: -0.028, lower: -0.094},
+        {range: [1250, 1600], upper: -0.03, lower: -0.108},
+        {range: [1600, 2000], upper: -0.032, lower: -0.124},
+        {range: [2000, 2500], upper: -0.034, lower: -0.144},
+        {range: [2500, 3150], upper: -0.038, lower: -0.173}
+    ],
+    'g7': [
+        {range: [0, 3], upper: -0.002, lower: -0.012},
+        {range: [3, 6], upper: -0.004, lower: -0.016},
+        {range: [6, 10], upper: -0.005, lower: -0.02},
+        {range: [10, 18], upper: -0.006, lower: -0.024},
+        {range: [18, 30], upper: -0.007, lower: -0.028},
+        {range: [30, 50], upper: -0.009, lower: -0.034},
+        {range: [50, 80], upper: -0.01, lower: -0.04},
+        {range: [80, 120], upper: -0.012, lower: -0.047},
+        {range: [120, 180], upper: -0.014, lower: -0.054},
+        {range: [180, 250], upper: -0.015, lower: -0.061},
+        {range: [250, 315], upper: -0.017, lower: -0.069},
+        {range: [315, 400], upper: -0.018, lower: -0.075},
+        {range: [400, 500], upper: -0.02, lower: -0.083}
+    ],
+    'g8': [
+        {range: [0, 3], upper: -0.002, lower: -0.016},
+        {range: [3, 6], upper: -0.004, lower: -0.022},
+        {range: [6, 10], upper: -0.005, lower: -0.027},
+        {range: [10, 18], upper: -0.006, lower: -0.033},
+        {range: [18, 30], upper: -0.007, lower: -0.04},
+        {range: [30, 50], upper: -0.009, lower: -0.048},
+        {range: [50, 80], upper: -0.01, lower: -0.056}
+    ],
+    'g9': [
+        {range: [0, 3], upper: -0.002, lower: -0.027},
+        {range: [3, 6], upper: -0.004, lower: -0.034},
+        {range: [6, 10], upper: -0.005, lower: -0.041},
+        {range: [10, 18], upper: -0.006, lower: -0.049},
+        {range: [18, 30], upper: -0.007, lower: -0.059},
+        {range: [30, 50], upper: -0.009, lower: -0.071}
+    ],
+    'g10': [
+        {range: [0, 3], upper: -0.002, lower: -0.042},
+        {range: [3, 6], upper: -0.004, lower: -0.052},
+        {range: [6, 10], upper: -0.005, lower: -0.063},
+        {range: [10, 18], upper: -0.006, lower: -0.076},
+        {range: [18, 30], upper: -0.007, lower: -0.091},
+        {range: [30, 50], upper: -0.009, lower: -0.109}
+    ],
+    'j5': [
+        {range: [0, 3], upper: 0.002, lower: -0.002},
+        {range: [3, 6], upper: 0.003, lower: -0.002},
+        {range: [6, 10], upper: 0.004, lower: -0.002},
+        {range: [10, 18], upper: 0.005, lower: -0.003},
+        {range: [18, 30], upper: 0.005, lower: -0.004},
+        {range: [30, 50], upper: 0.006, lower: -0.005},
+        {range: [50, 80], upper: 0.006, lower: -0.007},
+        {range: [80, 120], upper: 0.006, lower: -0.009},
+        {range: [120, 180], upper: 0.007, lower: -0.011},
+        {range: [180, 250], upper: 0.007, lower: -0.013},
+        {range: [250, 315], upper: 0.007, lower: -0.016},
+        {range: [315, 400], upper: 0.007, lower: -0.018},
+        {range: [400, 500], upper: 0.007, lower: -0.02}
+    ],
+    'j6': [
+        {range: [0, 3], upper: 0.004, lower: -0.002},
+        {range: [3, 6], upper: 0.006, lower: -0.002},
+        {range: [6, 10], upper: 0.007, lower: -0.002},
+        {range: [10, 18], upper: 0.008, lower: -0.003},
+        {range: [18, 30], upper: 0.009, lower: -0.004},
+        {range: [30, 50], upper: 0.011, lower: -0.005},
+        {range: [50, 80], upper: 0.012, lower: -0.007},
+        {range: [80, 120], upper: 0.013, lower: -0.009},
+        {range: [120, 180], upper: 0.014, lower: -0.011},
+        {range: [180, 250], upper: 0.016, lower: -0.013},
+        {range: [250, 315], upper: 0.016, lower: -0.016},
+        {range: [315, 400], upper: 0.018, lower: -0.018},
+        {range: [400, 500], upper: 0.02, lower: -0.02}
+    ],
+    'j7': [
+        {range: [0, 3], upper: 0.006, lower: -0.004},
+        {range: [3, 6], upper: 0.008, lower: -0.004},
+        {range: [6, 10], upper: 0.01, lower: -0.005},
+        {range: [10, 18], upper: 0.012, lower: -0.006},
+        {range: [18, 30], upper: 0.013, lower: -0.008},
+        {range: [30, 50], upper: 0.015, lower: -0.01},
+        {range: [50, 80], upper: 0.018, lower: -0.012},
+        {range: [80, 120], upper: 0.02, lower: -0.015},
+        {range: [120, 180], upper: 0.022, lower: -0.018},
+        {range: [180, 250], upper: 0.025, lower: -0.021},
+        {range: [250, 315], upper: 0.026, lower: -0.026},
+        {range: [315, 400], upper: 0.029, lower: -0.028},
+        {range: [400, 500], upper: 0.031, lower: -0.032}
+    ],
+    'j8': [
+        {range: [0, 3], upper: 0.008, lower: -0.006}
+    ],
+    'k3': [
+        {range: [0, 3], upper: 0.002, lower: 0},
+        {range: [3, 6], upper: 0.0025, lower: 0},
+        {range: [6, 10], upper: 0.0025, lower: 0},
+        {range: [10, 18], upper: 0.003, lower: 0},
+        {range: [18, 30], upper: 0.004, lower: 0},
+        {range: [30, 50], upper: 0.004, lower: 0}
+    ],
+    'k4': [
+        {range: [0, 3], upper: 0.003, lower: 0},
+        {range: [3, 6], upper: 0.005, lower: 0.001},
+        {range: [6, 10], upper: 0.005, lower: 0.001},
+        {range: [10, 18], upper: 0.006, lower: 0.001},
+        {range: [18, 30], upper: 0.008, lower: 0.002},
+        {range: [30, 50], upper: 0.009, lower: 0.002},
+        {range: [50, 80], upper: 0.01, lower: 0.002},
+        {range: [80, 120], upper: 0.013, lower: 0.003},
+        {range: [120, 180], upper: 0.015, lower: 0.003},
+        {range: [180, 250], upper: 0.018, lower: 0.004},
+        {range: [250, 315], upper: 0.02, lower: 0.004},
+        {range: [315, 400], upper: 0.022, lower: 0.004},
+        {range: [400, 500], upper: 0.025, lower: 0.005}
+    ],
+    'k5': [
+        {range: [0, 3], upper: 0.004, lower: 0},
+        {range: [3, 6], upper: 0.006, lower: 0.001},
+        {range: [6, 10], upper: 0.007, lower: 0.001},
+        {range: [10, 18], upper: 0.009, lower: 0.001},
+        {range: [18, 30], upper: 0.011, lower: 0.002},
+        {range: [30, 50], upper: 0.013, lower: 0.002},
+        {range: [50, 80], upper: 0.015, lower: 0.002},
+        {range: [80, 120], upper: 0.018, lower: 0.003},
+        {range: [120, 180], upper: 0.021, lower: 0.003},
+        {range: [180, 250], upper: 0.024, lower: 0.004},
+        {range: [250, 315], upper: 0.027, lower: 0.004},
+        {range: [315, 400], upper: 0.029, lower: 0.004},
+        {range: [400, 500], upper: 0.032, lower: 0.005}
+    ],
+    'k6': [
+        {range: [0, 3], upper: 0.006, lower: 0},
+        {range: [3, 6], upper: 0.009, lower: 0.001},
+        {range: [6, 10], upper: 0.01, lower: 0.001},
+        {range: [10, 18], upper: 0.012, lower: 0.001},
+        {range: [18, 30], upper: 0.015, lower: 0.002},
+        {range: [30, 50], upper: 0.018, lower: 0.002},
+        {range: [50, 80], upper: 0.021, lower: 0.002},
+        {range: [80, 120], upper: 0.025, lower: 0.003},
+        {range: [120, 180], upper: 0.028, lower: 0.003},
+        {range: [180, 250], upper: 0.033, lower: 0.004},
+        {range: [250, 315], upper: 0.036, lower: 0.004},
+        {range: [315, 400], upper: 0.04, lower: 0.004},
+        {range: [400, 500], upper: 0.045, lower: 0.005}
+    ],
+    'k7': [
+        {range: [0, 3], upper: 0.01, lower: 0},
+        {range: [3, 6], upper: 0.013, lower: 0.001},
+        {range: [6, 10], upper: 0.016, lower: 0.001},
+        {range: [10, 18], upper: 0.019, lower: 0.001},
+        {range: [18, 30], upper: 0.023, lower: 0.002},
+        {range: [30, 50], upper: 0.027, lower: 0.002},
+        {range: [50, 80], upper: 0.032, lower: 0.002},
+        {range: [80, 120], upper: 0.038, lower: 0.003},
+        {range: [120, 180], upper: 0.043, lower: 0.003},
+        {range: [180, 250], upper: 0.05, lower: 0.004},
+        {range: [250, 315], upper: 0.056, lower: 0.004},
+        {range: [315, 400], upper: 0.061, lower: 0.004},
+        {range: [400, 500], upper: 0.068, lower: 0.005}
+    ],
+    'k8': [
+        {range: [0, 3], upper: 0.014, lower: 0},
+        {range: [3, 6], upper: 0.018, lower: 0},
+        {range: [6, 10], upper: 0.022, lower: 0},
+        {range: [10, 18], upper: 0.027, lower: 0},
+        {range: [18, 30], upper: 0.033, lower: 0},
+        {range: [30, 50], upper: 0.039, lower: 0},
+        {range: [50, 80], upper: 0.046, lower: 0},
+        {range: [80, 120], upper: 0.054, lower: 0},
+        {range: [120, 180], upper: 0.063, lower: 0},
+        {range: [180, 250], upper: 0.072, lower: 0},
+        {range: [250, 315], upper: 0.081, lower: 0},
+        {range: [315, 400], upper: 0.089, lower: 0},
+        {range: [400, 500], upper: 0.097, lower: 0}
+    ],
+    'k9': [
+        {range: [0, 3], upper: 0.025, lower: 0},
+        {range: [3, 6], upper: 0.03, lower: 0},
+        {range: [6, 10], upper: 0.036, lower: 0},
+        {range: [10, 18], upper: 0.043, lower: 0},
+        {range: [18, 30], upper: 0.052, lower: 0},
+        {range: [30, 50], upper: 0.062, lower: 0},
+        {range: [50, 80], upper: 0.074, lower: 0},
+        {range: [80, 120], upper: 0.087, lower: 0},
+        {range: [120, 180], upper: 0.1, lower: 0},
+        {range: [180, 250], upper: 0.115, lower: 0},
+        {range: [250, 315], upper: 0.13, lower: 0},
+        {range: [315, 400], upper: 0.14, lower: 0},
+        {range: [400, 500], upper: 0.155, lower: 0},
+        {range: [500, 630], upper: 0.175, lower: 0},
+        {range: [630, 800], upper: 0.2, lower: 0},
+        {range: [800, 1000], upper: 0.23, lower: 0},
+        {range: [1000, 1250], upper: 0.26, lower: 0},
+        {range: [1250, 1600], upper: 0.31, lower: 0},
+        {range: [1600, 2000], upper: 0.37, lower: 0},
+        {range: [2000, 2500], upper: 0.44, lower: 0},
+        {range: [2500, 3150], upper: 0.54, lower: 0}
+    ],
+    'k10': [
+        {range: [0, 3], upper: 0.04, lower: 0},
+        {range: [3, 6], upper: 0.048, lower: 0},
+        {range: [6, 10], upper: 0.058, lower: 0},
+        {range: [10, 18], upper: 0.07, lower: 0},
+        {range: [18, 30], upper: 0.084, lower: 0},
+        {range: [30, 50], upper: 0.1, lower: 0},
+        {range: [50, 80], upper: 0.12, lower: 0},
+        {range: [80, 120], upper: 0.14, lower: 0},
+        {range: [120, 180], upper: 0.16, lower: 0},
+        {range: [180, 250], upper: 0.185, lower: 0},
+        {range: [250, 315], upper: 0.21, lower: 0},
+        {range: [315, 400], upper: 0.23, lower: 0},
+        {range: [400, 500], upper: 0.25, lower: 0},
+        {range: [500, 630], upper: 0.28, lower: 0},
+        {range: [630, 800], upper: 0.32, lower: 0},
+        {range: [800, 1000], upper: 0.36, lower: 0},
+        {range: [1000, 1250], upper: 0.42, lower: 0},
+        {range: [1250, 1600], upper: 0.5, lower: 0},
+        {range: [1600, 2000], upper: 0.6, lower: 0},
+        {range: [2000, 2500], upper: 0.7, lower: 0},
+        {range: [2500, 3150], upper: 0.86, lower: 0}
+    ],
+    'k11': [
+        {range: [0, 3], upper: 0.06, lower: 0},
+        {range: [3, 6], upper: 0.075, lower: 0},
+        {range: [6, 10], upper: 0.09, lower: 0},
+        {range: [10, 18], upper: 0.11, lower: 0},
+        {range: [18, 30], upper: 0.13, lower: 0},
+        {range: [30, 50], upper: 0.16, lower: 0},
+        {range: [50, 80], upper: 0.19, lower: 0},
+        {range: [80, 120], upper: 0.22, lower: 0},
+        {range: [120, 180], upper: 0.25, lower: 0},
+        {range: [180, 250], upper: 0.29, lower: 0},
+        {range: [250, 315], upper: 0.32, lower: 0},
+        {range: [315, 400], upper: 0.36, lower: 0},
+        {range: [400, 500], upper: 0.4, lower: 0},
+        {range: [500, 630], upper: 0.44, lower: 0},
+        {range: [630, 800], upper: 0.5, lower: 0},
+        {range: [800, 1000], upper: 0.56, lower: 0},
+        {range: [1000, 1250], upper: 0.66, lower: 0},
+        {range: [1250, 1600], upper: 0.78, lower: 0},
+        {range: [1600, 2000], upper: 0.92, lower: 0},
+        {range: [2000, 2500], upper: 1.1, lower: 0},
+        {range: [2500, 3150], upper: 1.35, lower: 0}
+    ],
+    'k12': [
+        {range: [0, 3], upper: 0.1, lower: 0},
+        {range: [3, 6], upper: 0.12, lower: 0},
+        {range: [6, 10], upper: 0.15, lower: 0},
+        {range: [10, 18], upper: 0.18, lower: 0},
+        {range: [18, 30], upper: 0.21, lower: 0},
+        {range: [30, 50], upper: 0.25, lower: 0},
+        {range: [50, 80], upper: 0.3, lower: 0},
+        {range: [80, 120], upper: 0.35, lower: 0},
+        {range: [120, 180], upper: 0.4, lower: 0},
+        {range: [180, 250], upper: 0.46, lower: 0},
+        {range: [250, 315], upper: 0.52, lower: 0},
+        {range: [315, 400], upper: 0.57, lower: 0},
+        {range: [400, 500], upper: 0.53, lower: 0},
+        {range: [500, 630], upper: 0.7, lower: 0},
+        {range: [630, 800], upper: 0.8, lower: 0},
+        {range: [800, 1000], upper: 0.9, lower: 0},
+        {range: [1000, 1250], upper: 1.05, lower: 0},
+        {range: [1250, 1600], upper: 1.25, lower: 0},
+        {range: [1600, 2000], upper: 1.5, lower: 0},
+        {range: [2000, 2500], upper: 1.75, lower: 0},
+        {range: [2500, 3150], upper: 2.1, lower: 0}
+    ],
+    'k13': [
+        {range: [0, 3], upper: 0.14, lower: 0},
+        {range: [3, 6], upper: 0.18, lower: 0},
+        {range: [6, 10], upper: 0.22, lower: 0},
+        {range: [10, 18], upper: 0.27, lower: 0},
+        {range: [18, 30], upper: 0.33, lower: 0},
+        {range: [30, 50], upper: 0.39, lower: 0},
+        {range: [50, 80], upper: 0.46, lower: 0},
+        {range: [80, 120], upper: 0.54, lower: 0},
+        {range: [120, 180], upper: 0.63, lower: 0},
+        {range: [180, 250], upper: 0.72, lower: 0},
+        {range: [250, 315], upper: 0.81, lower: 0},
+        {range: [315, 400], upper: 0.89, lower: 0},
+        {range: [400, 500], upper: 0.97, lower: 0},
+        {range: [500, 630], upper: 1.1, lower: 0},
+        {range: [630, 800], upper: 1.25, lower: 0},
+        {range: [800, 1000], upper: 1.4, lower: 0},
+        {range: [1000, 1250], upper: 1.65, lower: 0},
+        {range: [1250, 1600], upper: 1.95, lower: 0},
+        {range: [1600, 2000], upper: 2.3, lower: 0},
+        {range: [2000, 2500], upper: 2.8, lower: 0},
+        {range: [2500, 3150], upper: 3.3, lower: 0}
+    ],
+    'p3': [
+        {range: [0, 3], upper: 0.008, lower: 0.006},
+        {range: [3, 6], upper: 0.0145, lower: 0.012},
+        {range: [6, 10], upper: 0.0175, lower: 0.015},
+        {range: [10, 18], upper: 0.021, lower: 0.018},
+        {range: [18, 30], upper: 0.026, lower: 0.022},
+        {range: [30, 50], upper: 0.03, lower: 0.026},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'p4': [
+        {range: [0, 3], upper: 0.009, lower: 0.006},
+        {range: [3, 6], upper: 0.016, lower: 0.012},
+        {range: [6, 10], upper: 0.019, lower: 0.015},
+        {range: [10, 18], upper: 0.023, lower: 0.018},
+        {range: [18, 30], upper: 0.028, lower: 0.022},
+        {range: [30, 50], upper: 0.033, lower: 0.026},
+        {range: [50, 80], upper: 0.04, lower: 0.032},
+        {range: [80, 120], upper: 0.047, lower: 0.037},
+        {range: [120, 180], upper: 0.055, lower: 0.043},
+        {range: [180, 250], upper: 0.064, lower: 0.05},
+        {range: [250, 315], upper: 0.072, lower: 0.056},
+        {range: [315, 400], upper: 0.08, lower: 0.062},
+        {range: [400, 500], upper: 0.088, lower: 0.068},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'p5': [
+        {range: [0, 3], upper: 0.01, lower: 0.006},
+        {range: [3, 6], upper: 0.017, lower: 0.012},
+        {range: [6, 10], upper: 0.021, lower: 0.015},
+        {range: [10, 18], upper: 0.026, lower: 0.018},
+        {range: [18, 30], upper: 0.031, lower: 0.022},
+        {range: [30, 50], upper: 0.037, lower: 0.026},
+        {range: [50, 80], upper: 0.045, lower: 0.032},
+        {range: [80, 120], upper: 0.052, lower: 0.037},
+        {range: [120, 180], upper: 0.061, lower: 0.043},
+        {range: [180, 250], upper: 0.07, lower: 0.05},
+        {range: [250, 315], upper: 0.079, lower: 0.056},
+        {range: [315, 400], upper: 0.087, lower: 0.062},
+        {range: [400, 500], upper: 0.095, lower: 0.068},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'p6': [
+        {range: [0, 3], upper: 0.012, lower: 0.006},
+        {range: [3, 6], upper: 0.02, lower: 0.012},
+        {range: [6, 10], upper: 0.024, lower: 0.015},
+        {range: [10, 18], upper: 0.029, lower: 0.018},
+        {range: [18, 30], upper: 0.035, lower: 0.022},
+        {range: [30, 50], upper: 0.042, lower: 0.026},
+        {range: [50, 80], upper: 0.051, lower: 0.032},
+        {range: [80, 120], upper: 0.059, lower: 0.037},
+        {range: [120, 180], upper: 0.068, lower: 0.043},
+        {range: [180, 250], upper: 0.079, lower: 0.05},
+        {range: [250, 315], upper: 0.088, lower: 0.056},
+        {range: [315, 400], upper: 0.098, lower: 0.062},
+        {range: [400, 500], upper: 0.108, lower: 0.068},
+        {range: [500, 630], upper: 0.122, lower: 0.078},
+        {range: [630, 800], upper: 0.138, lower: 0.088},
+        {range: [800, 1000], upper: 0.156, lower: 0.1},
+        {range: [1000, 1250], upper: 0.186, lower: 0.12},
+        {range: [1250, 1600], upper: 0.218, lower: 0.14},
+        {range: [1600, 2000], upper: 0.262, lower: 0.17},
+        {range: [2000, 2500], upper: 0.305, lower: 0.195},
+        {range: [2500, 3150], upper: 0.375, lower: 0.24}
+    ],
+    'p7': [
+        {range: [0, 3], upper: 0.016, lower: 0.006},
+        {range: [3, 6], upper: 0.024, lower: 0.012},
+        {range: [6, 10], upper: 0.03, lower: 0.015},
+        {range: [10, 18], upper: 0.036, lower: 0.018},
+        {range: [18, 30], upper: 0.043, lower: 0.022},
+        {range: [30, 50], upper: 0.051, lower: 0.026},
+        {range: [50, 80], upper: 0.062, lower: 0.032},
+        {range: [80, 120], upper: 0.072, lower: 0.037},
+        {range: [120, 180], upper: 0.083, lower: 0.043},
+        {range: [180, 250], upper: 0.096, lower: 0.05},
+        {range: [250, 315], upper: 0.108, lower: 0.056},
+        {range: [315, 400], upper: 0.119, lower: 0.062},
+        {range: [400, 500], upper: 0.131, lower: 0.068},
+        {range: [500, 630], upper: 0.148, lower: 0.078},
+        {range: [630, 800], upper: 0.168, lower: 0.088},
+        {range: [800, 1000], upper: 0.19, lower: 0.1},
+        {range: [1000, 1250], upper: 0.225, lower: 0.12},
+        {range: [1250, 1600], upper: 0.265, lower: 0.14},
+        {range: [1600, 2000], upper: 0.32, lower: 0.17},
+        {range: [2000, 2500], upper: 0.37, lower: 0.195},
+        {range: [2500, 3150], upper: 0.45, lower: 0.24}
+    ],
+    'p8': [
+        {range: [0, 3], upper: 0.02, lower: 0.006},
+        {range: [3, 6], upper: 0.03, lower: 0.012},
+        {range: [6, 10], upper: 0.037, lower: 0.015},
+        {range: [10, 18], upper: 0.045, lower: 0.018},
+        {range: [18, 30], upper: 0.055, lower: 0.022},
+        {range: [30, 50], upper: 0.065, lower: 0.026},
+        {range: [50, 80], upper: 0.078, lower: 0.032},
+        {range: [80, 120], upper: 0.091, lower: 0.037},
+        {range: [120, 180], upper: 0.106, lower: 0.043},
+        {range: [180, 250], upper: 0.122, lower: 0.05},
+        {range: [250, 315], upper: 0.137, lower: 0.056},
+        {range: [315, 400], upper: 0.151, lower: 0.062},
+        {range: [400, 500], upper: 0.165, lower: 0.068},
+        {range: [500, 630], upper: 0.188, lower: 0.078},
+        {range: [630, 800], upper: 0.213, lower: 0.088},
+        {range: [800, 1000], upper: 0.24, lower: 0.1},
+        {range: [1000, 1250], upper: 0.285, lower: 0.12},
+        {range: [1250, 1600], upper: 0.335, lower: 0.14},
+        {range: [1600, 2000], upper: 0.4, lower: 0.17},
+        {range: [2000, 2500], upper: 0.475, lower: 0.195},
+        {range: [2500, 3150], upper: 0.57, lower: 0.24}
+    ],
+    'p9': [
+        {range: [0, 3], upper: 0.031, lower: 0.006},
+        {range: [3, 6], upper: 0.042, lower: 0.012},
+        {range: [6, 10], upper: 0.051, lower: 0.015},
+        {range: [10, 18], upper: 0.061, lower: 0.018},
+        {range: [18, 30], upper: 0.074, lower: 0.022},
+        {range: [30, 50], upper: 0.088, lower: 0.026},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'p10': [
+        {range: [0, 3], upper: 0.046, lower: 0.006},
+        {range: [3, 6], upper: 0.06, lower: 0.012},
+        {range: [6, 10], upper: 0.073, lower: 0.015},
+        {range: [10, 18], upper: 0.088, lower: 0.018},
+        {range: [18, 30], upper: 0.106, lower: 0.022},
+        {range: [30, 50], upper: 0.126, lower: 0.026},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'n3': [
+        {range: [0, 3], upper: 0.006, lower: 0.004},
+        {range: [3, 6], upper: 0.0105, lower: 0.008},
+        {range: [6, 10], upper: 0.0125, lower: 0.01},
+        {range: [10, 18], upper: 0.015, lower: 0.012},
+        {range: [18, 30], upper: 0.019, lower: 0.015},
+        {range: [30, 50], upper: 0.021, lower: 0.017},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'n4': [
+        {range: [0, 3], upper: 0.007, lower: 0.004},
+        {range: [3, 6], upper: 0.012, lower: 0.008},
+        {range: [6, 10], upper: 0.014, lower: 0.01},
+        {range: [10, 18], upper: 0.017, lower: 0.012},
+        {range: [18, 30], upper: 0.021, lower: 0.015},
+        {range: [30, 50], upper: 0.024, lower: 0.017},
+        {range: [50, 80], upper: 0.028, lower: 0.02},
+        {range: [80, 120], upper: 0.033, lower: 0.023},
+        {range: [120, 180], upper: 0.039, lower: 0.027},
+        {range: [180, 250], upper: 0.045, lower: 0.031},
+        {range: [250, 315], upper: 0.05, lower: 0.034},
+        {range: [315, 400], upper: 0.055, lower: 0.037},
+        {range: [400, 500], upper: 0.06, lower: 0.04},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'n5': [
+        {range: [0, 3], upper: 0.008, lower: 0.004},
+        {range: [3, 6], upper: 0.013, lower: 0.008},
+        {range: [6, 10], upper: 0.016, lower: 0.01},
+        {range: [10, 18], upper: 0.02, lower: 0.012},
+        {range: [18, 30], upper: 0.024, lower: 0.015},
+        {range: [30, 50], upper: 0.028, lower: 0.017},
+        {range: [50, 80], upper: 0.033, lower: 0.02},
+        {range: [80, 120], upper: 0.038, lower: 0.023},
+        {range: [120, 180], upper: 0.045, lower: 0.027},
+        {range: [180, 250], upper: 0.051, lower: 0.031},
+        {range: [250, 315], upper: 0.057, lower: 0.034},
+        {range: [315, 400], upper: 0.062, lower: 0.037},
+        {range: [400, 500], upper: 0.067, lower: 0.04},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'n6': [
+        {range: [0, 3], upper: 0.01, lower: 0.004},
+        {range: [3, 6], upper: 0.016, lower: 0.008},
+        {range: [6, 10], upper: 0.019, lower: 0.01},
+        {range: [10, 18], upper: 0.023, lower: 0.012},
+        {range: [18, 30], upper: 0.028, lower: 0.015},
+        {range: [30, 50], upper: 0.033, lower: 0.017},
+        {range: [50, 80], upper: 0.039, lower: 0.02},
+        {range: [80, 120], upper: 0.045, lower: 0.023},
+        {range: [120, 180], upper: 0.052, lower: 0.027},
+        {range: [180, 250], upper: 0.06, lower: 0.031},
+        {range: [250, 315], upper: 0.066, lower: 0.034},
+        {range: [315, 400], upper: 0.073, lower: 0.037},
+        {range: [400, 500], upper: 0.08, lower: 0.04},
+        {range: [500, 630], upper: 0.088, lower: 0.044},
+        {range: [630, 800], upper: 0.1, lower: 0.05},
+        {range: [800, 1000], upper: 0.112, lower: 0.056},
+        {range: [1000, 1250], upper: 0.132, lower: 0.066},
+        {range: [1250, 1600], upper: 0.156, lower: 0.078},
+        {range: [1600, 2000], upper: 0.184, lower: 0.092},
+        {range: [2000, 2500], upper: 0.22, lower: 0.11},
+        {range: [2500, 3150], upper: 0.27, lower: 0.135}
+    ],
+    'n7': [
+        {range: [0, 3], upper: 0.014, lower: 0.004},
+        {range: [3, 6], upper: 0.02, lower: 0.008},
+        {range: [6, 10], upper: 0.025, lower: 0.01},
+        {range: [10, 18], upper: 0.03, lower: 0.012},
+        {range: [18, 30], upper: 0.036, lower: 0.015},
+        {range: [30, 50], upper: 0.042, lower: 0.017},
+        {range: [50, 80], upper: 0.05, lower: 0.02},
+        {range: [80, 120], upper: 0.058, lower: 0.023},
+        {range: [120, 180], upper: 0.067, lower: 0.027},
+        {range: [180, 250], upper: 0.077, lower: 0.031},
+        {range: [250, 315], upper: 0.086, lower: 0.034},
+        {range: [315, 400], upper: 0.094, lower: 0.037},
+        {range: [400, 500], upper: 0.103, lower: 0.04},
+        {range: [500, 630], upper: 0.114, lower: 0.044},
+        {range: [630, 800], upper: 0.13, lower: 0.05},
+        {range: [800, 1000], upper: 0.146, lower: 0.056},
+        {range: [1000, 1250], upper: 0.171, lower: 0.066},
+        {range: [1250, 1600], upper: 0.203, lower: 0.078},
+        {range: [1600, 2000], upper: 0.242, lower: 0.092},
+        {range: [2000, 2500], upper: 0.285, lower: 0.11},
+        {range: [2500, 3150], upper: 0.345, lower: 0.135}
+    ],
+    'n8': [
+        {range: [0, 3], upper: 0.018, lower: 0.004},
+        {range: [3, 6], upper: 0.026, lower: 0.008},
+        {range: [6, 10], upper: 0.032, lower: 0.01},
+        {range: [10, 18], upper: 0.039, lower: 0.012},
+        {range: [18, 30], upper: 0.048, lower: 0.015},
+        {range: [30, 50], upper: 0.056, lower: 0.017},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'n9': [
+        {range: [0, 3], upper: 0.029, lower: 0.004},
+        {range: [3, 6], upper: 0.038, lower: 0.008},
+        {range: [6, 10], upper: 0.046, lower: 0.01},
+        {range: [10, 18], upper: 0.055, lower: 0.012},
+        {range: [18, 30], upper: 0.067, lower: 0.015},
+        {range: [30, 50], upper: 0.079, lower: 0.017},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'm3': [
+        {range: [0, 3], upper: 0.004, lower: 0.002},
+        {range: [3, 6], upper: 0.0065, lower: 0.004},
+        {range: [6, 10], upper: 0.0085, lower: 0.006},
+        {range: [10, 18], upper: 0.01, lower: 0.007},
+        {range: [18, 30], upper: 0.012, lower: 0.008},
+        {range: [30, 50], upper: 0.013, lower: 0.009},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'm4': [
+        {range: [0, 3], upper: 0.005, lower: 0.002},
+        {range: [3, 6], upper: 0.008, lower: 0.004},
+        {range: [6, 10], upper: 0.01, lower: 0.006},
+        {range: [10, 18], upper: 0.012, lower: 0.007},
+        {range: [18, 30], upper: 0.014, lower: 0.008},
+        {range: [30, 50], upper: 0.016, lower: 0.009},
+        {range: [50, 80], upper: 0.019, lower: 0.011},
+        {range: [80, 120], upper: 0.023, lower: 0.013},
+        {range: [120, 180], upper: 0.027, lower: 0.015},
+        {range: [180, 250], upper: 0.031, lower: 0.017},
+        {range: [250, 315], upper: 0.036, lower: 0.02},
+        {range: [315, 400], upper: 0.039, lower: 0.021},
+        {range: [400, 500], upper: 0.043, lower: 0.023},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'm5': [
+        {range: [0, 3], upper: 0.006, lower: 0.002},
+        {range: [3, 6], upper: 0.009, lower: 0.004},
+        {range: [6, 10], upper: 0.012, lower: 0.006},
+        {range: [10, 18], upper: 0.015, lower: 0.007},
+        {range: [18, 30], upper: 0.017, lower: 0.008},
+        {range: [30, 50], upper: 0.02, lower: 0.009},
+        {range: [50, 80], upper: 0.024, lower: 0.011},
+        {range: [80, 120], upper: 0.028, lower: 0.013},
+        {range: [120, 180], upper: 0.033, lower: 0.015},
+        {range: [180, 250], upper: 0.037, lower: 0.017},
+        {range: [250, 315], upper: 0.043, lower: 0.02},
+        {range: [315, 400], upper: 0.046, lower: 0.021},
+        {range: [400, 500], upper: 0.05, lower: 0.023},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'm6': [
+        {range: [0, 3], upper: 0.008, lower: 0.002},
+        {range: [3, 6], upper: 0.012, lower: 0.004},
+        {range: [6, 10], upper: 0.015, lower: 0.006},
+        {range: [10, 18], upper: 0.018, lower: 0.007},
+        {range: [18, 30], upper: 0.021, lower: 0.008},
+        {range: [30, 50], upper: 0.025, lower: 0.009},
+        {range: [50, 80], upper: 0.03, lower: 0.011},
+        {range: [80, 120], upper: 0.035, lower: 0.013},
+        {range: [120, 180], upper: 0.04, lower: 0.015},
+        {range: [180, 250], upper: 0.046, lower: 0.017},
+        {range: [250, 315], upper: 0.052, lower: 0.02},
+        {range: [315, 400], upper: 0.057, lower: 0.021},
+        {range: [400, 500], upper: 0.063, lower: 0.023},
+        {range: [500, 630], upper: 0.07, lower: 0.026},
+        {range: [630, 800], upper: 0.08, lower: 0.03},
+        {range: [800, 1000], upper: 0.09, lower: 0.034},
+        {range: [1000, 1250], upper: 0.106, lower: 0.04},
+        {range: [1250, 1600], upper: 0.126, lower: 0.048},
+        {range: [1600, 2000], upper: 0.15, lower: 0.058},
+        {range: [2000, 2500], upper: 0.178, lower: 0.068},
+        {range: [2500, 3150], upper: 0.211, lower: 0.076}
+    ],
+    'm7': [
+        {range: [0, 3], upper: 0.012, lower: 0.002},
+        {range: [3, 6], upper: 0.016, lower: 0.004},
+        {range: [6, 10], upper: 0.021, lower: 0.006},
+        {range: [10, 18], upper: 0.025, lower: 0.007},
+        {range: [18, 30], upper: 0.029, lower: 0.008},
+        {range: [30, 50], upper: 0.034, lower: 0.009},
+        {range: [50, 80], upper: 0.041, lower: 0.011},
+        {range: [80, 120], upper: 0.048, lower: 0.013},
+        {range: [120, 180], upper: 0.055, lower: 0.015},
+        {range: [180, 250], upper: 0.063, lower: 0.017},
+        {range: [250, 315], upper: 0.072, lower: 0.02},
+        {range: [315, 400], upper: 0.078, lower: 0.021},
+        {range: [400, 500], upper: 0.086, lower: 0.023},
+        {range: [500, 630], upper: 0.096, lower: 0.026},
+        {range: [630, 800], upper: 0.11, lower: 0.03},
+        {range: [800, 1000], upper: 0.124, lower: 0.034},
+        {range: [1000, 1250], upper: 0.145, lower: 0.04},
+        {range: [1250, 1600], upper: 0.173, lower: 0.048},
+        {range: [1600, 2000], upper: 0.208, lower: 0.058},
+        {range: [2000, 2500], upper: 0.243, lower: 0.068},
+        {range: [2500, 3150], upper: 0.286, lower: 0.076}
+    ],
+    'm8': [
+        {range: [0, 3], upper: 0.016, lower: 0.002},
+        {range: [3, 6], upper: 0.022, lower: 0.004},
+        {range: [6, 10], upper: 0.028, lower: 0.006},
+        {range: [10, 18], upper: 0.034, lower: 0.007},
+        {range: [18, 30], upper: 0.041, lower: 0.008},
+        {range: [30, 50], upper: 0.048, lower: 0.009},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ],
+    'm9': [
+        {range: [0, 3], upper: 0.027, lower: 0.002},
+        {range: [3, 6], upper: 0.034, lower: 0.004},
+        {range: [6, 10], upper: 0.042, lower: 0.006},
+        {range: [10, 18], upper: 0.05, lower: 0.007},
+        {range: [18, 30], upper: 0.06, lower: 0.008},
+        {range: [30, 50], upper: 0.071, lower: 0.009},
+        {range: [50, 80], upper: 0, lower: 0},
+        {range: [80, 120], upper: 0, lower: 0},
+        {range: [120, 180], upper: 0, lower: 0},
+        {range: [180, 250], upper: 0, lower: 0},
+        {range: [250, 315], upper: 0, lower: 0},
+        {range: [315, 400], upper: 0, lower: 0},
+        {range: [400, 500], upper: 0, lower: 0},
+        {range: [500, 630], upper: 0, lower: 0},
+        {range: [630, 800], upper: 0, lower: 0},
+        {range: [800, 1000], upper: 0, lower: 0},
+        {range: [1000, 1250], upper: 0, lower: 0},
+        {range: [1250, 1600], upper: 0, lower: 0},
+        {range: [1600, 2000], upper: 0, lower: 0},
+        {range: [2000, 2500], upper: 0, lower: 0},
+        {range: [2500, 3150], upper: 0, lower: 0}
+    ]
+};
 
-    // Сохраняем выбранную тему в localStorage
-    if (body.classList.contains('dark-theme')) {
-        localStorage.setItem('theme', 'dark');
-        themeToggleButton.textContent = '☀️'; // Изменяем иконку на солнце
-    } else {
-        localStorage.setItem('theme', 'light');
-        themeToggleButton.textContent = '🌙'; // Изменяем иконку на луну
+    if (shaftTolerances[toleranceClass]) {
+        const table = shaftTolerances[toleranceClass];
+        for (let item of table) {
+            if (diameterShaft > item.range[0] && diameterShaft <= item.range[1]) {
+                const upper = item.upper >= 0 ? '+' + item.upper : String(item.upper);
+                const lower = String(item.lower);
+                if (item.upper === 0) {
+                    return `<b>${lower} мм</b>`;
+                } else {
+                    return `<b>${upper} / ${lower} мм</b>`;
+                }
+            }
+        }
     }
-});
+    return '<span style="color: #FF6B6B;">Не найден</span>';
+}
 
-//serviceWorker
+
+
+
+//Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/Gcode-helper-2.0/sw.js').then((registration) => {
@@ -3907,4 +6678,4 @@ if ('serviceWorker' in navigator) {
         console.log('Ошибка регистрации Service Worker:', error);
       });
     });
-  }
+}
