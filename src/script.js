@@ -527,7 +527,7 @@ function calculateContactCircle() {
 
     // Проверка корректности данных
     if (!numTeeth || !module) {
-        showError('resultsW', 'Сначала выполните расчёт шестерни!');
+        showError('resultsW', 'Сначала выполните расчёт шлицев!');
         return;
     }
 
@@ -590,7 +590,7 @@ function calculatePitch() {
     const radianPitch = (anglePitch * (Math.PI / 180))
 
     if (isNaN(teethNumb) || teethNumb <= 0 || isNaN(pitchModule) || pitchModule < 0 || isNaN(anglePitch) || anglePitch < 0) {
-        showError('pitchDmResult', "Пожалуйста, введите корректные данные.");
+        showError('resultPitch', "Пожалуйста, введите корректные данные.");
         return;
     }
 
