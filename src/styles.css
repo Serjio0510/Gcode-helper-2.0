@@ -22,12 +22,21 @@ body {
 }
 
 .container {
+  position: relative;
   max-width: 900px;
   margin: auto;
   background-color: var(--secondary-dark);
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 21.5rem;
+    padding: 15px;
+    margin: 10px auto;
+  }
 }
 
 h1 {
@@ -170,13 +179,21 @@ button:active {
 }
 
 button#theme-toggle.theme-toggle {
-  margin-left: 91%;
+  position: absolute;
+  right: 10px;
   padding: 10px 15px;
   background: rgba(255, 140, 0, 0.2);
   color: var(--primary-orange);
   border: 2px solid var(--primary-orange);
-  margin-top: 0;
   font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  button#theme-toggle.theme-toggle {
+    top: 0px;
+    right: 10px;
+    padding: 5px 9px;
+  }
 }
 
 .result {
@@ -453,12 +470,21 @@ p2 {
 }
 
 .light-theme .container {
+  position: relative;
   max-width: 900px;
   margin: auto;
   background-color: var(--primary-white);
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 30px;
+}
+
+@media (max-width: 768px) {
+  .light-theme .container {
+    width: 21.5rem;
+    padding: 15px;
+    margin: 10px auto;
+  }
 }
 
 .light-theme h1 {
@@ -589,13 +615,21 @@ p2 {
 }
 
 .light-theme button#theme-toggle.theme-toggle {
-  margin-left: 91%;
+  position: absolute;
+  right: 10px;
   padding: 10px 15px;
   background: rgba(255, 140, 0, 0.15);
   color: var(--primary-orange);
   border: 2px solid var(--primary-orange);
-  margin-top: 0;
   font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .light-theme button#theme-toggle.theme-toggle {
+    top: 0px;
+    right: 10px;
+    padding: 5px 9px;
+  }
 }
 
 .light-theme .result {
