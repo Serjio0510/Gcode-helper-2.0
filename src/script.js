@@ -167,6 +167,8 @@ class ThemeManager {
             localStorage.setItem('theme', 'light');
             this.themeToggleButton.textContent = '🌙';
         }
+
+        document.dispatchEvent(new CustomEvent('themeChanged'));
     }
 }
 
@@ -206,6 +208,13 @@ function openMainTab(evt, tabName) {
 
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.classList.add("active");
+
+    // Инициализация Arc Calculator
+    if (tabName === 'arcCalc') {
+        if (typeof initializeArcCalculator !== 'undefined') {
+            initializeArcCalculator();
+        }
+    }
 }
 
 function goBack() {

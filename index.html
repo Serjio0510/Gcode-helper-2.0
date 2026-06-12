@@ -23,6 +23,7 @@
                 <button class="tab-button" onclick="openMainTab(event, 'toothCalc')">Впадина зуба</button>
                 <button class="tab-button" onclick="openMainTab(event, 'dopusk')">Допуски и посадки</button>
                 <button class="tab-button" onclick="openMainTab(event, 'timeWorck')">Расчёт времени</button>
+                <button class="tab-button" onclick="openMainTab(event, 'arcCalc')">Вычисление дуги</button>
             </div>
 
             <div id="gapCalc" class="tabcontent main-tabcontent">
@@ -617,8 +618,224 @@
                             <p2>При выборе высоты обработки округлять в меньшую сторону.</p2>
                         </div>
             </div>
+
+            <!-- Вкладка вычисления дуги -->
+            <div id="arcCalc" class="main-tabcontent" style="display:none;">
+                <h2>Расчет дуги окружности</h2>
+                <div class="arc-calc-container">
+                    <!-- CANVAS + CONTROLS -->
+                    <div class="top-arc">
+                        <div class="canvas-wrapper-arc">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 12px;">
+                                <label for="canvasScale" style="min-width: 60px;">Масштаб:</label>
+                                <input type="range" id="canvasScale" min="0.5" max="3" value="1" step="0.1" style="flex: 1;">
+                                <span class="canvasValue" id="canvasScaleValue">100%</span>
+                            </div>
+                            <canvas id="canvas" width="400" height="400"></canvas>
+                        </div>
+
+                        <div class="ctrl-arc">
+                            <!-- ПАРАМЕТРЫ -->
+                            <div class="card-arc">
+                                <div class="card-title-arc">Параметры инструмента</div>
+
+                                <div class="field-arc">
+                                    <label class="field-label-arc" for="iDc">Диаметр контура, мм</label>
+                                    <input type="number" id="iDc" min="5" max="500" step="0.1">
+                                </div>
+
+                                <div class="field-arc">
+                                    <label class="field-label-arc" for="iDt">Диаметр фрезы, мм</label>
+                                    <input type="number" id="iDt" min="0" max="200" step="0.1">
+                                </div>
+
+                                <div class="field-arc">
+                                    <label class="field-label-arc">Тип обработки</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                            <input type="radio" name="machine" id="iMachineIn" value="in" checked>
+                                            <span style="margin-left: 0.5rem;">Внутренняя</span>
+                                        </label>
+                                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                            <input type="radio" name="machine" id="iMachineEx" value="ex">
+                                            <span style="margin-left: 0.5rem;">Внешняя</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- РЕЖИМЫ ВВОДА И УПРАВЛЕНИЕ -->
+                            <div class="card-arc">
+                                <div class="card-title-arc">Параметр расчета</div>
+
+                                <!-- Tabs -->
+                                <div class="tabs-arc" id="inputModes" style="margin-bottom: 1rem;">
+                                    <button class="btn-tab-arc active" data-input-mode="angle">Угол</button>
+                                    <button class="btn-tab-arc" data-input-mode="chord">Хорда</button>
+                                </div>
+
+                                <!-- Направление хорды (select) -->
+                                <div class="field-arc" id="chordDirectionField" style="display: none; margin-bottom: 0.75rem;">
+                                    <label class="field-label-arc" for="chordDirection">Направление</label>
+                                    <select id="chordDirection">
+                                        <option value="Yplus">Y+ (вверх)</option>
+                                        <option value="Yminus">Y- (вниз)</option>
+                                        <option value="Xplus">X+ (вправо)</option>
+                                        <option value="Xminus">X- (влево)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Выбор знака второй оси (только для режима chord) -->
+                                <div id="chordSignField" style="display: none; margin-bottom: 0.75rem;">
+                                    <label class="field-label-arc" id="chordSignLabel" for="chordSign">Знак второй оси</label>
+                                    <div style="display: flex; gap: 0.4rem;">
+                                        <button class="btn-chord-sign-arc active" data-chord-sign="positive" id="chordSignPos">
+                                            <span id="chordSignPosText">+32.031 мм</span>
+                                        </button>
+                                        <button class="btn-chord-sign-arc" data-chord-sign="negative" id="chordSignNeg">
+                                            <span id="chordSignNegText">-32.031 мм</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Текстовое поле (основное управление) -->
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                    <div style="flex: 1;">
+                                        <label class="field-label-arc" id="inputLabel" for="inputValue">Угол</label>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <input type="text" id="inputValue" placeholder="Введите значение или выражение">
+                                            <span class="input-unit-arc" id="inputUnit">°</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-hint-arc" id="inputHint">Диапазон: 0–360°</div>
+
+                                <!-- Быстрые углы (горячие клавиши) - только для режима angle -->
+                                <div id="quickAnglesContainer" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin: 0.75rem 0;">
+                                    <button class="btn-quick-arc" data-angle="0">0°</button>
+                                    <button class="btn-quick-arc" data-angle="45">45°</button>
+                                    <button class="btn-quick-arc" data-angle="90">90°</button>
+                                    <button class="btn-quick-arc" data-angle="180">180°</button>
+                                    <button class="btn-quick-arc" data-angle="270">270°</button>
+                                    <button class="btn-quick-arc" data-angle="360">360°</button>
+                                </div>
+
+                                <!-- Slider (вторичное управление) - только для режима angle -->
+                                <div id="sliderContainer" class="slider-group-arc" style="margin-top: 0.75rem;">
+                                    <label class="slider-label-arc" for="inputRange">Ползунок</label>
+                                    <input type="range" id="inputRange" min="0" max="360" value="0" step="0.1">
+                                    <span class="slider-value-arc" id="sliderValue">0°</span>
+                                </div>
+
+                                <!-- Подсказка -->
+                                <div id="inputHintTip" style="font-size: 11px; color: #999; margin-top: 0.75rem; line-height: 1.4;">
+                                    💡 <strong>Способы ввода:</strong> <br>
+                                    • Введите число в поле <br>
+                                    • Нажмите кнопку быстрого угла<br>
+                                    • Тащите ползунок <br>
+                                </div>
+
+                                <!-- Ошибка -->
+                                <div class="alert-box-arc error" id="errorBox">
+                                    <span class="alert-icon-arc">⚠</span>
+                                    <span class="alert-text-arc" id="errorText"></span>
+                                </div>
+
+                                <!-- Предупреждение -->
+                                <div class="alert-box-arc warning" id="warningBox">
+                                    <span class="alert-icon-arc">⚡</span>
+                                    <span class="alert-text-arc" id="warningText"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- РЕЗУЛЬТАТЫ -->
+                    <div class="results-grid-arc">
+                        <div class="result-card-arc">
+                            <div class="result-card-title-arc blue-arc">📍 Точка на контуре</div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">X контура</span>
+                                <span class="result-value-arc blue-arc" id="oXc">—</span>
+                            </div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">Y контура</span>
+                                <span class="result-value-arc blue-arc" id="oYc">—</span>
+                            </div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">Угол</span>
+                                <span class="result-value-arc" id="oTh">—</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card-arc">
+                            <div class="result-card-title-arc red-arc">🎯 Центр фрезы (G-код)</div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">X фрезы</span>
+                                <span class="result-value-arc red-arc" id="oXt">—</span>
+                            </div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">Y фрезы</span>
+                                <span class="result-value-arc red-arc" id="oYt">—</span>
+                            </div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">Угол</span>
+                                <span class="result-value-arc" id="oTh2">—</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card-arc">
+                            <div class="result-card-title-arc green-arc">⚙️ Параметры инструмента</div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">R контура</span>
+                                <span class="result-value-arc" id="oRc">—</span>
+                            </div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">R пути фрезы</span>
+                                <span class="result-value-arc green-arc" id="oRp">—</span>
+                            </div>
+                            <div class="result-row-arc">
+                                <span class="result-label-arc">R фрезы</span>
+                                <span class="result-value-arc" id="oRt">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Формула -->
+                    <div class="formula-box-arc">
+                       <div class="formula-title-arc">📐 Формула расчета</div>
+                       <div class="formula-arc" id="formula"></div>
+                    </div>
+                    
+
+                    <!-- ЛЕГЕНДА -->
+                    <div class="legend-arc">
+                        <div class="legend-item-arc">
+                            <div class="legend-dot-arc" style="background:#185FA5;"></div>
+                            <span>Контур (желаемый)</span>
+                        </div>
+                        <div class="legend-item-arc">
+                            <div class="legend-dot-arc" style="background:#E24B4A;"></div>
+                            <span>Путь центра фрезы</span>
+                        </div>
+                        <div class="legend-item-arc">
+                            <div class="legend-dot-arc" style="background:#0F6E56;"></div>
+                            <span>Фреза (текущая позиция)</span>
+                        </div>
+                        <div class="legend-item-arc">
+                            <div class="legend-dot-arc" style="background:#EF9F27;"></div>
+                            <span>Проекции X/Y</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script src="src/calc.js"></script>
+    <script src="src/state.js"></script>
+    <script src="src/ui.js"></script>
+    <script src="src/app.js"></script>
     <script src="src/script.js"></script>
 </body>
 </html>
