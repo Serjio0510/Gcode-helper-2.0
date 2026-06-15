@@ -178,6 +178,7 @@ class UIController {
       let touchStartY = 0;
 
       this.canvas.addEventListener('mousedown', (e) => {
+        if (!this.state.calculator) return;
         this.isPanning = true;
         mouseStartX = e.clientX;
         mouseStartY = e.clientY;
@@ -201,6 +202,7 @@ class UIController {
       });
 
       this.canvas.addEventListener('touchstart', (e) => {
+        if (!this.state.calculator) return;
         this.isPanning = true;
         const touch = e.touches[0];
         touchStartX = touch.clientX;
