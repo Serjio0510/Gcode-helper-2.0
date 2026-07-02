@@ -156,6 +156,19 @@ class UIController {
         this.state.updateInputValue(val);
         this.render();
       });
+
+      // Prevent focus on other inputs when dragging on mobile - but don't prevent the input event
+      this.elements.inputRange.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+      }, { passive: true });
+
+      this.elements.inputRange.addEventListener('touchmove', (e) => {
+        e.stopPropagation();
+      }, { passive: true });
+
+      this.elements.inputRange.addEventListener('touchend', (e) => {
+        e.stopPropagation();
+      }, { passive: true });
     }
 
     if (this.elements.canvasScale) {
