@@ -157,9 +157,13 @@ class UIController {
         this.render();
       });
 
-      // Prevent focus on other inputs when dragging on mobile - but don't prevent the input event
+      // Prevent focus on other inputs when dragging on mobile
       this.elements.inputRange.addEventListener('touchstart', (e) => {
         e.stopPropagation();
+        // Blur any focused input to prevent auto-focus
+        if (document.activeElement && document.activeElement.blur) {
+          document.activeElement.blur();
+        }
       }, { passive: true });
 
       this.elements.inputRange.addEventListener('touchmove', (e) => {
@@ -169,6 +173,14 @@ class UIController {
       this.elements.inputRange.addEventListener('touchend', (e) => {
         e.stopPropagation();
       }, { passive: true });
+
+      this.elements.inputRange.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        // Blur any focused input
+        if (document.activeElement && document.activeElement.blur) {
+          document.activeElement.blur();
+        }
+      });
     }
 
     if (this.elements.canvasScale) {
@@ -181,6 +193,31 @@ class UIController {
         }
         this.render();
       });
+
+      // Prevent focus on other inputs when dragging on mobile
+      this.elements.canvasScale.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+        // Blur any focused input to prevent auto-focus
+        if (document.activeElement && document.activeElement.blur) {
+          document.activeElement.blur();
+        }
+      }, { passive: true });
+
+      this.elements.canvasScale.addEventListener('touchmove', (e) => {
+        e.stopPropagation();
+      }, { passive: true });
+
+      this.elements.canvasScale.addEventListener('touchend', (e) => {
+        e.stopPropagation();
+      }, { passive: true });
+
+      this.elements.canvasScale.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        // Blur any focused input
+        if (document.activeElement && document.activeElement.blur) {
+          document.activeElement.blur();
+        }
+      });
     }
 
     // Canvas panning support (mouse + touch)
@@ -192,6 +229,10 @@ class UIController {
 
       this.canvas.addEventListener('mousedown', (e) => {
         if (!this.state.calculator) return;
+        // Blur any focused input to prevent auto-focus
+        if (document.activeElement && document.activeElement.blur) {
+          document.activeElement.blur();
+        }
         this.isPanning = true;
         mouseStartX = e.clientX;
         mouseStartY = e.clientY;
@@ -216,6 +257,10 @@ class UIController {
 
       this.canvas.addEventListener('touchstart', (e) => {
         if (!this.state.calculator) return;
+        // Blur any focused input to prevent auto-focus
+        if (document.activeElement && document.activeElement.blur) {
+          document.activeElement.blur();
+        }
         this.isPanning = true;
         const touch = e.touches[0];
         touchStartX = touch.clientX;

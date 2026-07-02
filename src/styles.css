@@ -1091,6 +1091,10 @@ p2 {
   border-radius: 8px;
   padding: 1rem;
   position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .canvas-wrapper-arc canvas {
@@ -1099,6 +1103,11 @@ p2 {
   display: block;
   border-radius: 4px;
   background: linear-gradient(135deg, rgba(45, 45, 45, 0.5), rgba(26, 26, 26, 0.8));
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .ctrl-arc {
@@ -1302,6 +1311,7 @@ p2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .slider-group-arc input[type="range"]::-webkit-slider-thumb,
